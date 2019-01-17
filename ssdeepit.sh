@@ -1,3 +1,5 @@
+# Licence: GPLv2
+
 wcone=`echo $1|wc -c`
 wctwo=`echo $2|wc -c`
 if [ $wcone -eq 1 ] 
