@@ -1,3 +1,4 @@
+# Licence: GPLv2
 #Please put THIS_IS_CRON=1 in crotab
 if [ -n "$THIS_IS_CRON" ]
 then 
