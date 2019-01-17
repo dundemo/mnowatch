@@ -4,7 +4,7 @@
 # Licence: GPLv2
 
 #SET SIMILARNUM GREATER THAN 0 AND LESS THAN 99 IF YOU WANT TO SEARCH FOR SIMILARITIES
-SIMILARNUM=0
+SIMILARNUM=90
 
 superblock=0
 arg=`echo $1|wc -c`
@@ -982,7 +982,7 @@ echo "
 " >> $filenameis
 
 cd ..
-filetimeis="upload_"`date -u +"%Y-%m-%d-%H-%M-%S"`".tar"
+filetimeis="upload_"$dateis".tar"
 tar -cf $filetimeis ./upload
 gzip -9 $filetimeis
 
