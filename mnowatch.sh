@@ -980,7 +980,7 @@ echo "
 " >> $filenameis
 
 cd ..
-filetimeis="upload_"`date -u +"%H-%M-%S-%d-%m-%Y"`".tar"
+filetimeis="upload_"`date -u +"%Y-%m-%d-%H-%M-%S"`".tar"
 tar -cf $filetimeis ./upload
 gzip -9 $filetimeis
 
@@ -1043,7 +1043,7 @@ sed -i '8i'"$ADDTHIS" ./index.html
 
 if [ $superblock -gt 0 ]
 then
-ADDTHIS="-<strong>VoteDeadline<strong>"
+ADDTHIS="-<strong>Vote Deadline</strong>"
 sed -i '9i'"$ADDTHIS" ./index.html
 fi
 #echo "END! "
