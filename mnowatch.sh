@@ -4,7 +4,10 @@
 # Licence: GPLv2
 
 #SET SIMILARNUM GREATER THAN 0 AND LESS THAN 99 IF YOU WANT TO SEARCH FOR SIMILARITIES
+#Setting SIMILARNUM greater than 0 may cause delays in script's execution
 SIMILARNUM=0
+codeurl="https://github.com/dundemo/mnowatch"
+codeurl2="You may find the code used to produce this report <a href=\""$codeurl"\"> here </a> <br>"
 
 superblock=0
 arg=`echo $1|wc -c`
@@ -952,6 +955,9 @@ oB04TiSkKFOIUMJDJQOsA5AJSiNJ+bgrAH9b979yrtOQc5v3pMAbwDfA/fP5HE+BzDkE/nQOeUYh
 Qc6R1Wdm/+Ly4bzN+MoUCRRCcDBI6iFMY7Ncnc7D/vJvd8ch5jEFoCjmzMVyBKKFKVA4t9fX18/T
 2U6vddxsw4P01pIWdmvPOBiNpSUKULGqYCg7dcA6+GcSC5VKSMMyYDBzM5DVCaXieqZ3kf3WaI8i
 DyH4j//F3JFOFCQPussgAA=="|base64 -d|bzcat|sed -e s/"thedateis"/"$dateis"/g > $filenameis
+
+sed -i '1i'"$codeurl2" $filenameis
+
 csvfile=`echo $filenameis".csv"`
 #a bug occurs to all proposals than contain a , in their proposal-name
 #ex. proposal-name = VENEZUELAN-ALLIED-DASH-COMMUNITIES,Cash_Evolution_Bloomberg_Radio
