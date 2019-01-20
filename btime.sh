@@ -5,7 +5,7 @@
 # MNOWATCH VERSION: 0.01
 
 #=============== ISTRUCTIONS ==========================================
-# In order for this to work you havbe to put THIS_IS_CRON=1 into crontab
+# In order for this to work you have to put THIS_IS_CRON=1 into crontab
 # Look at crontab.example
 #=============== END OF ISTRUCTIONS ===================================
 
