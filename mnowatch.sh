@@ -1,14 +1,18 @@
 #!/bin/bash
 #set -x
 
-# MNOWATCH FOR DASHD VERSION 13
+# MNOWATCH FOR DASHD VERSION 13 (works also for DASHD VERSION 12)
 
-# 1) SET MYHOME_DIR
+# 1) SET MYHOME_DIR. DONT FORGET TO DO THE SAME TO ssdeepit.sh TOO.
 MYHOME_DIR="/home/demo"
 
 # 2) ALL GITHUB FILES MUST RESIDE INTO $MYHOME_DIR/bin
 
-# 3) SET SIMILARNUM GREATER THAN 0 AND LESS THAN 99 IF YOU WANT TO SEARCH FOR SIMILARITIES
+# 3) RUN THE SCRIPT. THE FIRST TIME SOME ERRORS WILL OCCURS. 
+#    DONT WORRY, AND RE-RUN IT. 
+#    IF THE SECOND TIME THE SCIPRT ENDS WITHOUD ERRORS, EVERYTHING IS FINE.
+
+# 4) SET SIMILARNUM GREATER THAN 0 /  LESS THAN 99 IF YOU WANT TO SPOT SIMILARITIES
 #    Setting SIMILARNUM greater than 0 may cause huge delays in script's execution
 SIMILARNUM=0
 
@@ -24,6 +28,9 @@ fi
 if [ ! -d $HTTPD_DIR ]
 then 
 mkdir $HTTPD_DIR 
+echo "<html><body>" > $HTTPD_DIR/index.html
+echo "Hello world. The time of the reports is UTC. <br>" >> $HTTPD_DIR/index.html
+echo "</body></html>" >> $HTTPD_DIR/index.html
 fi
 
 
@@ -38,6 +45,12 @@ if [ $1 == '-super' ]
 then 
 superblock=1
 fi
+fi
+
+
+if [ $superblock -gt 0 ]
+then
+codeurl2=$codeurl2" <strong>This Report occured as close as possible to the Votes Deadline</strong><br>"
 fi
 
 procs=`ps -aux|grep mnowatch.sh|wc -l`
@@ -1040,7 +1053,7 @@ rm -rf *_*
 rm -rf ./upload
 rm -ff proposals
 
-#here I change the working  direcory to httpd 
+#here I change the working  directory to httpd 
 cd $HTTPD_DIR
 
 diffis=`ls -ltra|grep similar|tail -1|cut -f4 -d"_"|cut -f1 -d"."`.diff
