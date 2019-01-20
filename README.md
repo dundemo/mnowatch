@@ -6,6 +6,7 @@ https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 These files are used in order to watch the way the Dash masternode owners vote. For more information read here:
 https://www.dash.org/forum/threads/which-masternodes-voted-and-what-exactly-voted-on-various-proposals-v2.34403/
 
+CURRENT VERSION: 0.01
 
 INSTALLATION
 
