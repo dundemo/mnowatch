@@ -1,22 +1,24 @@
 #!/bin/bash
 #set -x
 
+# Licence: GPLv2
+# MNOWATCH VERSION: 0.01
 # MNOWATCH FOR DASHD VERSION 13 (works also for DASHD VERSION 12)
+
+#==========================INSTRUCTIONS ======================
 
 # 1) SET MYHOME_DIR. DONT FORGET TO DO THE SAME TO ssdeepit.sh TOO.
 MYHOME_DIR="/home/demo"
-
 # 2) ALL GITHUB FILES MUST RESIDE INTO $MYHOME_DIR/bin
-
 # 3) RUN THE SCRIPT. THE FIRST TIME SOME ERRORS WILL OCCURS. 
 #    DONT WORRY, AND RE-RUN IT. 
 #    IF THE SECOND TIME THE SCRIPT ENDS WITHOUT ERRORS, EVERYTHING IS FINE.
-
 # 4) SET SIMILARNUM GREATER THAN 0 /  LESS THAN 99 IF YOU WANT TO SPOT SIMILARITIES
 #    Setting SIMILARNUM greater than 0 may cause huge delays in script's execution
 SIMILARNUM=0
 
-#Licence: GPLv2
+#==========================END OF INSTRUCTIONS ==================
+
 
 BIN_DIR=$MYHOME_DIR"/bin"
 TMP_DIR=$MYHOME_DIR"/tmp"

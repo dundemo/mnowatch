@@ -1,5 +1,14 @@
+#!/bin/bash
+#set -x
+
 # Licence: GPLv2
-#Please put THIS_IS_CRON=1 in crotab
+# MNOWATCH VERSION: 0.01
+
+#=============== ISTRUCTIONS ==========================================
+# In order for this to work you havbe to put THIS_IS_CRON=1 into crotab
+# Look at crontab.example
+#=============== END OF ISTRUCTIONS ===================================
+
 if [ -n "$THIS_IS_CRON" ]
 then 
 btime=$(($(dash-cli getblockcount)-880648-1662))&&remainder=$(($btime % 16616));if [ $remainder -le 10 ];then /home/demo/bin/mnowatch.sh -super;fi

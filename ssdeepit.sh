@@ -1,7 +1,15 @@
-# Licence: GPLv2
+#!/bin/bash
+#set -x
 
-# 1) SET MYHOME_DIR
+# Licence: GPLv2
+# MNOWATCH VERSION: 0.01
+
+#======================INSTRUCTIONS============================
+
+# 1) SET THE MYHOME_DIR
 MYHOME_DIR="/home/demo"
+
+#======================END OF INSTRUCTIONS=====================
 
 WORKING_DIR=$MYHOME_DIR"/tmp"
 BIN_DIR=$MYHOME_DIR"/bin"
