@@ -1,5 +1,4 @@
 #!/bin/bash
-#set -x
 
 # Licence: GPLv2
 # MNOWATCH VERSION: 0.01
