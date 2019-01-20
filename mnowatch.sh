@@ -1,11 +1,32 @@
 #!/bin/bash
 #set -x
 
-# Licence: GPLv2
+# MNOWATCH FOR DASHD VERSION 13
 
-#SET SIMILARNUM GREATER THAN 0 AND LESS THAN 99 IF YOU WANT TO SEARCH FOR SIMILARITIES
-#Setting SIMILARNUM greater than 0 may cause delays in script's execution
+# 1) SET MYHOME_DIR
+MYHOME_DIR="/home/demo"
+
+# 2) ALL GITHUB FILES MUST RESIDE INTO $MYHOME_DIR/bin
+
+# 3) SET SIMILARNUM GREATER THAN 0 AND LESS THAN 99 IF YOU WANT TO SEARCH FOR SIMILARITIES
+#    Setting SIMILARNUM greater than 0 may cause huge delays in script's execution
 SIMILARNUM=0
+
+#Licence: GPLv2
+
+BIN_DIR=$MYHOME_DIR"/bin"
+TMP_DIR=$MYHOME_DIR"/tmp"
+HTTPD_DIR=$MYHOME_DIR"/httpd"
+if [ ! -d $TMP_DIR ]
+then 
+mkdir $TMP_DIR 
+fi
+if [ ! -d $HTTPD_DIR ]
+then 
+mkdir $HTTPD_DIR 
+fi
+
+
 codeurl="https://github.com/dundemo/mnowatch"
 codeurl2="You may find the code used to produce this report <a href=\""$codeurl"\"> here </a> <br>"
 
@@ -19,7 +40,6 @@ superblock=1
 fi
 fi
 
-# MNOWATCH FOR VERSION 13
 procs=`ps -aux|grep mnowatch.sh|wc -l`
 if [ $procs -gt 3 ]
 then
@@ -27,7 +47,7 @@ then
 exit
 fi
 
-cd /home/demo/tmp
+cd $TMP_DIR
 rm -rf *_*
 rm -rf ./upload
 rm -ff proposals
@@ -56,9 +76,6 @@ propc=`echo $prop|wc -c`
 if [ $propc -gt 1 -a $propc -lt 200 ]
 then
 
-# MNOWATCH FOR VERSION 13
-#replace grep with grep -i
-
 grep -i ABSTAIN:FUNDING "gobject_getcurrentvotes_"$fn|cut -f3 -d"("|cut -f1 -d")"|sed -e s/", "/-/g |cut -f2 -d":" > "ABSTAIN_"$prop
 >"ABSTAIN_IP_"$prop
 for gn in `cat "ABSTAIN_"$prop`; do
@@ -66,8 +83,6 @@ grep $gn\" masternodelist_addr|cut -f2 -d":"|cut -f2 -d"\"" >> "ABSTAIN_IP_"$pro
 done
 sort "ABSTAIN_IP_"$prop -o "ABSTAIN_IP_"$prop
 #echo "ABS:"`wc -l "ABSTAIN_IP_"$prop|cut -f1 -d" "`
-# MNOWATCH FOR VERSION 13
-#replace grep with grep -i
 grep -i NO:FUNDING "gobject_getcurrentvotes_"$fn|cut -f3 -d"("|cut -f1 -d")"|sed -e s/", "/-/g |cut -f2 -d":" > "NO_"$prop
 >"NO_IP_"$prop
 for gn in `cat "NO_"$prop`; do
@@ -75,8 +90,6 @@ grep $gn\" masternodelist_addr|cut -f2 -d":"|cut -f2 -d"\"" >> "NO_IP_"$prop
 done
 sort "NO_IP_"$prop -o "NO_IP_"$prop
 #echo "NO:"`wc -l "NO_IP_"$prop|cut -f1 -d" "`
-# MNOWATCH FOR VERSION 13
-#replace grep with grep -i
 grep -i YES:FUNDING "gobject_getcurrentvotes_"$fn|cut -f3 -d"("|cut -f1 -d")"|sed -e s/", "/-/g |cut -f2 -d":" > "YES_"$prop
 >"YES_IP_"$prop
 for gn in `cat "YES_"$prop`; do
@@ -112,7 +125,6 @@ done
 cd upload
 
 # Decompress the javascript helper functions and add HTML file.
-#dateis=`date -u +"%H-%M-%S-%d-%m-%Y"`
 dateis=`date -u +"%Y-%m-%d-%H-%M-%S"`
 filenameis="../the_results_dashd_"$dateis".html"
 echo "QlpoOTFBWSZTWT7rLIAAj8X/0H90xER///////////////9AAAgAYQGe8AAAAAFAAAAF9y8+rfTQ
@@ -992,60 +1004,50 @@ filetimeis="upload_"$dateis".tar"
 tar -cf $filetimeis ./upload
 gzip -9 $filetimeis
 
-#filenameiszip="../the_results_dashd_"$dateis".html.gz"
-#gzip -9 "the_results_dashd_"$dateis".html"
-
 distrfileis="distr_"$dateis".txt"
 
 echo "$dateis" > $distrfileis
 echo "The first operator includes all people who abstain. All the rest are identified by the way they vote." >> $distrfileis
 cut -f22 -d"<" the_results_dashd_*.html|cut -f2 -d">"|grep -v [a-z]|grep -v [A-Z]| grep ^[0-9]|grep -v "-"|sort|uniq -c|sed -e s/'^   '/000/g|sed -s s/'000   '/000000/g|sed -e s/'000  '/00000/g|sed -s s/'000 '/0000/g|sort -r|cut -f1 -d" "|uniq -c|sed -e s/" 0"/" operator(s) control(s) "/g|sed -e s/$/" masternode(s)"/g >> $distrfileis
+
 cp the_results_dashd_*.html ../httpd
 cp the_results_dashd_*.html.csv ../httpd
 cp upload_*.tar.gz ../httpd
 cp distr_*.txt ../httpd
-#to do. better show the last result at the top. 
-#first reverse the index.html with tail -r myfile.txt
-# or use tac a.txt > b.txt (tac is the reverse of cat)
-#put in the first line of a file --  sed -i '1i put this' file 
-# sed -i '5i put in fifth line' file
-#echo "<br><a href=\""`ls ./distr_*.txt`"\"> the distribution $dateis </a> and <a href=\""`ls ./the_results*.html`"\"> the results $dateis </a> and <a href=\""`ls ./the_results*.html.csv`"\"> the csv file</a>" >> ../httpd/index.html
 ADDTHIS="<br><a href=\""`ls ./distr_*.txt`"\"> the distribution $dateis </a> and <a href=\""`ls ./the_results*.html`"\"> the results $dateis </a> (<a href=\""`ls ./the_results*.html.csv`"\">csv format</a>)" 
 sed -i '3i'"$ADDTHIS" ../httpd/index.html
 
+#ssdeepit.sh depends on the above copy commands and expexts the newest *html.csv to reside into httpd directory
+#to do: make ssdeepit.sh not dependant to the copy of the files, so that in case diff is zero to not copy files
 if [ $SIMILARNUM -gt 0 ]
 then
-/home/demo/bin/ssdeepit.sh `ls -tra /home/demo/httpd/*html.csv|tail -1` $SIMILARNUM
+$BIN_DIR/ssdeepit.sh `ls -tra $HTTPD_DIR/*html.csv|tail -1` $SIMILARNUM
 else
-/home/demo/bin/ssdeepit.sh `ls -tra /home/demo/httpd/*html.csv|tail -1`
+$BIN_DIR/ssdeepit.sh `ls -tra $HTTPD_DIR/*html.csv|tail -1`
 fi
+
 
 cp the_results_dashd_*.similar.*.csv ../httpd
 cp the_results_dashd_*.uniqueHashVotes.*.csv ../httpd
 cp the_results_dashd_*.uniqueHashVotes.*.html ../httpd
-#echo " and <a href=\""`ls ./the_results*.similar.*.csv`"\"> the similarities file</a>" >> ../httpd/index.html
 ADDTHIS=" and <a href=\""`ls ./the_results*.similar.*.csv`"\"> the similarities.csv</a>" 
 sed -i '4i'"$ADDTHIS" ../httpd/index.html
-#echo " and <a href=\""`ls ./the_results*.uniqueHashVotes.*.csv`"\"> the uniqueVotesHashes.csv</a>" >> ../httpd/index.html
 ADDTHIS=" and <a href=\""`ls ./the_results*.uniqueHashVotes.*.csv`"\"> the uniqueVotesHashes.csv</a>"
 sed -i '5i'"$ADDTHIS" ../httpd/index.html
 ADDTHIS=" (<a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html format</a>)"
 sed -i '6i'"$ADDTHIS" ../httpd/index.html
-
 rm -rf *_*
 rm -rf ./upload
 rm -ff proposals
 
-cd /home/demo/httpd
-diffis=`ls -ltra|tail -6|grep similar|cut -f4 -d"_"|cut -f1 -d"."`.diff
-#diff `ls -lrta |tail -15|grep unique|grep -v html |cut -f2 -d":"|cut -f2 -d" "|head -2` > $diffis
-git diff --color-words --word-diff=plain --unified=0 `ls -lrta |tail -15|grep unique|grep -v html |cut -f2 -d":"|cut -f2 -d" "|head -2` > $diffis
-#git diff --color-words --word-diff=plain files1 file2
-#wdiff -3p file1 file2|colordiff|less -R
-#git diff --color-words --word-diff=plain the_results_dashd_16-50-57-06-01-2019.html.csv the_results_dashd_10-23-59-06-01-2019.html.csv|grep "{"|less -R
+#here I change the working  direcory to httpd 
+cd $HTTPD_DIR
+
+diffis=`ls -ltra|grep similar|tail -1|cut -f4 -d"_"|cut -f1 -d"."`.diff
+git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "` > $diffis
 ADDTHIS=" and <a href=\"./"$diffis"\">the git diff</a>"
 sed -i '7i'"$ADDTHIS" ./index.html
-cat $diffis |/home/demo/bin/ansi2html.sh > $diffis.html
+cat $diffis |$BIN_DIR/ansi2html.sh > $diffis.html
 ADDTHIS=" (<a href=\"./"$diffis.html"\">html format</a>)"
 sed -i '8i'"$ADDTHIS" ./index.html
 
@@ -1054,6 +1056,7 @@ then
 ADDTHIS="-<strong>Vote Deadline</strong>"
 sed -i '9i'"$ADDTHIS" ./index.html
 fi
+
 #echo "END! "
 
 

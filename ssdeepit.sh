@@ -1,5 +1,12 @@
 # Licence: GPLv2
 
+# 1) SET MYHOME_DIR
+MYHOME_DIR="/home/demo"
+
+WORKING_DIR=$MYHOME_DIR"/tmp"
+BIN_DIR=$MYHOME_DIR"/bin"
+HTTPD_DIR=$MYHOME_DIR"/httpd"
+
 wcone=`echo $1|wc -c`
 wctwo=`echo $2|wc -c`
 if [ $wcone -eq 1 ] 
@@ -16,8 +23,6 @@ SEARCHSIMILARITIES=1
 secondarg=$2
 fi
 
-WORKING_DIR="/home/demo/tmp"
-#cp $1 $WORKING_DIR
 cd $WORKING_DIR
 sort -t"," -k5 $1 > mysorted.csv
 #a bug occurs to all proposals than contain a , in their proposal-name
@@ -32,9 +37,9 @@ cp mysortedUnique.csv $filenameun
 cat $filenameun|grep -v "^,,," > pastedonefile 
 cat /dev/null > pastedtwofile
 dateis=`echo $1|cut -f4 -d"_"|cut -f1 -d"."`
-cat /home/demo/bin/jsssdeep.html|sed -e s/"thedateis"/"$dateis"/g >  mysortedUnique.html
-PREVIUSREPORT=`cd /home/demo/httpd;ls -tra *uniqueHashVotes*.html|tail -1`
-PREVIUSREPORTFULL="/home/demo/httpd/"$PREVIUSREPORT
+cat $BIN_DIR/jsssdeep.html|sed -e s/"thedateis"/"$dateis"/g >  mysortedUnique.html
+PREVIUSREPORT=`cd $HTTPD_DIR;ls -tra *uniqueHashVotes*.html|tail -1`
+PREVIUSREPORTFULL=$HTTPD_DIR"/"$PREVIUSREPORT
 
 for fn in `cat pastedonefile`; do 
 yes=" "`echo $fn |cut -f1 -d","|sed -e s/":"/" "/g`" "
@@ -49,9 +54,8 @@ theMNSnum=" "`grep $voteshash mysorted.csv|cut -f2 -d","|wc -l`" "
 echo $IPS","$yes","$no","$abs","$voteshash", \""$theIPSgrouphash"\" ,"$theMNSnum","$theMNS >> pastedtwofile
 
 
-#echo "<tr><td class=\"container1\"><div><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis"</div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> mysortedUnique.html
 exists=`grep $theIPSgrouphash $PREVIUSREPORTFULL|wc -l`
-theHistory=`grep -l $theIPSgrouphash /home/demo/httpd/*uniqueHashVotes*.html|wc -l`
+theHistory=`grep -l $theIPSgrouphash $HTTPD_DIR/*uniqueHashVotes*.html|wc -l`
 theHistory=`printf %04d $theHistory`
 
 numips=`echo $IPS|awk -F'" "' 'NF{print NF-1}'`
@@ -105,11 +109,6 @@ then
 
 for fn in `cat  mysortedUnique.csv`; do
 echo $fn|cut -f1-3 -d"," > this
-#thischeck=`cat this |tr -cd ',' | wc -c`
-#if [ $thischeck -ne 2 ] 
-#then
-#echo "Error in "`cat this`
-#fi
 #maybe I should use the recursive mode ssdeep -r , for performance reasons
 ssdeep -s this > this.db
 found=0
