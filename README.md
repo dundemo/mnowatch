@@ -10,12 +10,13 @@ CURRENT VERSION: 0.01
 
 INSTALLATION
 
-1) Download the files and put them in a directory named some_path_of_your_choice/bin.
-2) Edit the scripts mnowatch.sh and ssdeepit.sh and change what is needed (instructions inside the scripts)
+0) Install a dashd , and put dash-cli (along with any other script's dependacies) into your path.
+1) Download the git files of mnowatch and put them into a directory named some_path_of_your_choice/bin.
+2) Edit the scripts mnowatch.sh and ssdeepit.sh and change whatever is needed there (instructions inside the scripts)
 3) Run the script TWICE.
 4) If the SECOND time the script ends without errors, everything is fine.
-5) Add to the cron deamon a file similar to the crontab.example
-6) If anything goes wrong, send the minimum possible amount of Dash to the below Dash address along with a message included in the transaction (ex. https://mydashwallet.org/Chat), and I will contact you as soon as possible.
-7) In case you want to contribute to the development of the code, you are welcome.
+5) You may run the script mannualy, or you may edit the cron daemon similar to the crontab.example
+6) In case you want to contribute to the development of the code, you are more than welcome.
+7) If anything goes wrong, send the minimum possible amount of Dash to the below Dash address along with your message included into the transaction (ex. https://mydashwallet.org/Chat), and I will contact you as soon as possible.
 
 The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
