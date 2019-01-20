@@ -16,5 +16,6 @@ INSTALLATION
 4) If the SECOND time the script ends without errors, everything is fine.
 5) Add to the cron deamon a file similar to the crontab.example
 6) If anything goes wrong, send the minimum possible amount of Dash to the below Dash address along with a message included in the transaction (ex. https://mydashwallet.org/Chat), and I will contact you as soon as possible.
+7) In case you want to contribute to the development of the code, you are welcome.
 
 The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
