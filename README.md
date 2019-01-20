@@ -8,7 +8,7 @@ CURRENT MNOWATCH VERSION: 0.01
 
 INSTALLATION
 
-1) First [download dashd](https://www.dash.org/get-dash/) and install it into a Linux system. Then put dash-cli (along with any other script's dependencies) into your execution path.
+1) First [download dashd](https://www.dash.org/get-dash/) and install it into a Linux system. Then put dash-cli (along with any other script's dependencies) into your execution path (Read [here](https://www.dash.org/forum/threads/which-masternodes-voted-and-what-exactly-voted-on-various-proposals-v2.34403/#post-195834) for more instructions).
 2) Download the git files of mnowatch and put them into a directory named some_path_of_your_choice/bin.
 3) Edit the scripts mnowatch.sh and ssdeepit.sh and change whatever is needed there (instructions inside the scripts)
 4) Run the script TWICE.
