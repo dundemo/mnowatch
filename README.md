@@ -19,7 +19,9 @@ INSTALLATION
 6) In case you want to contribute to the development of the code, you are more than welcome.
 7) If anything goes wrong, send OP_RETURN to the Dash address XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX with a message and I will contact you as soon as possible. 
 Examples of sending messages to an address:
+
 https://mydashwallet.org/Chat 
-https://chainz.cryptoid.info/dash/tx.dws?4285e7a8c25b0c89ce1ebba38512d865547f583ebe28ce6738b216e4c2078008.htm)
+
+https://chainz.cryptoid.info/dash/tx.dws?4285e7a8c25b0c89ce1ebba38512d865547f583ebe28ce6738b216e4c2078008.htm
 
 The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
