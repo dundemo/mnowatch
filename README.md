@@ -17,6 +17,6 @@ INSTALLATION
 4) If the SECOND time the script ends without errors, everything is fine.
 5) You may run the script mannualy, or you may edit the cron daemon similar to the crontab.example
 6) In case you want to contribute to the development of the code, you are more than welcome.
-7) If anything goes wrong, send the minimum possible amount of Dash to the below Dash address along with your message included into the transaction (ex. https://mydashwallet.org/Chat), and I will contact you as soon as possible.
+7) If anything goes wrong, send the minimum possible amount of Dash to the Dash address XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX along with your message included into the transaction (examples. https://mydashwallet.org/Chat, https://chainz.cryptoid.info/dash/tx.dws?4285e7a8c25b0c89ce1ebba38512d865547f583ebe28ce6738b216e4c2078008.htm), and I will contact you as soon as possible.
 
 The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
