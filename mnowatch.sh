@@ -14,7 +14,7 @@ MYHOME_DIR="/home/demo"
 #    IF THE SCRIPT ENDS WITHOUT ERRORS EVERYTHING IS FINE. CHECK $MYHOME_DIR/httpd.
 # 4) SET $SIMILARNUM LESS THAN 99 AND GREATER THAN 0 IN CASE YOU WANT TO SPOT SIMILARITIES
 #    WARNING: Setting $SIMILARNUM greater than 0 may cause HUGE delays in script's execution!
-SIMILARNUM=90
+SIMILARNUM=0
 
 #==========================END OF INSTRUCTIONS ==================
 
