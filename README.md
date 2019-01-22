@@ -15,6 +15,6 @@ INSTALLATION
 5) If the script ends without errors, everything is fine. Check the reports at some_path_of_your_choice/httpd.
 6) You may run the script manually, or you may edit the cron daemon similar to the provided crontab.example.
 7) If anything goes wrong, send an OP_RETURN to the Dash address XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX with your message and I will contact you as soon as possible. 
-Examples of sending messages to an address: [example 1](https://mydashwallet.org/Chat), [example 2](https://chainz.cryptoid.info/dash/tx.dws?4285e7a8c25b0c89ce1ebba38512d865547f583ebe28ce6738b216e4c2078008.htm) 
+Examples of sending messages to an address: [example 1](https://mydashwallet.org/Chat), [example 2](https://chainz.cryptoid.info/dash/tx.dws?6dbf28ba485ef56cf33dc0f348088f766e1302e39004bf5359161e6ba7de6ff9.htm) 
 
 The author of the software is the owner of the Dash Address: [XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX](https://chainz.cryptoid.info/dash/address.dws?XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX.htm)
