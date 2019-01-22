@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Licence: GPLv2
-# MNOWATCH VERSION: 0.01
+# MNOWATCH VERSION: 0.02
 
 #=============== ISTRUCTIONS ==========================================
 # In order for this to work you have to put THIS_IS_CRON=1 into crontab

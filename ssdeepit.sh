@@ -1,24 +1,13 @@
 #!/bin/bash
 
 # Licence: GPLv2
-# MNOWATCH VERSION: 0.01
-
-#======================INSTRUCTIONS============================
-
-# 1) SET THE MYHOME_DIR
-MYHOME_DIR="/home/demo"
-
-#======================END OF INSTRUCTIONS=====================
-
-WORKING_DIR=$MYHOME_DIR"/tmp"
-BIN_DIR=$MYHOME_DIR"/bin"
-HTTPD_DIR=$MYHOME_DIR"/httpd"
+# MNOWATCH VERSION: 0.02
 
 wcone=`echo $1|wc -c`
 wctwo=`echo $2|wc -c`
 if [ $wcone -eq 1 ] 
 then
-echo "usage: ssdeepit.sh /full/path/csvfile [similarity_number]"
+echo "usage: ssdeepit.sh /mnowatch_path/httpd/csvfile [similarity_number]"
 exit
 fi
 if [ $wctwo -eq 1 ] 
@@ -29,6 +18,14 @@ else
 SEARCHSIMILARITIES=1
 secondarg=$2
 fi
+
+MYDIR=`dirname $1`
+cd $MYDIR
+cd ..
+MYHOME_DIR=`pwd`
+WORKING_DIR=$MYHOME_DIR"/tmp"
+BIN_DIR=$MYHOME_DIR"/bin"
+HTTPD_DIR=$MYHOME_DIR"/httpd"
 
 cd $WORKING_DIR
 sort -t"," -k5 $1 > mysorted.csv
@@ -45,7 +42,7 @@ cat $filenameun|grep -v "^,,," > pastedonefile
 cat /dev/null > pastedtwofile
 dateis=`echo $1|cut -f4 -d"_"|cut -f1 -d"."`
 cat $BIN_DIR/jsssdeep.html|sed -e s/"thedateis"/"$dateis"/g >  mysortedUnique.html
-PREVIUSREPORT=`cd $HTTPD_DIR;ls -tra *uniqueHashVotes*.html|tail -1`
+PREVIUSREPORT=`cd $HTTPD_DIR;ls -tra *uniqueHashVotes*.html 2>/dev/null|tail -1`
 PREVIUSREPORTFULL=$HTTPD_DIR"/"$PREVIUSREPORT
 
 for fn in `cat pastedonefile`; do 
@@ -60,9 +57,8 @@ theMNSnum=" "`grep $voteshash mysorted.csv|cut -f2 -d","|wc -l`" "
 
 echo $IPS","$yes","$no","$abs","$voteshash", \""$theIPSgrouphash"\" ,"$theMNSnum","$theMNS >> pastedtwofile
 
-
-exists=`grep $theIPSgrouphash $PREVIUSREPORTFULL|wc -l`
-theHistory=`grep -l $theIPSgrouphash $HTTPD_DIR/*uniqueHashVotes*.html|wc -l`
+exists=`grep $theIPSgrouphash $PREVIUSREPORTFULL 2>/dev/null|wc -l`
+theHistory=`grep -l $theIPSgrouphash $HTTPD_DIR/*uniqueHashVotes*.html 2>/dev/null|wc -l`
 theHistory=`printf %04d $theHistory`
 
 numips=`echo $IPS|awk -F'" "' 'NF{print NF-1}'`

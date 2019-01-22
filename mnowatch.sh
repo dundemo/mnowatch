@@ -2,19 +2,18 @@
 #set -x
 
 # Licence: GPLv2
-# MNOWATCH VERSION: 0.01
+# MNOWATCH VERSION: 0.02
 # MNOWATCH FOR DASHD VERSION 13 (works also for DASHD VERSION 12)
 
 #==========================INSTRUCTIONS ======================
 
 # 1) SET MYHOME_DIR. DONT FORGET TO DO THE SAME TO ssdeepit.sh TOO.
 MYHOME_DIR="/home/demo"
-# 2) ALL GITHUB FILES MUST RESIDE INTO $MYHOME_DIR/bin
-# 3) RUN THE SCRIPT. THE FIRST TIME SOME ERRORS WILL OCCURS. 
-#    DONT WORRY, AND RE-RUN IT. 
-#    IF THE SECOND TIME THE SCRIPT ENDS WITHOUT ERRORS, EVERYTHING IS FINE.
-# 4) SET SIMILARNUM GREATER THAN 0 /  LESS THAN 99 IF YOU WANT TO SPOT SIMILARITIES
-#    Setting SIMILARNUM greater than 0 may cause huge delays in script's execution
+# 2) ALL MNOWATCH GITHUB FILES MUST RESIDE INTO $MYHOME_DIR/bin
+# 3) RUN THIS SCRIPT. IT RUNS SILENTLY AND LASTS ABOUT 2 MINUTES (in an Intel Xeon 2.7 Ghz)
+#    IF THE SCRIPT ENDS WITHOUT ERRORS EVERYTHING IS FINE. CHECK $MYHOME_DIR/httpd.
+# 4) SET $SIMILARNUM LESS THAN 99 AND GREATER THAN 0 IN CASE YOU WANT TO SPOT SIMILARITIES
+#    WARNING: Setting $SIMILARNUM greater than 0 may cause HUGE delays in script's execution!
 SIMILARNUM=0
 
 #==========================END OF INSTRUCTIONS ==================
@@ -1059,7 +1058,13 @@ rm -ff proposals
 cd $HTTPD_DIR
 
 diffis=`ls -ltra|grep similar|tail -1|cut -f4 -d"_"|cut -f1 -d"."`.diff
+filestodiff=`ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "|wc -l`
+if [ $filestodiff -eq 2 ]
+then
 git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "` > $diffis
+else
+echo "" > $diffis
+fi
 ADDTHIS=" and <a href=\"./"$diffis"\">the git diff</a>"
 sed -i '7i'"$ADDTHIS" ./index.html
 cat $diffis |$BIN_DIR/ansi2html.sh > $diffis.html
