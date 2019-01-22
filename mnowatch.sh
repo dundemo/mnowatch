@@ -3,6 +3,7 @@
 
 # Licence: GPLv2
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
+# Tweaking / Debugging by xkcd@dashtalk 
 #
 # MNOWATCH VERSION: 0.02
 # MNOWATCH FOR DASHD VERSION 13 (works also for DASHD VERSION 12)
