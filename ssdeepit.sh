@@ -56,6 +56,7 @@ IPS=" "`grep $voteshash mysorted.csv|cut -f1 -d","|sort`" "
 theIPSgrouphash=`bc <<<ibase=16\;$(sha1sum <<<$IPS|tr a-z A-Z)0`
 theMNS=" "`grep $voteshash mysorted.csv|cut -f2 -d","`" "
 theMNSnum=" "`grep $voteshash mysorted.csv|cut -f2 -d","|wc -l`" "
+theMNSnum=`printf %04d $theMNSnum`
 
 echo $IPS","$yes","$no","$abs","$voteshash", \""$theIPSgrouphash"\" ,"$theMNSnum","$theMNS >> pastedtwofile
 
@@ -74,6 +75,7 @@ content="`echo $IPS|cut -f"$cutf" -d'\"'`"
 builtIPS=`echo $builtIPS|sed "s/@/${content}/"`
 done
 
+#to do : make every proposal link to dashwatch https://dashwatchbeta.org/api/p/proposal_name
 
 if [ $exists -eq 0 ]
 then

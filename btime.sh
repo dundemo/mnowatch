@@ -25,5 +25,6 @@ then
   echo $btime","$remainder","`date -u` > /tmp/Not_a_voting_deadline
  fi
 else
+#echo $(($(($(dash-cli getblockcount)-880648-1662)) % 16616))
  echo "This bash should be executed only by cron daemon."
 fi
