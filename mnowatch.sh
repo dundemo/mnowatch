@@ -1064,7 +1064,7 @@ diffis=`ls -ltra|grep similar|tail -1|cut -f4 -d"_"|cut -f1 -d"."`.diff
 filestodiff=`ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "|wc -l`
 if [ $filestodiff -eq 2 ]
 then
-git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "` > $diffis
+git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "`|sed -e s/"IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF"/"------------------------------"/g > $diffis
 else
 echo "" > $diffis
 fi

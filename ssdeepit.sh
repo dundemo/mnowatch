@@ -80,11 +80,11 @@ done
 #to do : make every MNO link to dashninja.pl https://www.dashninja.pl/mndetails.html?mnoutput=
 
 voteshashexist=`grep $voteshash $PREVIUSREPORTFULL|wc -l`
-if [ $voteshashexist -eq 1 ]
+if [ $voteshashexist -eq 0 ]
 then
-voteshash2=$voteshash
-else
 voteshash2="<strong>"$voteshash"</strong> (<a target=\"_blank\" href=\"./"$dateis".diff.html#"`echo $voteshash|cut -f2 -d"\""`"\">diff</a>)"
+else
+voteshash2=$voteshash
 fi
 
 if [ $exists -eq 0 ]
