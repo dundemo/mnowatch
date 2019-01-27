@@ -82,7 +82,12 @@ done
 voteshashexist=`grep $voteshash $PREVIUSREPORTFULL|wc -l`
 if [ $voteshashexist -eq 0 ]
 then
-voteshash2="<strong>"$voteshash"</strong> (<a target=\"_blank\" href=\"./"$dateis".diff.html#"`echo $voteshash|cut -f2 -d"\""`"\">diff</a>)"
+ if [ $theHistory -gt 0 ]
+ then
+  voteshash2="<strong>"$voteshash"</strong> (<a target=\"_blank\" href=\"./"$dateis".diff.html#"`echo $voteshash|cut -f2 -d"\""`"\">diff</a>)"
+ else
+  voteshash2=$voteshash
+ fi
 else
 voteshash2=$voteshash
 fi
