@@ -16,7 +16,7 @@ MYHOME_DIR="/home/demo"
 
 if [ -n "$THIS_IS_CRON" ]
 then 
- btime=$(($(dash-cli getblockcount)-880648-1662))&&remainder=$(($btime % 16616))
+ btime=$(($(dash-cli getblockcount)-880648+1662))&&remainder=$(($btime % 16616))
  if [ $remainder -le 10 ]
  then 
   echo $btime","$remainder","`date -u` > /tmp/The_voting_deadline
