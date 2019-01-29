@@ -7538,9 +7538,12 @@ NO filter:<input type="text" id="myInput4" onkeyup="myFunction4()" placeholder="
 ABS filter:<input type="text" id="myInput5" onkeyup="myFunction5()" placeholder="Search for names..">
 VotesHash filter:<input type="text" id="myInput6" onkeyup="myFunction6()" placeholder="Search for names..">
 Masternodes filter:<input type="text" id="myInput7" onkeyup="myFunction7()" placeholder="Search for names..">
+
+<span id="myValf"></span>
 <script>
 function myFunction0() {
-  var input, filter, table, tr, td, i;
+  var input, filter, table, tr, td, i, sumValf, trimit;
+sumValf = 0;
   input = document.getElementById("myInput0");
   filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
@@ -7550,16 +7553,23 @@ function myFunction0() {
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
+trimit=table.rows[i].cells[0].innerHTML;
+trimit=trimit.replace(/[^\w\s]/gi, '');
+trimit=trimit.replace(/div/g, '');
+sumValf=sumValf+Number(trimit);
+
       } else {
         tr[i].style.display = "none";
       }
     }
   }
+document.getElementById("myValf").innerHTML="<br><h3 style=\"color:Tomato;\"><strong>Total Number of filtered Masternodes ="+sumValf+"</strong></h3>";
 }
 </script>
 <script>
 function myFunction1() {
-  var input, filter, table, tr, td, i;
+  var input, filter, table, tr, td, i, sumValf, trimit;
+sumValf = 0;
   input = document.getElementById("myInput1");
   filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
@@ -7569,16 +7579,23 @@ function myFunction1() {
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
+trimit=table.rows[i].cells[0].innerHTML;
+trimit=trimit.replace(/[^\w\s]/gi, '');
+trimit=trimit.replace(/div/g, '');
+sumValf=sumValf+Number(trimit);
+
       } else {
         tr[i].style.display = "none";
       }
     }
   }
+document.getElementById("myValf").innerHTML="<br><h3 style=\"color:Tomato;\"><strong>Total Number of filtered Masternodes ="+sumValf+"</strong></h3>";
 }
 </script>
 <script>
 function myFunction2() {
-  var input, filter, table, tr, td, i;
+  var input, filter, table, tr, td, i, sumValf, trimit;
+sumValf = 0;
   input = document.getElementById("myInput2");
   filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
@@ -7588,16 +7605,23 @@ function myFunction2() {
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
+trimit=table.rows[i].cells[0].innerHTML;
+trimit=trimit.replace(/[^\w\s]/gi, '');
+trimit=trimit.replace(/div/g, '');
+sumValf=sumValf+Number(trimit);
+
       } else {
         tr[i].style.display = "none";
       }
     }
   }
+document.getElementById("myValf").innerHTML="<br><h3 style=\"color:Tomato;\"><strong>Total Number of filtered Masternodes ="+sumValf+"</strong></h3>";
 }
 </script>
 <script>
 function myFunction3() {
-  var input, filter, table, tr, td, i;
+  var input, filter, table, tr, td, i, sumValf, trimit;
+sumValf = 0;
   input = document.getElementById("myInput3");
   filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
@@ -7607,16 +7631,23 @@ function myFunction3() {
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
+trimit=table.rows[i].cells[0].innerHTML;
+trimit=trimit.replace(/[^\w\s]/gi, '');
+trimit=trimit.replace(/div/g, '');
+sumValf=sumValf+Number(trimit);
+
       } else {
         tr[i].style.display = "none";
       }
     }
   }
+document.getElementById("myValf").innerHTML="<br><h3 style=\"color:Tomato;\"><strong>Total Number of filtered Masternodes ="+sumValf+"</strong></h3>";
 }
 </script>
 <script>
 function myFunction4() {
-  var input, filter, table, tr, td, i;
+  var input, filter, table, tr, td, i, sumValf, trimit;
+sumValf = 0;
   input = document.getElementById("myInput4");
   filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
@@ -7626,16 +7657,23 @@ function myFunction4() {
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
+trimit=table.rows[i].cells[0].innerHTML;
+trimit=trimit.replace(/[^\w\s]/gi, '');
+trimit=trimit.replace(/div/g, '');
+sumValf=sumValf+Number(trimit);
+
       } else {
         tr[i].style.display = "none";
       }
     }
   }
+document.getElementById("myValf").innerHTML="<br><h3 style=\"color:Tomato;\"><strong>Total Number of filtered Masternodes ="+sumValf+"</strong></h3>";
 }
 </script>
 <script>
 function myFunction5() {
-  var input, filter, table, tr, td, i;
+  var input, filter, table, tr, td, i, sumValf, trimit;
+sumValf = 0;
   input = document.getElementById("myInput5");
   filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
@@ -7645,16 +7683,23 @@ function myFunction5() {
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
+trimit=table.rows[i].cells[0].innerHTML;
+trimit=trimit.replace(/[^\w\s]/gi, '');
+trimit=trimit.replace(/div/g, '');
+sumValf=sumValf+Number(trimit);
+
       } else {
         tr[i].style.display = "none";
       }
     }
   }
+document.getElementById("myValf").innerHTML="<br><h3 style=\"color:Tomato;\"><strong>Total Number of filtered Masternodes ="+sumValf+"</strong></h3>";
 }
 </script>
 <script>
 function myFunction6() {
-  var input, filter, table, tr, td, i;
+  var input, filter, table, tr, td, i, sumValf, trimit;
+sumValf = 0;
   input = document.getElementById("myInput6");
   filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
@@ -7664,16 +7709,23 @@ function myFunction6() {
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
+trimit=table.rows[i].cells[0].innerHTML;
+trimit=trimit.replace(/[^\w\s]/gi, '');
+trimit=trimit.replace(/div/g, '');
+sumValf=sumValf+Number(trimit);
+
       } else {
         tr[i].style.display = "none";
       }
     }
   }
+document.getElementById("myValf").innerHTML="<br><h3 style=\"color:Tomato;\"><strong>Total Number of filtered Masternodes ="+sumValf+"</strong></h3>";
 }
 </script>
 <script>
 function myFunction7() {
-  var input, filter, table, tr, td, i;
+  var input, filter, table, tr, td, i, sumValf, trimit;
+sumValf = 0;
   input = document.getElementById("myInput7");
   filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
@@ -7683,11 +7735,17 @@ function myFunction7() {
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
+trimit=table.rows[i].cells[0].innerHTML;
+trimit=trimit.replace(/[^\w\s]/gi, '');
+trimit=trimit.replace(/div/g, '');
+sumValf=sumValf+Number(trimit);
+
       } else {
         tr[i].style.display = "none";
       }
     }
   }
+document.getElementById("myValf").innerHTML="<br><h3 style=\"color:Tomato;\"><strong>Total Number of filtered Masternodes ="+sumValf+"</strong></h3>";
 }
 </script>
 
@@ -7701,6 +7759,7 @@ function myFunction7() {
 <input type="checkbox" id="chkTest7" />Hide VOTESHASH
 <input type="checkbox" id="chkTest8" />Hide MASTERNODES
 <br>
+
 <table id="myTable" class="tablesorter"> 
 <thead> 
 

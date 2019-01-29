@@ -3,7 +3,7 @@
 # Licence: GPLv2
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 #
-# MNOWATCH VERSION: 0.02
+# MNOWATCH VERSION: 0.03
 
 wcone=`echo $1|wc -c`
 wctwo=`echo $2|wc -c`

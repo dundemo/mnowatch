@@ -4,7 +4,7 @@
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 # Tweaking / Debugging / Blockchain Advices by xkcd@dashtalk
 #
-# MNOWATCH VERSION: 0.02
+# MNOWATCH VERSION: 0.03
 
 #=============== ISTRUCTIONS ==========================================
 # 1) SET MYHOME_DIR.
@@ -25,6 +25,6 @@ then
   echo $btime","$remainder","`date -u` > /tmp/Not_a_voting_deadline
  fi
 else
-#echo $(($(($(dash-cli getblockcount)-880648-1662)) % 16616))
+echo $(($(($(dash-cli getblockcount)-880648-1662)) % 16616))
  echo "This bash should be executed only by cron daemon."
 fi
