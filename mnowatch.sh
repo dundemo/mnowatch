@@ -39,7 +39,7 @@ fi
 
 
 codeurl="https://github.com/dundemo/mnowatch"
-codeurl2="You may find the code used to produce this report <a href=\""$codeurl"\"> here </a> <br>"
+codeurl2="You may find the code used to produce this report <a href=\""$codeurl"\"> here </a>. The time of the report is UTC. <br>"
 
 superblock=0
 arg=`echo $1|wc -c`
