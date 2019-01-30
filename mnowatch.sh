@@ -1001,8 +1001,8 @@ novotes=`grep -l ^$ipis$ *NO_IP_*|cut -f3- -d"_"`
 novotes=`echo $novotes`
 absvotes=`grep -l ^$ipis$ *ABSTAIN_IP_*|cut -f3- -d"_"`
 absvotes=`echo $absvotes`
-allvotes=$yesvotes" "$novotes" "$absvotes
-#there is a bug when hashing $allvotes, in case a person has NO votes and not ABS votes, while another person has not NO votes but has ABS votes identical to the previous person's NO votes.
+allvotes=$yesvotes","$novotes","$absvotes
+#there was a bug when hashing $allvotes, in case a person has NO votes and not ABS votes, while another person has not NO votes but has ABS votes identical to the previous person's NO votes. I tried to fix it by comma separate instead of space.
 hashis=`bc <<<ibase=16\;$(sha1sum <<<$allvotes|tr a-z A-Z)0`
 echo "<tr><td class=\"container1\"><div><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis"</div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> $filenameis
 echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\"" >> $csvfile
