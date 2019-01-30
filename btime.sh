@@ -4,7 +4,7 @@
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 # Tweaking / Debugging / Blockchain Advices by xkcd@dashtalk
 #
-# MNOWATCH VERSION: 0.03
+# MNOWATCH VERSION: 0.04
 
 #=============== ISTRUCTIONS ==========================================
 # 1) SET MYHOME_DIR.

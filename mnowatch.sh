@@ -5,7 +5,7 @@
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 # Tweaking / Debugging by xkcd@dashtalk 
 #
-# MNOWATCH VERSION: 0.03
+# MNOWATCH VERSION: 0.04
 # MNOWATCH FOR DASHD VERSION 13 (works also for DASHD VERSION 12)
 
 #==========================INSTRUCTIONS ======================
@@ -17,7 +17,7 @@ MYHOME_DIR="/home/demo"
 #    If the script ends withour errors, everything is fine. Check $MYHOME_DIR/httpd for the reports.
 # 4) Set SIMILARNUM less than 99 and greater than 0 in case you want to spot similarities.
 #    WARNING: Setting $SIMILARNUM greater than 0 may cause HUGE delays in script's execution!
-SIMILARNUM=0
+SIMILARNUM=90
 
 #==========================END OF INSTRUCTIONS ==================
 
