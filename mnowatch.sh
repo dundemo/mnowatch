@@ -50,6 +50,7 @@ if [ $# -gt 0 ]
 then
  if [ $1 == '-super' ]
  then 
+#echo "super"
   superblock=1
  fi
 fi
