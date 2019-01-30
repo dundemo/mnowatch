@@ -10,12 +10,12 @@
 
 #==========================INSTRUCTIONS ======================
 
-# 1) SET MYHOME_DIR. 
+# 1) Set MYHOME_DIR to whatever DIR you want, provided that the script has read/write priviledges there. 
 MYHOME_DIR="/home/demo"
-# 2) ALL MNOWATCH GITHUB FILES MUST RESIDE INTO $MYHOME_DIR/bin
-# 3) RUN THIS SCRIPT. IT RUNS SILENTLY AND LASTS ABOUT 2 MINUTES (in an Intel Xeon 2.7 Ghz)
-#    IF THE SCRIPT ENDS WITHOUT ERRORS EVERYTHING IS FINE. CHECK $MYHOME_DIR/httpd.
-# 4) SET $SIMILARNUM LESS THAN 99 AND GREATER THAN 0 IN CASE YOU WANT TO SPOT SIMILARITIES
+# 2) All MNOWATCH files myst reside into $MYHOME_DIR/bin, so create that dir and put them inside it.
+# 3) Run the script. It runs silently and lasts about 2 minutes (in an Intel Xeon 2.7 Ghz)
+#    If the script ends withour errors, everything is fine. Check $MYHOME_DIR/httpd for the reports.
+# 4) Set SIMILARNUM less than 99 and greater than 0 in case you want to spot similarities.
 #    WARNING: Setting $SIMILARNUM greater than 0 may cause HUGE delays in script's execution!
 SIMILARNUM=0
 
@@ -1036,6 +1036,7 @@ sed -i '3i'"$ADDTHIS" ../httpd/index.html
 
 #ssdeepit.sh depends on the above copy commands and expexts the newest *html.csv to reside into httpd directory
 #to do: make ssdeepit.sh not dependant to the copy of the files, so that in case diff is zero to not copy files
+# Maybe there is a bug because some proposals report different sum of vote in the original report and in the ssdeep it one
 if [ $SIMILARNUM -gt 0 ]
 then
 $BIN_DIR/ssdeepit.sh `ls -tra $HTTPD_DIR/*html.csv|tail -1` $SIMILARNUM
