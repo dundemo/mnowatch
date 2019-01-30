@@ -42,13 +42,16 @@ codeurl="https://github.com/dundemo/mnowatch"
 codeurl2="You may find the code used to produce this report <a href=\""$codeurl"\"> here </a>. The time of the report is UTC. <br>"
 
 superblock=0
-arg=`echo $1|wc -c`
-if [ $arg -gt 1 ] 
+
+#arg=`echo $1|wc -c`
+#if [ $arg -gt 1 ] 
+
+if [ $# -gt 0 ]
 then
-if [ $1 == '-super' ]
-then 
-superblock=1
-fi
+ if [ $1 == '-super' ]
+ then 
+  superblock=1
+ fi
 fi
 
 
