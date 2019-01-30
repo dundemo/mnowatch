@@ -30,14 +30,13 @@ if [ ! -d $TMP_DIR ]
 then 
 mkdir $TMP_DIR 
 fi
-httpdirjustcreated=0
+
 if [ ! -d $HTTPD_DIR ]
 then 
 mkdir $HTTPD_DIR 
 echo "<html><body>" > $HTTPD_DIR/index.html
 echo "Hello world. The time of the reports is UTC. <br>" >> $HTTPD_DIR/index.html
 echo "</body></html>" >> $HTTPD_DIR/index.html
-httpdirjustcreated=1
 fi
 
 
@@ -1038,9 +1037,10 @@ cd ..
 
 cp the_results_dashd_*.html ../httpd
 
-if [ $httpdirjustcreated -eq 0 ]
+compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html$|grep -v uniqueHashVotes|tail -2|wc -l`
+if [ $compareresultfiles -eq 2 ]
 then
- compareresultfiles=`ls -tra $HTTPD_DIR/the_results_dashd_*.html|grep -v uniqueHashVotes|tail -2`
+ compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html$|grep -v uniqueHashVotes|tail -2`
  istherediff=`diff $compareresultfiles |grep "^>"|wc -l`
  if [ $istherediff -le 2 ]
  then
@@ -1074,9 +1074,6 @@ cp distr_*.txt ../httpd
 ADDTHIS="<br><a href=\""`ls ./distr_*.txt`"\"> the distribution $dateis </a> and <a href=\""`ls ./the_results*.html`"\"> the results $dateis </a> (<a href=\""`ls ./the_results*.html.csv`"\">csv format</a>)" 
 sed -i '3i'"$ADDTHIS" ../httpd/index.html
 
-#ssdeepit.sh depends on the above copy commands and expexts the newest *html.csv to reside into httpd directory
-#to do: make ssdeepit.sh not dependant to the copy of the files, so that in case diff is zero to not copy files
-# Maybe there is a bug because some proposals report different sum of vote in the original report and in the ssdeep it one
 if [ $SIMILARNUM -gt 0 ]
 then
 $BIN_DIR/ssdeepit.sh `ls -tra $HTTPD_DIR/*html.csv|tail -1` $SIMILARNUM
