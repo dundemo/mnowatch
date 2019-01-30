@@ -1036,7 +1036,7 @@ cd ..
 cp the_results_dashd_*.html ../httpd
 
 compareresultfiles=`ls -tra $HTTPD_DIR/the_results_dashd_*.html|grep -v uniqueHashVotes|tail -2`
-istherediff=`diff $compareresultfiles |wc -l|grep "^>"|wc -l`
+istherediff=`diff $compareresultfiles |grep "^>"|wc -l`
 if [ $istherediff -le 2 ]
 then
 # echo "nodiff" `pwd`
