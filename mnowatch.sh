@@ -12,7 +12,7 @@
 
 # 1) Set MYHOME_DIR to whatever DIR you want, provided that the script has read/write priviledges there. 
 MYHOME_DIR="/home/demo"
-# 2) All MNOWATCH files myst reside into $MYHOME_DIR/bin, so create that dir and put them inside it.
+# 2) All MNOWATCH files must reside into $MYHOME_DIR/bin, so create that dir and put them inside it.
 # 3) Run the script. It runs silently and lasts about 2 minutes (in an Intel Xeon 2.7 Ghz)
 #    If the script ends withour errors, everything is fine. Check $MYHOME_DIR/httpd for the reports.
 # 4) Set SIMILARNUM less than 99 and greater than 0 in case you want to spot similarities.
