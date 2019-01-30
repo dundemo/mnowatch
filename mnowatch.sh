@@ -29,12 +29,14 @@ if [ ! -d $TMP_DIR ]
 then 
 mkdir $TMP_DIR 
 fi
+httpdirjustcreated=0
 if [ ! -d $HTTPD_DIR ]
 then 
 mkdir $HTTPD_DIR 
 echo "<html><body>" > $HTTPD_DIR/index.html
 echo "Hello world. The time of the reports is UTC. <br>" >> $HTTPD_DIR/index.html
 echo "</body></html>" >> $HTTPD_DIR/index.html
+httpdirjustcreated=1
 fi
 
 
@@ -1035,19 +1037,21 @@ cd ..
 
 cp the_results_dashd_*.html ../httpd
 
-compareresultfiles=`ls -tra $HTTPD_DIR/the_results_dashd_*.html|grep -v uniqueHashVotes|tail -2`
-istherediff=`diff $compareresultfiles |grep "^>"|wc -l`
-if [ $istherediff -le 2 ]
+if [ $httpdirjustcreated -eq 0 ]
 then
-# echo "nodiff" `pwd`
- deletelatest=`ls -tra $HTTPD_DIR/the_results_dashd_*.html|grep -v uniqueHashVotes|tail -1`
-# echo $deletelatest
- rm -ff $deletelatest
- rm -rf *_*
- rm -rf ./upload
- rm -ff proposals
- echo $dateis" --> No diffs found between "$compareresultfiles" . "`date -u` > /tmp/Mnowatch_found_no_diffs
- exit
+ compareresultfiles=`ls -tra $HTTPD_DIR/the_results_dashd_*.html|grep -v uniqueHashVotes|tail -2`
+ istherediff=`diff $compareresultfiles |grep "^>"|wc -l`
+ if [ $istherediff -le 2 ]
+ then
+  echo $dateis" --> No diffs found between "$compareresultfiles" . "`date -u` > /tmp/Mnowatch_found_no_diffs
+  diff $compareresultfiles >> /tmp/Mnowatch_found_no_diffs 
+  deletelatest=`ls -tra $HTTPD_DIR/the_results_dashd_*.html|grep -v uniqueHashVotes|tail -1`
+  rm -ff $deletelatest
+  rm -rf *_*
+  rm -rf ./upload
+  rm -ff proposals
+  exit
+ fi
 fi
 
 filetimeis="upload_"$dateis".tar"
