@@ -68,6 +68,17 @@ cd $TMP_DIR
 rm -rf *_*
 rm -rf ./upload
 rm -ff proposals
+
+#to do: Make the script intedendant of dashcentral.org apo. Read directly the active proposals by using dash-cli
+#look at https://insight.dashevo.org/insight-api-dash/gobject/list
+#Look at the end_epoch
+#End epoch occurs in the middle of the month, so if a proposal ends in the middle of the month is considered as non active
+#They define an overlap of two weeks prior to a superblock and two weeks after
+#It accounts for the fact that superblocks don't fall into exact date times
+#To put a flag and inform that this proposal will expire in the middle of the cycle, so that it is not taken as active one.
+#delete all supposed active proposals that end in the middle of the cycle.
+#it will be removed from the Active tab after the last superblock  overlaps with has occurred. So no, it will no longer be "active"
+
 curl -s https://www.dashcentral.org/api/v1/budget > centralproposals_json
 awk -F"\"name" '{for(i=2;i<=NF;i++){{print $i}}}' centralproposals_json|cut -f2 -d":"|cut -f1 -d","|sed -e s/\"//g > current_props
 echo  > expired_props
@@ -1017,6 +1028,24 @@ echo "
 " >> $filenameis
 
 cd ..
+
+cp the_results_dashd_*.html ../httpd
+
+compareresultfiles=`ls -tra $HTTPD_DIR/the_results_dashd_*.html|grep -v uniqueHashVotes|tail -2`
+istherediff=`diff $compareresultfiles |wc -l|grep "^>"|wc -l`
+if [ $istherediff -le 2 ]
+then
+# echo "nodiff" `pwd`
+ deletelatest=`ls -tra $HTTPD_DIR/the_results_dashd_*.html|grep -v uniqueHashVotes|tail -1`
+# echo $deletelatest
+ rm -ff $deletelatest
+ rm -rf *_*
+ rm -rf ./upload
+ rm -ff proposals
+ echo $dateis" --> No diffs found between "$compareresultfiles" . "`date -u` > /tmp/Mnowatch_found_no_diffs
+ exit
+fi
+
 filetimeis="upload_"$dateis".tar"
 tar -cf $filetimeis ./upload
 gzip -9 $filetimeis
@@ -1027,10 +1056,12 @@ echo "$dateis" > $distrfileis
 echo "The first operator includes all people who abstain. All the rest are identified by the way they vote." >> $distrfileis
 cut -f22 -d"<" the_results_dashd_*.html|cut -f2 -d">"|grep -v [a-z]|grep -v [A-Z]| grep ^[0-9]|grep -v "-"|sort|uniq -c|sed -e s/'^   '/000/g|sed -s s/'000   '/000000/g|sed -e s/'000  '/00000/g|sed -s s/'000 '/0000/g|sort -r|cut -f1 -d" "|uniq -c|sed -e s/" 0"/" operator(s) control(s) "/g|sed -e s/$/" masternode(s)"/g >> $distrfileis
 
-cp the_results_dashd_*.html ../httpd
+
 cp the_results_dashd_*.html.csv ../httpd
 cp upload_*.tar.gz ../httpd
 cp distr_*.txt ../httpd
+
+
 ADDTHIS="<br><a href=\""`ls ./distr_*.txt`"\"> the distribution $dateis </a> and <a href=\""`ls ./the_results*.html`"\"> the results $dateis </a> (<a href=\""`ls ./the_results*.html.csv`"\">csv format</a>)" 
 sed -i '3i'"$ADDTHIS" ../httpd/index.html
 
