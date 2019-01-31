@@ -7540,6 +7540,10 @@ VotesHash filter:<input type="text" id="myInput6" onkeyup="myFunction6()" placeh
 Masternodes filter:<input type="text" id="myInput7" onkeyup="myFunction7()" placeholder="Search for names..">
 
 <span id="myValf"></span>
+<!-- When a filter works, it cancels all the rest  -->
+<!-- Look at the below URL to make filters work all together in the table row, or in separate collumns with an OR or an AND relation  -->
+<!-- Also implement and/or special syntax inside a single filter and not only between two or more filters   -->
+<!-- https://stackoverflow.com/questions/43622127/filtering-table-multiple-columns -->
 <script>
 function myFunction0() {
   var input, filter, table, tr, td, i, sumValf, trimit;

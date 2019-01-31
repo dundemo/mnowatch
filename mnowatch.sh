@@ -1036,23 +1036,31 @@ echo "
 cd ..
 
 cp the_results_dashd_*.html ../httpd
-
+# for some reason the no diff plays only in tty and not in cron!
+# Warning! sometime THERE iS diff in the_results and there is no diff in the csv. This is in case
+# an mno who DID NOT voted arrived or left. In that case the csv diff is zero, but still there is diff.
 compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html$|grep -v uniqueHashVotes|tail -2|wc -l`
+
 if [ $compareresultfiles -eq 2 ]
 then
  compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html$|grep -v uniqueHashVotes|tail -2`
- istherediff=`diff $compareresultfiles |grep "^>"|wc -l`
- if [ $istherediff -le 2 ]
+ istherediff=`diff $compareresultfiles |wc -l`
+ if [[ ( $superblock -eq 0 && $istherediff -le 8 ) || ( $superblock -eq 1 && $istherediff -le 12 ) ]]
  then
-  echo $dateis" --> No diffs found between "$compareresultfiles" . "`date -u` > /tmp/Mnowatch_found_no_diffs
-  diff $compareresultfiles >> /tmp/Mnowatch_found_no_diffs 
+  echo $dateis" --> No diffs found between "$compareresultfiles" . "`date -u` > /tmp/Mnowatch_diffs
+  diff $compareresultfiles >> /tmp/Mnowatch_diffs 
   deletelatest=`ls -tra $HTTPD_DIR/the_results_dashd_*.html|grep -v uniqueHashVotes|tail -1`
   rm -ff $deletelatest
   rm -rf *_*
   rm -rf ./upload
   rm -ff proposals
   exit
+ else
+  echo $dateis" DIFFS FOUND! "$istherediff > /tmp/Mnowatch_diffs
+  diff $compareresultfiles >> /tmp/Mnowatch_diffs 
  fi
+else
+ echo "I cant find two files to compare" > /tmp/Mnowatch__diffs
 fi
 
 filetimeis="upload_"$dateis".tar"
@@ -1114,7 +1122,7 @@ sed -i '8i'"$ADDTHIS" ./index.html
 
 if [ $superblock -gt 0 ]
 then
-ADDTHIS="-<strong>Vote Deadline</strong>"
+ADDTHIS="-<strong>EndOfVote</strong>"
 sed -i '9i'"$ADDTHIS" ./index.html
 fi
 
