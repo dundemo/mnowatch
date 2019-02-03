@@ -1035,21 +1035,21 @@ echo "
 
 cd ..
 
-cp the_results_dashd_*.html ../httpd
-# for some reason the no diff plays only in tty and not in cron!
-# Warning! sometime THERE iS diff in the_results and there is no diff in the csv. This is in case
-# an mno who DID NOT voted arrived or left. In that case the csv diff is zero, but still there is diff.
-compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html$|grep -v uniqueHashVotes|tail -2|wc -l`
+cp the_results_dashd_*.html.csv ../httpd
+# Check it: diff plays in tty and not in cron!
+# Warning! sometimes THERE iS diff in the_results.csv and there is no diff in the uniqueHashVotes.csv.
+# This is because an mno who DID NOT voted appeared/left.
+compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html.csv$|grep -v uniqueHashVotes|tail -2|wc -l`
 
 if [ $compareresultfiles -eq 2 ]
 then
- compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html$|grep -v uniqueHashVotes|tail -2`
+ compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html.csv$|grep -v uniqueHashVotes|tail -2`
  istherediff=`diff $compareresultfiles |wc -l`
- if [[ ( $superblock -eq 0 && $istherediff -le 8 ) || ( $superblock -eq 1 && $istherediff -le 12 ) ]]
+ if [[ ( $superblock -eq 0 && $istherediff -eq 0 ) || ( $superblock -eq 1 && $istherediff -eq 0 ) ]]
  then
   echo $dateis" --> No diffs found between "$compareresultfiles" . "`date -u` > /tmp/Mnowatch_diffs
   diff $compareresultfiles >> /tmp/Mnowatch_diffs 
-  deletelatest=`ls -tra $HTTPD_DIR/the_results_dashd_*.html|grep -v uniqueHashVotes|tail -1`
+  deletelatest=`ls -tra $HTTPD_DIR/the_results_dashd_*.html.csv|grep -v uniqueHashVotes|tail -1`
   rm -ff $deletelatest
   rm -rf *_*
   rm -rf ./upload
@@ -1074,7 +1074,7 @@ echo "The first operator includes all people who abstain. All the rest are ident
 cut -f22 -d"<" the_results_dashd_*.html|cut -f2 -d">"|grep -v [a-z]|grep -v [A-Z]| grep ^[0-9]|grep -v "-"|sort|uniq -c|sed -e s/'^   '/000/g|sed -s s/'000   '/000000/g|sed -e s/'000  '/00000/g|sed -s s/'000 '/0000/g|sort -r|cut -f1 -d" "|uniq -c|sed -e s/" 0"/" operator(s) control(s) "/g|sed -e s/$/" masternode(s)"/g >> $distrfileis
 
 
-cp the_results_dashd_*.html.csv ../httpd
+cp the_results_dashd_*.html ../httpd
 cp upload_*.tar.gz ../httpd
 cp distr_*.txt ../httpd
 
