@@ -2,7 +2,6 @@
 #set -x
 
 # Licence: GPLv2
-# The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 # Tweaking / Debugging / Blockchain Advices by xkcd#7307@dashtalk Discord
 #
 # MNOWATCH VERSION: 0.05
