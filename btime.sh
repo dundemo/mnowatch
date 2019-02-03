@@ -2,7 +2,7 @@
 #set -x
 
 # Licence: GPLv2
-# Coder / Tweaking / Debugging / Blockchain Advices by xkcd#7307@dashtalk Discord
+# Code / Tweaking / Debugging / Blockchain Advices by xkcd#7307@dashtalk Discord
 #
 # MNOWATCH VERSION: 0.05
 
