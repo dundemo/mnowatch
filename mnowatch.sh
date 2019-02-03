@@ -18,19 +18,18 @@ MYHOME_DIR="/home/demo"
 #    No new report will appear in case the previous report is identical.
 # 4) Set SIMILARNUM less than 99 and greater than 0 in case you want to spot similarities.
 #    WARNING: Setting $SIMILARNUM greater than 0 may cause HUGE delays in script's execution!
+#    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
 SIMILARNUM=0
-
 #==========================END OF INSTRUCTIONS ==================
 
 
 BIN_DIR=$MYHOME_DIR"/bin"
 TMP_DIR=$MYHOME_DIR"/tmp"
-HTTPD_DIR=$MYHOME_DIR"/httpd"
 if [ ! -d $TMP_DIR ]
 then 
 mkdir $TMP_DIR 
 fi
-
+HTTPD_DIR=$MYHOME_DIR"/httpd"
 if [ ! -d $HTTPD_DIR ]
 then 
 mkdir $HTTPD_DIR 
@@ -39,24 +38,34 @@ echo "Hello world. The time of the reports is UTC. <br>" >> $HTTPD_DIR/index.htm
 echo "</body></html>" >> $HTTPD_DIR/index.html
 fi
 
-
-codeurl="https://github.com/dundemo/mnowatch"
-codeurl2="You may find the code used to produce this report <a href=\""$codeurl"\"> here </a>. The time of the report is UTC. <br>"
-
 superblock=0
-
-#arg=`echo $1|wc -c`
-#if [ $arg -gt 1 ] 
-
 if [ $# -gt 0 ]
 then
- if [ $1 == '-super' ]
- then 
-#echo "super"
-  superblock=1
+ re='^[0-9]+$'
+ if ! [[ $1 =~ $re ]] ; then
+  if [ $1 == '-super' ]
+  then 
+   superblock=1
+   if [ $# -gt 1 ]
+   then
+    if [[ $2 -ge 0 && $2 -lt 100 ]]
+    then 
+     SIMILARNUM=$2
+    fi
+   fi
+  fi
+ else
+  if [[ $1 -ge 0 && $1 -lt 100 ]]
+  then 
+   SIMILARNUM=$1
+  fi
  fi
 fi
 
+
+
+codeurl="https://github.com/dundemo/mnowatch"
+codeurl2="You may find the code used to produce this report <a href=\""$codeurl"\"> here </a>. The time of the report is UTC. <br>"
 
 if [ $superblock -gt 0 ]
 then

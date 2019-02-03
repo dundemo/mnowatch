@@ -39,6 +39,10 @@ num_instances_this=$(echo "$procs"|grep "$0"|wc -l)
 num_instances_prog=$(echo "$procs"|grep "$run_prog"|wc -l)
 
 if [ $num_instances_this -le 1 -a $num_instances_prog -eq 0 -a $remainder -ge 16068 ];then
+# Note: In case you dont want similarities the programm lasts about 2 minutes. So you can sleep less thn 3600. 
+# For no similarities you should run: mnowatch.sh 0
+
+#	"$run_prog" 0
 	"$run_prog"
 	sleep 3600
 fi
