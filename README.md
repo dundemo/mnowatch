@@ -6,7 +6,11 @@ These files are used in order to watch the way the Dash masternode owners vote. 
 
 CURRENT MNOWATCH VERSION: 0.04
 
-INSTALLATION
+QUICK INSTALLATION
+
+1) Put everything in a directory named bin, and run mnowatch.sh
+
+ANALYTIC INSTALLATION
 
 1) First [download dashd](https://www.dash.org/get-dash/) and install it into a Linux system. Then put dash-cli (along with any other script's dependencies, probably you will also need to install bc,zip and ssdeep packages) into your execution path. (Read [here](https://www.dash.org/forum/threads/which-masternodes-voted-and-what-exactly-voted-on-various-proposals-v2.34403/#post-195834) for more instructions).
 2) Download the git files of mnowatch package and put them into a directory named SOME_PATH_OF_YOUR_CHOICE/bin.
