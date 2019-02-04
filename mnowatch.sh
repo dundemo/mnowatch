@@ -11,7 +11,8 @@
 #==========================INSTRUCTIONS ======================
 
 # 1) Set MYHOME_DIR to whatever DIR you want, provided that the script has read/write priviledges there. 
-MYHOME_DIR="/home/demo"
+#MYHOME_DIR="/home/demo"
+MYHOME_DIR=$HOME
 # 2) All MNOWATCH files must reside into $MYHOME_DIR/bin, so create that dir and put them inside it.
 # 3) Run the script. It runs silently and lasts about 2 minutes (in an Intel Xeon 2.7 Ghz)
 #    If the script ends withour errors, everything is fine. Check $MYHOME_DIR/httpd for new reports.
@@ -21,7 +22,6 @@ MYHOME_DIR="/home/demo"
 #    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
 SIMILARNUM=0
 #==========================END OF INSTRUCTIONS ==================
-
 
 BIN_DIR=$MYHOME_DIR"/bin"
 TMP_DIR=$MYHOME_DIR"/tmp" ; if [ ! -d $TMP_DIR ] ; then mkdir $TMP_DIR ; fi;

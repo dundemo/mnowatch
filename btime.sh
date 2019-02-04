@@ -5,10 +5,10 @@
 # Code / Tweaking / Debugging / Blockchain Advices by xkcd#7307@dashtalk Discord
 #
 # MNOWATCH VERSION: 0.05
-
 #=============== INSTRUCTIONS =========================================
-# 1) SET MYHOME_DIR.
-MYHOME_DIR="/home/demo"
+# 1) SET MYHOME_DIR. in case you dont want it to be $HOME
+#MYHOME_DIR="/home/demo"
+MYHOME_DIR=$HOME
 # 2) ALL MNOWATCH GITHUB FILES MUST RESIDE INTO $MYHOME_DIR/bin
 # 3) In order for this to work you have to put THIS_IS_CRON=1 into crontab.
 #    Look at the provided crontab.example file.
