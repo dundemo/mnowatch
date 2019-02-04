@@ -11,9 +11,10 @@
 #==========================INSTRUCTIONS ======================
 
 # 1) Set MYHOME_DIR to whatever DIR you want, provided that the script has read/write priviledges there. 
-#MYHOME_DIR="/home/demo"
+#    example: MYHOME_DIR="/home/demo"
+#    You may also leave the below as it is, in case you want everything to reside in $HOME.
 MYHOME_DIR=$HOME
-# 2) All MNOWATCH files must reside into $MYHOME_DIR/bin, so create that dir and put them inside it.
+# 2) IMPORTANT: All MNOWATCH files must reside into $MYHOME_DIR/bin, so create that dir and put them inside it.
 # 3) Run the script. It runs silently and lasts about 2 minutes (in an Intel Xeon 2.7 Ghz)
 #    If the script ends withour errors, everything is fine. Check $MYHOME_DIR/httpd for new reports.
 #    No new report will appear in case the previous report is identical.
