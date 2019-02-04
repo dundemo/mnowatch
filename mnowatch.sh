@@ -58,9 +58,7 @@ exit
 fi
 
 cd $TMP_DIR
-rm -rf *_*
-rm -rf ./upload
-rm -ff proposals
+rm -rf *_* upload proposals
 
 #to do: Make the script intedendant of dashcentral.org apo. Read directly the active proposals by using dash-cli
 #look at https://insight.dashevo.org/insight-api-dash/gobject/list
@@ -994,7 +992,7 @@ sed -i '1i'"$codeurl2" $filenameis
 csvfile=`echo $filenameis".csv"`
 #a bug occurs to all proposals than contain a , in their proposal-name
 #ex. proposal-name = VENEZUELAN-ALLIED-DASH-COMMUNITIES,Cash_Evolution_Bloomberg_Radio
-cat /dev/null > $csvfile
+> $csvfile
 for gn in `cat masternodelist_hash_addr_clear`; do
 MNhashis=`echo $gn|cut -f1 -d":"`
 ipis=`echo $gn|cut -f2 -d":"`
@@ -1037,10 +1035,7 @@ then
   echo $dateis" --> No diffs found between "$compareresultfiles" . "`date -u` > /tmp/Mnowatch_diffs
   diff $compareresultfiles >> /tmp/Mnowatch_diffs 
   deletelatest=`ls -tra $HTTPD_DIR/the_results_dashd_*.html.csv|grep -v uniqueHashVotes|tail -1`
-  rm -ff $deletelatest
-  rm -rf *_*
-  rm -rf ./upload
-  rm -ff proposals
+  rm -rf $deletelatest *_* upload proposals
   exit
  else
   echo $dateis" DIFFS FOUND! "$istherediff > /tmp/Mnowatch_diffs
@@ -1086,9 +1081,7 @@ ADDTHIS=" and <a href=\""`ls ./the_results*.uniqueHashVotes.*.csv`"\"> the uniqu
 sed -i '5i'"$ADDTHIS" ../httpd/index.html
 ADDTHIS=" (<a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html format</a>)"
 sed -i '6i'"$ADDTHIS" ../httpd/index.html
-rm -rf *_*
-rm -rf ./upload
-rm -ff proposals
+rm -rf *_* upload proposals
 
 #here I change the working  directory to httpd 
 cd $HTTPD_DIR
