@@ -9,7 +9,7 @@ CURRENT MNOWATCH VERSION: 0.04
 QUICK INSTALLATION
 
 1) Put everything in the directory $HOME/bin, and run mnowatch.sh
-2) The scipt runs silently and produces the reports in $HOME/httpd. If something goes wrong read below.
+2) The script runs silently and produces the reports in $HOME/httpd. If something goes wrong read below.
 
 ANALYTIC INSTALLATION
 
