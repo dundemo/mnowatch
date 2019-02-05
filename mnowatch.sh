@@ -29,19 +29,24 @@ TMP_DIR=$MYHOME_DIR"/tmp" ; if [ ! -d $TMP_DIR ] ; then mkdir $TMP_DIR ; fi;
 HTTPD_DIR=$MYHOME_DIR"/httpd" ; if [ ! -d $HTTPD_DIR ] ; then mkdir $HTTPD_DIR ; echo "<html><body>" > $HTTPD_DIR/index.html ; echo "Hello world. The time of the reports is UTC. <br>" >> $HTTPD_DIR/index.html ; echo "</body></html>" >> $HTTPD_DIR/index.html ; fi;
 superblock=0
 if [ $# -gt 0 ] ; then
- re='^[0-9]+$'
- if [[ $1 =~ $re ]] ; then
-  if [[ $1 -ge 0 && $1 -lt 100 ]] ; then
-   SIMILARNUM=$1
+  re='^[0-9]+$'
+  if [[ $1 =~ $re ]] ; then
+    if [[ $1 -ge 0 && $1 -lt 100 ]] ; then
+      SIMILARNUM=$1
+    fi
+  elif [ $1 == '-super' ] ; then
+    superblock=1
+    if [ $# -gt 1 ] ; then
+      if [[ $2 =~ $re ]] ; then
+        if [[ $2 -ge 0 && $2 -lt 100 ]] ; then
+          SIMILARNUM=$2
+        fi
+      fi
+    fi
   fi
- else
-  if [ $1 == '-super' ] ; then
-   superblock=1
-   if [ $# -gt 1 ] ; then
-    if [[ $2 =~ $re ]] ; then
-     if [[ $2 -ge 0 && $2 -lt 100 ]] ; then
-      SIMILARNUM=$2
-fi; fi; fi; fi; fi; fi;
+fi
+
+#echo "SIMILARNUM=$SIMILARNUM superblock=$superblock"
 
 codeurl="https://github.com/dundemo/mnowatch"
 codeurl2="You may find the code used to produce this report <a href=\""$codeurl"\"> here </a>. The time of the report is UTC. <br>"
