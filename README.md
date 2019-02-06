@@ -1,8 +1,8 @@
 # mnowatch
 
-The code is under the [GNU General Public License v2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html) 
+This set of scripts is used in order to watch the way the Dash masternode owners vote. For more information read [here](https://www.dash.org/forum/threads/which-masternodes-voted-and-what-exactly-voted-on-various-proposals-v2.34403/) .
 
-These files are used in order to watch the way the Dash masternode owners vote. For more information read [here](https://www.dash.org/forum/threads/which-masternodes-voted-and-what-exactly-voted-on-various-proposals-v2.34403/) .
+Have a quick glance at some of the reports the above scripts produce, over [here] (https://demodun6.github.io/mnowatch/)
 
 CURRENT MNOWATCH VERSION: 0.05
 
@@ -23,3 +23,5 @@ ANALYTIC INSTALLATION
 Examples of sending messages to an address: [example 1](https://mydashwallet.org/Chat), [example 2](https://chainz.cryptoid.info/dash/tx.dws?6dbf28ba485ef56cf33dc0f348088f766e1302e39004bf5359161e6ba7de6ff9.htm) 
 
 The author of the software is the owner of the Dash Address: [XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX](https://chainz.cryptoid.info/dash/address.dws?XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX.htm)
+
+The code is under the [GNU General Public License v2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html) 
