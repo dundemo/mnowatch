@@ -4,7 +4,7 @@ The code is under the [GNU General Public License v2.0](https://www.gnu.org/lice
 
 These files are used in order to watch the way the Dash masternode owners vote. For more information read [here](https://www.dash.org/forum/threads/which-masternodes-voted-and-what-exactly-voted-on-various-proposals-v2.34403/) .
 
-CURRENT MNOWATCH VERSION: 0.04
+CURRENT MNOWATCH VERSION: 0.05
 
 QUICK INSTALLATION
 
