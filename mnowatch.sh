@@ -23,6 +23,11 @@ MYHOME_DIR=$HOME
 #    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
 SIMILARNUM=0
 #==========================END OF INSTRUCTIONS ==================
+checkbin=`cd \`dirname $0\` &&pwd|grep /bin$|wc -l`
+if [ $checkbin -eq 0 ]; then
+echo "Please put all the mnowatch files into a directory named SOME_PATH_OF_YOUR CHOICE/bin"
+exit
+fi 
 
 BIN_DIR=$MYHOME_DIR"/bin"
 TMP_DIR=$MYHOME_DIR"/tmp" ; if [ ! -d $TMP_DIR ] ; then mkdir $TMP_DIR ; fi;
