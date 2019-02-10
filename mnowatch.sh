@@ -23,9 +23,10 @@ MYHOME_DIR=$HOME
 #    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
 SIMILARNUM=0
 #==========================END OF INSTRUCTIONS ==================
+
 checkbin=`cd \`dirname $0\` &&pwd|grep /bin$|wc -l`
 if [ $checkbin -eq 0 ]; then
-echo "Please put all the mnowatch files into a directory named SOME_PATH_OF_YOUR CHOICE/bin"
+test -n "$THIS_IS_CRON"||{ echo "INSTALLATION ERROR: Please put all the mnowatch files into a directory named SOME_PATH_OF_YOUR_CHOICE/bin";}
 exit
 fi 
 
