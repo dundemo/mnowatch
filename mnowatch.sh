@@ -72,7 +72,7 @@ fi
 cd $TMP_DIR
 rm -rf *_* upload proposals
 
-#to do: Make the script intedendant of dashcentral.org apo. Read directly the active proposals by using dash-cli
+#to do: Make the script intedendant of dashcentral.org api. Read directly the active proposals by using dash-cli
 #look at https://insight.dashevo.org/insight-api-dash/gobject/list
 #Look at the end_epoch
 #End epoch occurs in the middle of the month, so if a proposal ends in the middle of the month is considered as non active
