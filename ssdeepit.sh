@@ -119,7 +119,7 @@ filenameis=$WORKING_DIR/`basename $filenameis`
 cat /dev/null > $filenameis
 cat /dev/null > used.txt
 
-#START SIMILARITIES SEARCH
+#START VOTING SIMILARITIES SEARCH
 if [ $SEARCHSIMILARITIES -gt 0 ]
 then
 
@@ -186,7 +186,11 @@ rm this
 rm this.db
 
 fi
-#END SIMILARITIES SEARCH
+#END VOTING SIMILARITIES SEARCH
+
+#TO DO: CALCULATE ALSO THE IP similarities. This will apply mostly to the whale whose IP set  differ +- 1 or 2 masternodes.
+#TO DO: So in case we have the same votes set and the IPs are similar, it is probable the same individual
+#TO DO: END OF IP similarities
 
 tmpsortin=$WORKING_DIR/tmpsort
 sort -nr $filenameis > $tmpsortin
