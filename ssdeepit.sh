@@ -75,9 +75,9 @@ content="`echo $IPS|cut -f"$cutf" -d'\"'`"
 builtIPS=`echo $builtIPS|sed "s/@/${content}/"`
 done
 
-#to do : make every proposal link to dashwatch https://dashwatchbeta.org/api/p/proposal_name
+#TO DO: make every proposal link to dashwatch https://dashwatchbeta.org/api/p/proposal_name
 
-#to do : make every MNO link to dashninja.pl https://www.dashninja.pl/mndetails.html?mnoutput=
+#TO DO: make every MNO link to dashninja.pl https://www.dashninja.pl/mndetails.html?mnoutput=
 
 
 if [ $exists -eq 0 ]
@@ -190,7 +190,6 @@ fi
 
 #TO DO: CALCULATE ALSO THE IP similarities. This will apply mostly to the whale whose IP set  differ +- 1 or 2 masternodes.
 #TO DO: So in case we have the same votes set and the IPs are similar, it is probable the same individual
-#TO DO: END OF IP similarities
 
 tmpsortin=$WORKING_DIR/tmpsort
 sort -nr $filenameis > $tmpsortin

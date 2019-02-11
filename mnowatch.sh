@@ -72,7 +72,7 @@ fi
 cd $TMP_DIR
 rm -rf *_* upload proposals
 
-#to do: Make the script intedendant of dashcentral.org api. Read directly the active proposals by using dash-cli
+#TO DO: Make the script intedendant of dashcentral.org api. Read directly the active proposals by using dash-cli
 #look at https://insight.dashevo.org/insight-api-dash/gobject/list
 #Look at the end_epoch
 #End epoch occurs in the middle of the month, so if a proposal ends in the middle of the month is considered as non active
@@ -1108,6 +1108,7 @@ echo "" > $diffis
 fi
 ADDTHIS=" and <a href=\"./"$diffis"\">the git diff</a>"
 sed -i '7i'"$ADDTHIS" ./index.html
+#TO DO: make ansi2html look like a table.
 cat $diffis |$BIN_DIR/ansi2html.sh > $diffis.html
 ADDTHIS=" (<a href=\"./"$diffis.html"\">html format</a>)"
 sed -i '8i'"$ADDTHIS" ./index.html
