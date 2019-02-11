@@ -76,8 +76,11 @@ builtIPS=`echo $builtIPS|sed "s/@/${content}/"`
 done
 
 #TO DO: make every proposal link to dashwatch https://dashwatchbeta.org/api/p/proposal_name
+#TO DO: rate every voter according to the quality of the proposala (as calculated by dashwatch) he historicaly voted.
 
 #TO DO: make every MNO link to dashninja.pl https://www.dashninja.pl/mndetails.html?mnoutput=
+#TO DO: show the dash address of every masternode, and link it to an OP_RETURN service so that people can send him messages.
+
 
 
 if [ $exists -eq 0 ]

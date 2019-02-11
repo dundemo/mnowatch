@@ -1,6 +1,10 @@
+jsssdeep.html:<!-- TO DO: Look at the below URL to make filters work all together in the table row, or in separate collumns with an OR or an AND relation  -->
+jsssdeep.html:<!-- TO DO: Also implement and/or special syntax inside a single filter and not only between two or more filters   -->
 mnowatch.sh:#TO DO: Make the script intedendant of dashcentral.org api. Read directly the active proposals by using dash-cli
 mnowatch.sh:#TO DO: make ansi2html look like a table.
 ssdeepit.sh:#TO DO: make every proposal link to dashwatch https://dashwatchbeta.org/api/p/proposal_name
+ssdeepit.sh:#TO DO: rate every voter according to the quality of the proposala (as calculated by dashwatch) he historicaly voted.
 ssdeepit.sh:#TO DO: make every MNO link to dashninja.pl https://www.dashninja.pl/mndetails.html?mnoutput=
+ssdeepit.sh:#TO DO: show the dash address of every masternode, and link it to an OP_RETURN service so that people can send him messages.
 ssdeepit.sh:#TO DO: CALCULATE ALSO THE IP similarities. This will apply mostly to the whale whose IP set  differ +- 1 or 2 masternodes.
 ssdeepit.sh:#TO DO: So in case we have the same votes set and the IPs are similar, it is probable the same individual
