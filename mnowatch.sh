@@ -40,7 +40,7 @@ fi
 
 TMP_DIR=$MYHOME_DIR"/tmp" 
 if [ ! -d $TMP_DIR ] ; then 
- mkdir $TMP_DIR||{ echo "Unable to create directory $TMP_DIR. Please chack your read-write priviledges.";exit 1;}
+ mkdir $TMP_DIR||{ echo "Unable to create directory $TMP_DIR. Please check your read-write priviledges.";exit 1;}
 fi
 HTTPD_DIR=$MYHOME_DIR"/httpd" ; if [ ! -d $HTTPD_DIR ] ; then mkdir $HTTPD_DIR ; echo "<html><body>" > $HTTPD_DIR/index.html ; echo "Hello world. The time of the reports is UTC. <br>" >> $HTTPD_DIR/index.html ; echo "</body></html>" >> $HTTPD_DIR/index.html ; fi;
 superblock=0
