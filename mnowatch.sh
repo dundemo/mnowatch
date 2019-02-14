@@ -27,11 +27,14 @@ SIMILARNUM=0
 checkbin=`cd \`dirname $0\` &&pwd|grep /bin$|wc -l`
 if [ $checkbin -eq 0 ]; then
 test -n "$THIS_IS_CRON"||{ echo "INSTALLATION ERROR: Please put all the mnowatch files into a directory named SOME_PATH_OF_YOUR_CHOICE/bin";}
-exit
+exit 
 fi 
 
 BIN_DIR=$MYHOME_DIR"/bin"
-TMP_DIR=$MYHOME_DIR"/tmp" ; if [ ! -d $TMP_DIR ] ; then mkdir $TMP_DIR ; fi;
+TMP_DIR=$MYHOME_DIR"/tmp" 
+if [ ! -d $TMP_DIR ] ; then 
+ mkdir $TMP_DIR||{ echo "Unable to create directory $TMP_DIR. Please chack your read-write priviledges.";exit 1;}
+fi
 HTTPD_DIR=$MYHOME_DIR"/httpd" ; if [ ! -d $HTTPD_DIR ] ; then mkdir $HTTPD_DIR ; echo "<html><body>" > $HTTPD_DIR/index.html ; echo "Hello world. The time of the reports is UTC. <br>" >> $HTTPD_DIR/index.html ; echo "</body></html>" >> $HTTPD_DIR/index.html ; fi;
 superblock=0
 if [ $# -gt 0 ] ; then
