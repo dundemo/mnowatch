@@ -31,12 +31,14 @@ exit
 fi 
 
 BIN_DIR=$MYHOME_DIR"/bin"
-lsfiles=`cd $BIN_DIR;ls ansi2html.sh btime.sh jsssdeep.html mnowatch.sh ssdeepit.sh 2>/dev/null`
-lsfilescheck=`echo $lsfiles|grep "ansi2html.sh btime.sh jsssdeep.html mnowatch.sh ssdeepit.sh"|wc -l`
-if [ $lsfilescheck -ne 1 ]; then 
-test -n "$THIS_IS_CRON"||{ echo "FILES MISSING: Please put ALL the github mnowatch files into THE SAME directory named "$MYHOME_DIR"/bin";}
-exit
-fi 
+
+#The below seems not to run in cron so I commented it.
+#lsfiles=`cd $BIN_DIR;ls ansi2html.sh btime.sh jsssdeep.html mnowatch.sh ssdeepit.sh 2>/dev/null`
+#lsfilescheck=`echo $lsfiles|grep "ansi2html.sh btime.sh jsssdeep.html mnowatch.sh ssdeepit.sh"|wc -l`
+#if [ $lsfilescheck -ne 1 ]; then 
+#test -n "$THIS_IS_CRON"||{ echo "FILES MISSING: Please put ALL the github mnowatch files into THE SAME directory named "$MYHOME_DIR"/bin";}
+#exit
+#fi 
 
 TMP_DIR=$MYHOME_DIR"/tmp" 
 if [ ! -d $TMP_DIR ] ; then 
