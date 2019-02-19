@@ -20,7 +20,7 @@ Have a quick glance at some of the reports the above scripts produce, over [here
 5) If the script ends without errors, everything is fine. The reports reside in SOME_PATH_OF_YOUR_CHOICE/httpd. No new report will appear in case the previous report is identical. The reports are best viewed with firefox browser.
 6) You can run the script manually, or you may edit the cron daemon (similar to the provided crontab.example) along with the btime.sh, in case you want to automate things.
 7) If something goes wrong (or if you have requests about new features/[tweakings](https://en.wikipedia.org/wiki/Tweaking)) then send an OP_RETURN message to the Dash address XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX and I will contact you as soon as possible. 
-Examples of sending messages to an address: [example 1](https://mydashwallet.org/Chat), [example 2](https://chainz.cryptoid.info/dash/tx.dws?6dbf28ba485ef56cf33dc0f348088f766e1302e39004bf5359161e6ba7de6ff9.htm) 
+Examples of sending messages to an address: [example 1](https://mydashwallet.org/Chat), [example 2](https://chainz.cryptoid.info/dash/tx.dws?6dbf28ba485ef56cf33dc0f348088f766e1302e39004bf5359161e6ba7de6ff9.htm), [example 3](https://github.com/ChristopherA/Learning-Bitcoin-from-the-Command-Line/blob/master/06_5_Sending_a_Transaction_with_Data.md) 
 
 ## LICENCE
 
