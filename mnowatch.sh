@@ -1123,6 +1123,7 @@ filestodiff=`ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -
 if [ $filestodiff -eq 2 ]
 then
 #git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "`|sed -e s/"IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF"/"------------------------------"/g > $diffis
+#TO DO: debug git diff --color-words. It seems to put some IPs in the same line while we expect to be in separete lines.
 git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "` > $diffis
 else
 echo "" > $diffis
