@@ -4,7 +4,7 @@ This set of scripts is used in order to watch the way the Dash masternode owners
 
 Have a quick glance at some of the reports the above scripts produce, over [here](https://demodun6.github.io/mnowatch/).
 
-## CURRENT MNOWATCH VERSION: 0.05
+## CURRENT MNOWATCH VERSION: 0.06
 
 ## QUICK INSTALLATION
 

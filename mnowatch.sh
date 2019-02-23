@@ -5,7 +5,7 @@
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 # Tweaking / Debugging by xkcd@dashtalk 
 #
-# MNOWATCH VERSION: 0.05
+# MNOWATCH VERSION: 0.06
 # COMPATIBLE TO DASHD VERSION 13 (works also for DASHD VERSION 12)
 
 #==========================INSTRUCTIONS ======================
@@ -1086,7 +1086,7 @@ cp upload_*.tar.gz ../httpd
 cp distr_*.txt ../httpd
 
 
-ADDTHIS="<br><a href=\""`ls ./distr_*.txt`"\"> the distribution $dateis </a> and <a href=\""`ls ./the_results*.html`"\"> the results $dateis </a> (<a href=\""`ls ./the_results*.html.csv`"\">csv format</a>)" 
+ADDTHIS="<br><a href=\""`ls ./distr_*.txt`"\"> the distribution $dateis </a> and <a href=\""`ls ./the_results*.html`"\"> the results $dateis </a> (<a href=\""`ls ./the_results*.html.csv`"\">csv</a>)" 
 sed -i '3i'"$ADDTHIS" ../httpd/index.html
 
 if [ $SIMILARNUM -gt 0 ]
@@ -1104,7 +1104,7 @@ ADDTHIS=" and <a href=\""`ls ./the_results*.similar.*.csv`"\"> the similarities.
 sed -i '4i'"$ADDTHIS" ../httpd/index.html
 ADDTHIS=" and <a href=\""`ls ./the_results*.uniqueHashVotes.*.csv`"\"> the uniqueVotesHashes.csv</a>"
 sed -i '5i'"$ADDTHIS" ../httpd/index.html
-ADDTHIS=" (<a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html format</a>)"
+ADDTHIS=" (<a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html</a>)"
 sed -i '6i'"$ADDTHIS" ../httpd/index.html
 rm -rf *_* upload proposals
 
@@ -1115,15 +1115,30 @@ diffis=`ls -ltra|grep similar|tail -1|cut -f4 -d"_"|cut -f1 -d"."`.diff
 filestodiff=`ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "|wc -l`
 if [ $filestodiff -eq 2 ]
 then
-git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "`|sed -e s/"IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF"/"------------------------------"/g > $diffis
+#git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "`|sed -e s/"IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF"/"------------------------------"/g > $diffis
+git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "` > $diffis
 else
 echo "" > $diffis
 fi
 ADDTHIS=" and <a href=\"./"$diffis"\">the git diff</a>"
 sed -i '7i'"$ADDTHIS" ./index.html
-#TO DO: make ansi2html look like a table.
-cat $diffis |$BIN_DIR/ansi2html.sh > $diffis.html
-ADDTHIS=" (<a href=\"./"$diffis.html"\">html format</a>)"
+#TO DO: debug ansi2html when looks like a table.
+cat $diffis |$BIN_DIR/ansi2html.sh > $diffis.init.html
+
+initfile="$HTTPD_DIR/$diffis.init.html"
+targetfile="$HTTPD_DIR/$diffis.html"
+tblstart=`grep -n ".csv</span>" $initfile |tail -1|cut -f1 -d:`
+head -n $tblstart $initfile > $targetfile
+echo "<style> table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; } td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } tr:nth-child(even) { background-color: #dddddd; } </style><table><thead><tr><th>IPS</th><th>YES_VOTES</th><th>NO_VOTES</th><th>ABSTAIN_VOTES</th><th>VOTESHASH</th><th>IPSHASH</th><th>NUM_OF_MNOS</th><th>MNOS</th></tr></thead><tbody><tr><td><div>" >> $targetfile
+tblstart=`expr $tblstart + 1`
+tail -n +$tblstart $initfile|grep -v "<span class=\"f6\">@@"|sed -e s/"^&quot;"/"<\/div><\/td><\/tr><tr><td><div>\&quot;"/g|sed -e s/"^<span class=\"f1\">"/"<\/div><\/td><\/tr><tr><td><div><span class=\"f1\">"/g|sed -e s/"^<span class=\"f2\">"/"<\/div><\/td><\/tr><tr><td><div><span class=\"f2\">"/g|sed -e s/,/"<\/div><\/td><td><div>"/g >> $targetfile
+tblend=`grep -n "</pre>" $targetfile |tail -1|cut -f1 -d:`
+ADDTHIS="</tr></td></tbody></table>"
+tblend=$tblend"i$ADDTHIS"
+sed -i $tblend $targetfile
+rm $initfile
+
+ADDTHIS=" (<a href=\"./"$diffis.html"\">html</a>)"
 sed -i '8i'"$ADDTHIS" ./index.html
 
 if [ $superblock -gt 0 ]
@@ -1133,5 +1148,8 @@ sed -i '9i'"$ADDTHIS" ./index.html
 fi
 
 #echo "END! "
+
+
+
 
 

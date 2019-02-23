@@ -20,7 +20,7 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-#MNOWATCH VERSION: 0.05
+#MNOWATCH VERSION: 0.06
 MAILTO=""
 THIS_IS_CRON=1
 SHELL=/bin/bash
