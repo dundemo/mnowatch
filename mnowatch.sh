@@ -1092,24 +1092,24 @@ sed -i '3i'"$ADDTHIS" ../httpd/index.html
 if [ $SIMILARNUM -gt 0 ]
 then
 $BIN_DIR/ssdeepit.sh `ls -tra $HTTPD_DIR/*html.csv|tail -1` $SIMILARNUM
+cp the_results_dashd_*.similar.*.csv ../httpd
+cp the_results_dashd_*.similar.*.html ../httpd
 else
 $BIN_DIR/ssdeepit.sh `ls -tra $HTTPD_DIR/*html.csv|tail -1`
 fi
 
 
-cp the_results_dashd_*.similar.*.csv ../httpd
-cp the_results_dashd_*.similar.*.html ../httpd
 cp the_results_dashd_*.uniqueHashVotes.*.csv ../httpd
 cp the_results_dashd_*.uniqueHashVotes.*.html ../httpd
-checksimilariszero=`cat ./the_results*.similar.*.csv |wc -l`
-if [ $checksimilariszero -eq 0 ] 
+
+if [ $SIMILARNUM -gt 0 ]
 then
-ADDTHIS=" and didnt calculate similarites" 
-sed -i '4i'"$ADDTHIS" ../httpd/index.html
-else
 ADDTHIS=" and <a href=\""`ls ./the_results*.similar.*.csv`"\">the similarities.csv</a> (<a href=\""`ls ./the_results*.similar.*.html`"\">html</a>)" 
-sed -i '4i'"$ADDTHIS" ../httpd/index.html
+else
+ADDTHIS=" and didnt calculate similarites" 
 fi
+
+sed -i '4i'"$ADDTHIS" ../httpd/index.html
 
 ADDTHIS=" and <a href=\""`ls ./the_results*.uniqueHashVotes.*.csv`"\"> the uniqueVotesHashes.csv</a>"
 sed -i '5i'"$ADDTHIS" ../httpd/index.html
@@ -1120,7 +1120,7 @@ rm -rf *_* upload proposals
 #here I change the working  directory to httpd 
 cd $HTTPD_DIR
 
-diffis=`ls -ltra|grep similar|tail -1|cut -f4 -d"_"|cut -f1 -d"."`.diff
+diffis=`ls -ltra|grep unique|tail -1|cut -f4 -d"_"|cut -f1 -d"."`.diff
 filestodiff=`ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "|wc -l`
 if [ $filestodiff -eq 2 ]
 then

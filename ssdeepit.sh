@@ -117,6 +117,9 @@ filenameunhtml=`echo $1|cut -f1 -d"."`.uniqueHashVotes.$numuniques.html
 filenameunhtml=$WORKING_DIR/`basename $filenameunhtml`
 cp mysortedUnique.html $filenameunhtml
 
+#START VOTING SIMILARITIES SEARCH
+if [ $SEARCHSIMILARITIES -gt 0 ]
+then
 #echo "PLEASE WAIT. SEARCHING FOR SIMILARITY>"$secondarg" among "$numuniques" unique voteshashes"
 filenameis=`echo $1|cut -f1 -d"."`.similar.$secondarg.$numuniques.csv
 filenameis=$WORKING_DIR/`basename $filenameis`
@@ -126,9 +129,6 @@ cat /dev/null > $filenameis
 cat /dev/null > $filenameishtml
 cat /dev/null > used.txt
 
-#START VOTING SIMILARITIES SEARCH
-if [ $SEARCHSIMILARITIES -gt 0 ]
-then
 
 cat mysortedUnique.csv > mysortedUnique_gn.csv
 
@@ -220,8 +220,6 @@ done
 rm this
 rm this.db
 
-fi
-#END VOTING SIMILARITIES SEARCH
 
 #TO DO: CALCULATE ALSO THE IP similarities. This will apply mostly to the whale whose IP set  differ +- 1 or 2 masternodes.
 #TO DO: So in case we have the same votes set and the IPs are similar, it is probable the same individual
@@ -238,12 +236,14 @@ cat $tmpsortin >> $filenameishtml
 echo "</tbody></table></body></html>" >> $filenameishtml
 
 rm tmpsort
-rm mysortedUnique.csv
-
 rm mysortedUnique_gntwo.csv 
 rm mysortedUnique_gn.csv
-
-rm mysorted.csv
 rm used.txt
+
+fi
+#END VOTING SIMILARITIES SEARCH
+
+rm mysortedUnique.csv
+rm mysorted.csv
 rm pasted.html
 rm mysortedUnique.html
