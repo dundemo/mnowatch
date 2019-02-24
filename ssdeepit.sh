@@ -119,7 +119,10 @@ cp mysortedUnique.html $filenameunhtml
 #echo "PLEASE WAIT. SEARCHING FOR SIMILARITY>"$secondarg" among "$numuniques" unique voteshashes"
 filenameis=`echo $1|cut -f1 -d"."`.similar.$secondarg.$numuniques.csv
 filenameis=$WORKING_DIR/`basename $filenameis`
+filenameishtml=`echo $1|cut -f1 -d"."`.similar.$secondarg.$numuniques.html
+filenameishtml=$WORKING_DIR/`basename $filenameishtml`
 cat /dev/null > $filenameis
+cat /dev/null > $filenameishtml
 cat /dev/null > used.txt
 
 #START VOTING SIMILARITIES SEARCH
@@ -181,6 +184,7 @@ then
  #echo "TOTAL MASTERNODES OF THE GROUP="$IPS
  #echo "ALL IPs of the group="$ALLIPSgrouped
  echo $IPS",\""$ALLIPShashis"\","$ALLIPSsorted","$ALLIPSgrouped >> $filenameis
+ echo "<tr><td><div>"$IPS"</div></td><td><div>"$ALLIPShashis"</div></td><td><div>"$ALLIPSsorted"</div></td><td><div>"$ALLIPSgrouped"</div></td></tr>" >> $filenameishtml
  echo $voteshashisfn >> used.txt
 fi
 done
@@ -199,6 +203,12 @@ sort -nr $filenameis > $tmpsortin
 ADDTHIS="NUMBER_OF_IPS,HASH_OF_IPS,ALL_IPS,HOW_THE_IPS_ARE_GROUPED"
 sed -i '1i'"$ADDTHIS" $tmpsortin
 cp -f $tmpsortin $filenameis
+
+sort -t">" -k4,4 -nr $filenameishtml > $tmpsortin
+echo "<html><body><style> table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; } td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } tr:nth-child(even) { background-color: #dddddd; } </style><table><thead><tr><th>NUMBER_OF_IPS</th><th>HASH_OF_IPS</th><th>ALL_IPS</th><th>HOW_IPS_ARE_GROUPED</th></tr></thead><tbody>" > $filenameishtml
+cat $tmpsortin >> $filenameishtml
+echo "</tbody></table></body></html>" >> $filenameishtml
+
 rm tmpsort
 rm mysortedUnique.csv
 rm mysorted.csv

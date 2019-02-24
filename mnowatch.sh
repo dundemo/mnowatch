@@ -1098,6 +1098,7 @@ fi
 
 
 cp the_results_dashd_*.similar.*.csv ../httpd
+cp the_results_dashd_*.similar.*.html ../httpd
 cp the_results_dashd_*.uniqueHashVotes.*.csv ../httpd
 cp the_results_dashd_*.uniqueHashVotes.*.html ../httpd
 checksimilariszero=`cat ./the_results*.similar.*.csv |wc -l`
@@ -1106,9 +1107,10 @@ then
 ADDTHIS=" and didnt calculate similarites" 
 sed -i '4i'"$ADDTHIS" ../httpd/index.html
 else
-ADDTHIS=" and <a href=\""`ls ./the_results*.similar.*.csv`"\">the similarities.csv</a> (html)" 
+ADDTHIS=" and <a href=\""`ls ./the_results*.similar.*.csv`"\">the similarities.csv</a> (<a href=\""`ls ./the_results*.similar.*.html`"\">html</a>)" 
 sed -i '4i'"$ADDTHIS" ../httpd/index.html
 fi
+
 ADDTHIS=" and <a href=\""`ls ./the_results*.uniqueHashVotes.*.csv`"\"> the uniqueVotesHashes.csv</a>"
 sed -i '5i'"$ADDTHIS" ../httpd/index.html
 ADDTHIS=" (<a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html</a>)"
