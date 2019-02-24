@@ -4,7 +4,7 @@
 # Licence: GPLv2
 # Code / Tweaking / Debugging / Blockchain Advices by xkcd#7307@dashtalk Discord
 #
-# MNOWATCH VERSION: 0.06
+# MNOWATCH VERSION: 0.07
 #=============== INSTRUCTIONS =========================================
 # 1) SET MYHOME_DIR. in case you dont want it to be $HOME
 #MYHOME_DIR="/home/demo"
