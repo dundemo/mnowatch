@@ -1080,12 +1080,10 @@ echo "$dateis" > $distrfileis
 echo "The first operator includes all people who abstain. All the rest are identified by the way they vote." >> $distrfileis
 cut -f22 -d"<" the_results_dashd_*.html|cut -f2 -d">"|grep -v [a-z]|grep -v [A-Z]| grep ^[0-9]|grep -v "-"|sort|uniq -c|sed -e s/'^   '/000/g|sed -s s/'000   '/000000/g|sed -e s/'000  '/00000/g|sed -s s/'000 '/0000/g|sort -r|cut -f1 -d" "|uniq -c|sed -e s/" 0"/" operator(s) control(s) "/g|sed -e s/$/" masternode(s)"/g >> $distrfileis
 
-
-cp the_results_dashd_*.html ../httpd
 cp upload_*.tar.gz ../httpd
 cp distr_*.txt ../httpd
 
-
+cp the_results_dashd_*.html ../httpd
 ADDTHIS="<br><a href=\""`ls ./distr_*.txt`"\"> the distribution $dateis </a> and <a href=\""`ls ./the_results*.html`"\"> the results $dateis </a> (<a href=\""`ls ./the_results*.html.csv`"\">csv</a>)" 
 sed -i '3i'"$ADDTHIS" ../httpd/index.html
 
@@ -1094,23 +1092,15 @@ then
 $BIN_DIR/ssdeepit.sh `ls -tra $HTTPD_DIR/*html.csv|tail -1` $SIMILARNUM
 cp the_results_dashd_*.similar.*.csv ../httpd
 cp the_results_dashd_*.similar.*.html ../httpd
+ADDTHIS=" and <a href=\""`ls ./the_results*.similar.*.csv`"\">the similarities.csv</a> (<a href=\""`ls ./the_results*.similar.*.html`"\">html</a>)" 
 else
 $BIN_DIR/ssdeepit.sh `ls -tra $HTTPD_DIR/*html.csv|tail -1`
+ADDTHIS=" and didnt calculate similarites" 
 fi
-
+sed -i '4i'"$ADDTHIS" ../httpd/index.html
 
 cp the_results_dashd_*.uniqueHashVotes.*.csv ../httpd
 cp the_results_dashd_*.uniqueHashVotes.*.html ../httpd
-
-if [ $SIMILARNUM -gt 0 ]
-then
-ADDTHIS=" and <a href=\""`ls ./the_results*.similar.*.csv`"\">the similarities.csv</a> (<a href=\""`ls ./the_results*.similar.*.html`"\">html</a>)" 
-else
-ADDTHIS=" and didnt calculate similarites" 
-fi
-
-sed -i '4i'"$ADDTHIS" ../httpd/index.html
-
 ADDTHIS=" and <a href=\""`ls ./the_results*.uniqueHashVotes.*.csv`"\"> the uniqueVotesHashes.csv</a>"
 sed -i '5i'"$ADDTHIS" ../httpd/index.html
 ADDTHIS=" (<a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html</a>)"
@@ -1158,8 +1148,4 @@ sed -i '9i'"$ADDTHIS" ./index.html
 fi
 
 #echo "END! "
-
-
-
-
 
