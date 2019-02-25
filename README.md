@@ -20,7 +20,7 @@ Have a quick glance at some of the reports the above scripts produce, over [here
 4) Run the script. The script runs silently and lasts about 2 minutes (In an Intel Xeon 2.7 Ghz)
 5) If the script ends without errors, everything is fine. The reports reside in SOME_PATH_OF_YOUR_CHOICE/httpd. No new report will appear in case the previous report is identical. The reports are best viewed with firefox browser.
 6) You can run the script manually, or you may edit the cron daemon (similar to the provided crontab.example) along with the btime.sh, in case you want to automate things.
-7) If something goes wrong (or if you have requests about new features/[tweakings](https://en.wikipedia.org/wiki/Tweaking)) leave a message to the issues here. 
+7) If something goes wrong (or if you have requests about new features/[tweakings](https://en.wikipedia.org/wiki/Tweaking)) leave a message to the [issues](https://github.com/dundemo/mnowatch/issues).
 
 ## LICENCE
 
