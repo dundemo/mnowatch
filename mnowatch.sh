@@ -5,7 +5,7 @@
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 # Tweaking / Debugging by xkcd@dashtalk 
 #
-# MNOWATCH VERSION: 0.07
+# MNOWATCH VERSION: 0.08
 # COMPATIBLE TO DASHD VERSION 13 (works also for DASHD VERSION 12)
 
 #==========================INSTRUCTIONS ======================
@@ -154,6 +154,9 @@ fi
 done
 #echo "Please wait"
 sed 's/\"//g;s/\ //g;s/,//g' masternodelist_addr|grep -v "[{}]"> masternodelist_hash_addr_clear
+#IN THIS masternodelist_hash_addr_clear are included the masternodes who didnt vote and these who change state   and have same IPS
+#due to this a non voted masternode was reported as voted!
+#this bug has been solved in checkifitvoted variable
 cut -f2 -d":" masternodelist_addr|cut -f2 -d"\""|grep -v "[{}]"|sort > masternodelist_addr_only_sorted
 
 mkdir upload
@@ -1028,6 +1031,23 @@ novotes=`grep -l ^$ipis$ *NO_IP_*|cut -f3- -d"_"`
 novotes=`echo $novotes`
 absvotes=`grep -l ^$ipis$ *ABSTAIN_IP_*|cut -f3- -d"_"`
 absvotes=`echo $absvotes`
+
+checkifitvoted=`grep -R $MNhashis ../*|grep gobject_getcurrentvotes|wc -l`
+if [ $checkifitvoted -eq 0 ] 
+then
+checkmorethanoneIP=`grep $ipis":" masternodelist_hash_addr_clear|wc -l`
+if [ $checkmorethanoneIP -gt 1 ] 
+then
+#echo $MNhashis $ipis
+#grep -R $MNhashis ../*|grep gobject_getcurrentvotes
+#grep $ipis":" masternodelist_hash_addr_clear
+#echo $yesvotes $novotes $absvotes
+yesvotes=""
+novotes=""
+absvotes=""
+fi
+fi
+
 allvotes=$yesvotes","$novotes","$absvotes
 #there was a bug when hashing $allvotes, in case a person has NO votes and not ABS votes, while another person has not NO votes but has ABS votes identical to the previous person's NO votes. I tried to fix it by comma separate instead of space.
 hashis=`bc <<<ibase=16\;$(sha1sum <<<$allvotes|tr a-z A-Z)0`

@@ -4,7 +4,7 @@
 # Licence: GPLv2
 # Code / Tweaking / Debugging / Blockchain Advices by xkcd#7307@dashtalk Discord
 #
-# MNOWATCH VERSION: 0.07
+# MNOWATCH VERSION: 0.08
 #=============== INSTRUCTIONS =========================================
 # 1) SET MYHOME_DIR. in case you dont want it to be $HOME
 #MYHOME_DIR="/home/demo"
@@ -45,9 +45,9 @@ if [ $num_instances_this -le 1 -a $num_instances_prog -eq 0 -a $remainder -ge 16
 # If you want to exclude  similarities you should run: mnowatch.sh 0
 
 	"$run_prog"
-	sleep 3600
 #	"$run_prog" 0
-#	sleep 720
+	sleep 3600
+#	sleep 120
 
 fi
 
