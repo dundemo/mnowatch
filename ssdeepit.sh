@@ -47,6 +47,7 @@ cat $BIN_DIR/jsssdeep.html|sed -e s/"thedateis"/"$dateis"/g >  mysortedUnique.ht
 PREVIUSREPORT=`cd $HTTPD_DIR;ls -tra *uniqueHashVotes*.html 2>/dev/null|tail -1`
 PREVIUSREPORTFULL=$HTTPD_DIR"/"$PREVIUSREPORT
 
+
 for fn in `cat pastedonefile`; do 
 yes=" "`echo $fn |cut -f1 -d","|sed -e s/":"/" "/g`" "
 no=" "`echo $fn |cut -f2 -d","|sed -e s/":"/" "/g`" "
@@ -63,8 +64,10 @@ echo $IPS","$yes","$no","$abs","$voteshash", \""$theIPSgrouphash"\" ,"$theMNSnum
 
 exists=`grep $theIPSgrouphash $PREVIUSREPORTFULL 2>/dev/null|wc -l`
 theHistory=`grep -l $theIPSgrouphash $HTTPD_DIR/*uniqueHashVotes*.html 2>/dev/null|wc -l`
-#TO DO: Link theHistory number to the OLDEST report. The group id will link to the previous report and the history number will link to the oldest report.
 theHistory=`printf %04d $theHistory`
+
+OLDESTREPORT=`cd $HTTPD_DIR;grep -l $theIPSgrouphash *uniqueHashVotes*.html 2>/dev/null|head -1`
+theHistory="<a href=\"./"$OLDESTREPORT"#"$theIPSgrouphash"\">"$theHistory"</a>"
 
 numips=`echo $IPS|awk -F'" "' 'NF{print NF-1}'`
 numips=`expr $numips + 1`
@@ -206,6 +209,9 @@ for fn in `cat mysortedUnique.csv`; do
   existsfn=`grep $ALLIPShashis $PREVIUSREPORTSIMILARFULL 2>/dev/null|wc -l`
   theHistoryfn=`grep -l $ALLIPShashis $HTTPD_DIR/*similar*.html 2>/dev/null|wc -l`
   theHistoryfn=`printf %04d $theHistoryfn`
+
+  OLDESTREPORTSIMILAR=`cd $HTTPD_DIR;grep -l $ALLIPShashis *similar*.html 2>/dev/null|head -1`
+  theHistoryfn="<a href=\"./"$OLDESTREPORTSIMILAR"#"$ALLIPShashis"\">"$theHistoryfn"</a>"
 
   if [ $existsfn -eq 0 ]
   then
