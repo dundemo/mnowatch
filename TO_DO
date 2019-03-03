@@ -4,6 +4,7 @@ mnowatch.sh:#TO DO: Make the script intedendant of dashcentral.org api. Read dir
 mnowatch.sh:#TO DO: Use this payee address to do more smart groupings
 mnowatch.sh:#TO DO: debug git diff --color-words. It seems to put some IPs in the same line while we expect to be in separete lines.
 mnowatch.sh:#TO DO: debug ansi2html when looks like a table.
+ssdeepit.sh:#TO DO: Link theHistory number to the OLDEST report. The group id will link to the previous report and the history number will link to the oldest report.
 ssdeepit.sh:#TO DO: make every proposal link to dashwatch https://dashwatchbeta.org/api/p/proposal_name
 ssdeepit.sh:#TO DO: rate every voter according to the quality of the proposala (as calculated by dashwatch) he historicaly voted.
 ssdeepit.sh:#TO DO: make every MNO link to dashninja.pl https://www.dashninja.pl/mndetails.html?mnoutput=
