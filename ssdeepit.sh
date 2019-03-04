@@ -66,7 +66,8 @@ exists=`grep $theIPSgrouphash $PREVIUSREPORTFULL 2>/dev/null|wc -l`
 theHistory=`grep -l $theIPSgrouphash $HTTPD_DIR/*uniqueHashVotes*.html 2>/dev/null|wc -l`
 theHistory=`printf %04d $theHistory`
 
-OLDESTREPORT=`cd $HTTPD_DIR;grep -l $theIPSgrouphash *uniqueHashVotes*.html 2>/dev/null|head -1`
+OLDESTREPORT=`cd $HTTPD_DIR;ls -tra *uniqueHashVotes*.html 2>/dev/null|xargs grep -l $theIPSgrouphash`
+OLDESTREPORT=`echo $OLDESTREPORT|cut -f1 -d" "`
 theHistory="<a href=\"./"$OLDESTREPORT"#"$theIPSgrouphash"\">"$theHistory"</a>"
 
 numips=`echo $IPS|awk -F'" "' 'NF{print NF-1}'`
@@ -210,7 +211,8 @@ for fn in `cat mysortedUnique.csv`; do
   theHistoryfn=`grep -l $ALLIPShashis $HTTPD_DIR/*similar*.html 2>/dev/null|wc -l`
   theHistoryfn=`printf %04d $theHistoryfn`
 
-  OLDESTREPORTSIMILAR=`cd $HTTPD_DIR;grep -l $ALLIPShashis *similar*.html 2>/dev/null|head -1`
+  OLDESTREPORTSIMILAR=`cd $HTTPD_DIR;ls -tra *similar*.html 2>/dev/null|xargs grep -l $ALLIPShashis`
+  OLDESTREPORTSIMILAR=`echo $OLDESTREPORTSIMILAR|cut -f1 -d" "`
   theHistoryfn="<a href=\"./"$OLDESTREPORTSIMILAR"#"$ALLIPShashis"\">"$theHistoryfn"</a>"
 
   if [ $existsfn -eq 0 ]
