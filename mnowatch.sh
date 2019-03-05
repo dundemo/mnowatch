@@ -5,7 +5,7 @@
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 # Tweaking / Debugging by xkcd@dashtalk 
 #
-# MNOWATCH VERSION: 0.08
+# MNOWATCH VERSION: 0.09
 # COMPATIBLE TO DASHD VERSION 13 (works also for DASHD VERSION 12)
 
 #==========================INSTRUCTIONS ======================
@@ -1149,7 +1149,8 @@ cat $diffis |$BIN_DIR/ansi2html.sh > $diffis.init.html
 initfile="$HTTPD_DIR/$diffis.init.html"
 targetfile="$HTTPD_DIR/$diffis.html"
 tblstart=`grep -n ".csv</span>" $initfile |tail -1|cut -f1 -d:`
-head -n $tblstart $initfile > $targetfile
+#TO DO: If git_diff is empty do not create a link of it in index.html, but rathere present the simple diff (which will contain the new IPs that appeared  who didnt vote at all,  but caused the new report to be triggered)
+head -n $tblstart $initfile 2>/dev/null > $targetfile
 echo "<style> table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; } td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } tr:nth-child(even) { background-color: #dddddd; } </style><table><thead><tr><th>IPS</th><th>YES_VOTES</th><th>NO_VOTES</th><th>ABSTAIN_VOTES</th><th>VOTESHASH</th><th>IPSHASH</th><th>NUM_OF_MNOS</th><th>MNOS</th></tr></thead><tbody><tr><td><div>" >> $targetfile
 tblstart=`expr $tblstart + 1`
 tail -n +$tblstart $initfile|grep -v "<span class=\"f6\">@@"|sed -e s/"^&quot;"/"<\/div><\/td><\/tr><tr><td><div>\&quot;"/g|sed -e s/"^<span class=\"f1\">"/"<\/div><\/td><\/tr><tr><td><div><span class=\"f1\">"/g|sed -e s/"^<span class=\"f2\">"/"<\/div><\/td><\/tr><tr><td><div><span class=\"f2\">"/g|sed -e s/,/"<\/div><\/td><td><div>"/g >> $targetfile

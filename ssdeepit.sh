@@ -3,7 +3,7 @@
 # Licence: GPLv2
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 #
-# MNOWATCH VERSION: 0.08
+# MNOWATCH VERSION: 0.09
 
 wcone=`echo $1|wc -c`
 wctwo=`echo $2|wc -c`
@@ -212,7 +212,7 @@ for fn in `cat mysortedUnique.csv`; do
   theHistoryfn=`grep -l $ALLIPShashis $HTTPD_DIR/*similar*.html 2>/dev/null|wc -l`
   theHistoryfn=`printf %04d $theHistoryfn`
 
-  OLDESTREPORTSIMILAR=`cd $HTTPD_DIR;ls -tra *similar*.html 2>/dev/null|xargs grep -l $ALLIPShashis`
+  OLDESTREPORTSIMILAR=`cd $HTTPD_DIR;ls -tra *similar*.html 2>/dev/null|grep -v ".init.html"|xargs grep -l $ALLIPShashis`
   OLDESTREPORTSIMILAR=`echo $OLDESTREPORTSIMILAR|cut -f1 -d" "`
   theHistoryfn="<a href=\"./"$OLDESTREPORTSIMILAR"#"$ALLIPShashis"\">"$theHistoryfn"</a>"
 
