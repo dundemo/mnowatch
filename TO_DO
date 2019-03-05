@@ -8,5 +8,6 @@ ssdeepit.sh:#TO DO: make every proposal link to dashwatch https://dashwatchbeta.
 ssdeepit.sh:#TO DO: rate every voter according to the quality of the proposala (as calculated by dashwatch) he historicaly voted.
 ssdeepit.sh:#TO DO: make every MNO link to dashninja.pl https://www.dashninja.pl/mndetails.html?mnoutput=
 ssdeepit.sh:#TO DO: show the dash address of every masternode, and link it to an OP_RETURN service so that people can send him messages.
+ssdeepit.sh:#TO DO: Do not link to the previous report, but to the report that there is a diff in votes.
 ssdeepit.sh:#TO DO: CALCULATE ALSO THE IP similarities. This will apply mostly to the whale whose IP set  differ +- 1 or 2 masternodes.
 ssdeepit.sh:#TO DO: So in case we have the same votes set and the IPs are similar, it is probable the same individual
