@@ -23,6 +23,10 @@ MYHOME_DIR=$HOME
 #    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
 SIMILARNUM=0
 #==========================END OF INSTRUCTIONS ==================
+which dash-cli>/dev/null||{ echo "I dont know where the command dash-cli is. Please put dash-cli in your execution path.";exit;}
+which bc>/dev/null||{ echo "I dont know where the command bc is. Please put bc in your execution path.";exit;}
+which zip>/dev/null||{ echo "I dont know where the command zip is. Please put zip in your execution path.";exit;}
+which ssdeep>/dev/null||{ echo "I dont know where ssdeep command is. Please put ssdeep in your execution path.";exit;}
 
 checkbin=`cd \`dirname $0\` &&pwd|grep /bin$|wc -l`
 if [ $checkbin -eq 0 ]; then
@@ -1151,8 +1155,9 @@ targetfile="$HTTPD_DIR/$diffis.html"
 tblstart=`grep -n ".csv</span>" $initfile |tail -1|cut -f1 -d:`
 #TO DO: If git_diff is empty do not create a link of it in index.html, but rathere present the simple diff (which will contain the new IPs that appeared  who didnt vote at all,  but caused the new report to be triggered)
 head -n $tblstart $initfile 2>/dev/null > $targetfile
-echo "<style> table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; } td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } tr:nth-child(even) { background-color: #dddddd; } </style><table><thead><tr><th>IPS</th><th>YES_VOTES</th><th>NO_VOTES</th><th>ABSTAIN_VOTES</th><th>VOTESHASH</th><th>IPSHASH</th><th>NUM_OF_MNOS</th><th>MNOS</th></tr></thead><tbody><tr><td><div>" >> $targetfile
+echo "<style> table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; } td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } tr:nth-child(even) { background-color: #dddddd; } </style><table><thead><tr><th>IPS</th><th>YES_VOTES</th><th>NO_VOTES</th><th>ABSTAIN_VOTES</th><th>VOTESHASH</th><th>IPSHASH</th><th>NUM_OF_MNS</th><th>MNS</th></tr></thead><tbody><tr><td><div>" >> $targetfile
 tblstart=`expr $tblstart + 1`
+#TO DO: insert in every line the VOTEHASH as the keyword of the row <tr id=$VOTEHASH>. (how to do it without looping? maybe by using the command paste)
 tail -n +$tblstart $initfile|grep -v "<span class=\"f6\">@@"|sed -e s/"^&quot;"/"<\/div><\/td><\/tr><tr><td><div>\&quot;"/g|sed -e s/"^<span class=\"f1\">"/"<\/div><\/td><\/tr><tr><td><div><span class=\"f1\">"/g|sed -e s/"^<span class=\"f2\">"/"<\/div><\/td><\/tr><tr><td><div><span class=\"f2\">"/g|sed -e s/,/"<\/div><\/td><td><div>"/g >> $targetfile
 tblend=`grep -n "</pre>" $targetfile |tail -1|cut -f1 -d:`
 ADDTHIS="</tr></td></tbody></table>"
