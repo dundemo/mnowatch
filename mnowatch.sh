@@ -5,7 +5,7 @@
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 # Tweaking / Debugging by xkcd@dashtalk 
 #
-# MNOWATCH VERSION: 0.09
+# MNOWATCH VERSION: 0.10
 # COMPATIBLE TO DASHD VERSION 13 (works also for DASHD VERSION 12)
 
 #==========================INSTRUCTIONS ======================
@@ -116,7 +116,7 @@ numip=$numi"p"
 prop=$(sed -n $numip gobject_list|cut -f4 -d":"|cut -f2 -d"\\"|sed 's/"//g')
 #echo $prop
 
-greprop=`grep $prop current_props |wc -c`
+greprop=`grep "^"$prop"$" current_props |wc -c`
 #echo $greprop
 if [ $greprop -gt 1 ]
 then

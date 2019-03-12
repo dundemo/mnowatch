@@ -1,5 +1,5 @@
 #!/bin/sh
-#MNOWATCH VERSION: 0.09
+#MNOWATCH VERSION: 0.10
 
 # Convert ANSI (terminal) colours and attributes to HTML
 
