@@ -81,12 +81,19 @@ then
 codeurl2=$codeurl2" <strong>This Report occured as close as possible to the Votes Deadline</strong><br>"
 fi
 
-procs=`ps -aux|grep mnowatch.sh|wc -l`
-if [ $procs -gt 3 ]
-then
-#echo not run
-exit
-fi
+
+for pid in $(pidof -x mnowatch.sh); do
+    if [ $pid != $$ ]; then
+        echo "[$(date)] : mnowatch.sh : Process is already running with PID $pid"
+        exit 1
+    fi
+done
+
+#procs=`ps -aux|grep mnowatch.sh|wc -l`
+#if [ $procs -gt 3 ]
+#then
+#exit
+#fi
 
 cd $TMP_DIR
 rm -rf *_* upload proposals
