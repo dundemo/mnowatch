@@ -28,7 +28,9 @@ which bc>/dev/null||{ echo "I dont know where the command bc is. Please put bc i
 which zip>/dev/null||{ echo "I dont know where the command zip is. Please put zip in your execution path.";exit;}
 which ssdeep>/dev/null||{ echo "I dont know where ssdeep command is. Please put ssdeep in your execution path.";exit;}
 
-checkbin=`cd \`dirname $0\` &&pwd|grep /bin$|wc -l`
+#checkbin=`cd \`dirname $0\` &&pwd|grep /bin$|wc -l`
+checkbin=$(cd $(dirname $0) &&pwd|grep /bin$|wc -l)
+
 if [ $checkbin -eq 0 ]; then
 test -n "$THIS_IS_CRON"||{ echo "INSTALLATION ERROR: Please put all the mnowatch github files into the directory named "$MYHOME_DIR"/bin";}
 exit 
@@ -116,7 +118,7 @@ numip=$numi"p"
 prop=$(sed -n $numip gobject_list|cut -f4 -d":"|cut -f2 -d"\\"|sed 's/"//g')
 #echo $prop
 
-greprop=`grep "^"$prop"$" current_props |wc -c`
+greprop=`grep "^$prop$" current_props |wc -c`
 #echo $greprop
 if [ $greprop -gt 1 ]
 then
