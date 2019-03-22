@@ -26,4 +26,4 @@ THIS_IS_CRON=1
 SHELL=/bin/bash
 PATH=/usr/sbin:/usr/bin:/sbin:/bin:/opt/dash/bin
 52 7 * * * { ~/bin/mnowatch.sh;} >> /tmp/mnowatch.log 2>&1
-*/5 * * * * /home/demo/bin/btime.sh
+*/5 * * * * ~/bin/btime.sh
