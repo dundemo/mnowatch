@@ -7540,7 +7540,6 @@ NO filter:<input type="text" id="myInput4" onkeyup="myFunction4()" placeholder="
 ABS filter:<input type="text" id="myInput5" onkeyup="myFunction5()" placeholder="Search for names..">
 VotesHash filter:<input type="text" id="myInput6" onkeyup="myFunction6()" placeholder="Search for names..">
 Masternodes filter:<input type="text" id="myInput7" onkeyup="myFunction7()" placeholder="Search for names..">
-<span id="myValf"></span>
 <!-- When a filter works, it cancels all the rest  -->
 <!-- TO DO: Look at the below URL to make filters work all together in the table row, or in separate collumns with an OR or an AND relation  -->
 <!-- TO DO: Also implement and/or special syntax inside a single filter and not only between two or more filters   -->
@@ -7819,7 +7818,9 @@ document.getElementById("myInput6").value = "";
 <input type="checkbox" id="chkTest7" />Hide VOTESHASH
 <input type="checkbox" id="chkTest8" />Hide MASTERNODES
 <br>
-<strong>Note 3:</strong> Click the headers of the table if you want to sort it.<br>
+<strong>Note 3:</strong> When clicking the History number you go to the report where the specific IP_group initially appeared. When clicking the IP_HASH you go to the report where a change in the votes of the IP_group occured. Scroll to the right to display the VOTES_HASH collumn, copy the VOTESHASH (Ctrl+C) to your clipboard, click to "(diff)" and then in the report search for the votehash you have just copied. That way the changes in the votes of the specific IP_group can be viewed in a human readable manner.<br>
+<strong>Note 4:</strong> Click the headers of the table if you want to sort it.<br>
+<span id="myValf"></span>
 <table id="myTable" class="tablesorter"> 
 <thead> 
 
