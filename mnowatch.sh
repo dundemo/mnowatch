@@ -115,6 +115,7 @@ echo  > expired_props
 dash-cli masternodelist addr > masternodelist_addr
 dash-cli masternodelist payee > masternodelist_payee
 #TO DO: Use this payee address to do more smart groupings
+#TO DO: After spork 15 the payee is not valid, we should check collateraladdress
 dash-cli gobject list > gobject_list
 grep "{" gobject_list|grep -v "DataString"|cut -f2 -d"\""|grep -v "{" > proposals
 for fn in `cat proposals`; do
