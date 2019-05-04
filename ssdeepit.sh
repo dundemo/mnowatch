@@ -94,7 +94,7 @@ for fn in `cat pastedonefile`; do
   voteshashexist=`grep $voteshash $PREVIUSREPORTFULL|wc -l`
   if [ $voteshashexist -eq 0 ]
   then
-   voteshash2="<strong>"$voteshash"</strong> (<a target=\"_blank\" href=\"./"$dateis".diff.html#"`echo $voteshash|cut -f2 -d"\""`"\">diff</a>)"
+   voteshash2="<strong>"$voteshash"</strong> (copy the votehash, then search for it in the <a target=\"_blank\" href=\"./"$dateis".diff.html#"`echo $voteshash|cut -f2 -d"\""`"\">diff</a> file)"
   fi
   lastdiffdate=`cd $HTTPD_DIR;grep -l $theIPSgrouphash *.diff|grep -v "\-2019.diff"|tail -1|cut -f1 -d"."`
 #Note the grep -v "\-2019.diff" usage is for excluding the non stantard date diff files. Maybe do the same for the xargs above, for performance reasons
