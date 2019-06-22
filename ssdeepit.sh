@@ -54,6 +54,7 @@ for fn in `cat pastedonefile`; do
  voteshash=" "`echo $fn |cut -f4 -d","`" "
  IPS=" "`grep $voteshash mysorted.csv|cut -f1 -d","|sort`" "
 #Note: theIPSgrouphash contains " " in front and in the end, as inherited by $IPS
+ IPS=`echo $IPS` # bug fix due to change of bash version that trims spaces differently
  theIPSgrouphash=`bc <<<ibase=16\;$(sha1sum <<<$IPS|tr a-z A-Z)0`
  theMNS=" "`grep $voteshash mysorted.csv|cut -f2 -d","`" "
  theMNSnum=" "`grep $voteshash mysorted.csv|cut -f2 -d","|wc -l`" "
@@ -167,6 +168,7 @@ then
          ALLIPSofthisgroup=`grep $voteshashis $1|cut -f1 -d","|sort`
          ALLIPSofthisgroup2=" "`grep $voteshashis $1|cut -f1 -d","|sort`" "
          #Note: theIPSgrouphashsimilar contains " " in front and in the end due to compatibility to uniquehashes
+         ALLIPSofthisgroup2=`echo $ALLIPSofthisgroup2` # bug fix due to change of bash version that trims spaces differently
          theIPSgrouphashsimilar=`bc <<<ibase=16\;$(sha1sum <<<$ALLIPSofthisgroup2|tr a-z A-Z)0`
          ALLIPS=$ALLIPS" "$ALLIPSofthisgroup
          ALLIPSgrouped=$ALLIPSgrouped"("$cutit":"$voteshashis":"$ALLIPSofthisgroup":"\"$theIPSgrouphashsimilar\"")"
@@ -188,6 +190,7 @@ then
    ALLIPSofthisgroupfn=`grep $voteshashisfn $1|cut -f1 -d","|sort`
    ALLIPSofthisgroupfn2=" "`grep $voteshashisfn $1|cut -f1 -d","|sort`" "
 #Note: theIPSgrouphashsimilarfn contains " " in front and in the end due to compatibility to uniquehashes
+   ALLIPSofthisgroupfn2=`echo $ALLIPSofthisgroupfn2` # bug fix due to change of bash version that trims spaces differently
    theIPSgrouphashsimilarfn=`bc <<<ibase=16\;$(sha1sum <<<$ALLIPSofthisgroupfn2|tr a-z A-Z)0`
    ALLIPS=$ALLIPS" "$ALLIPSofthisgroupfn
    ALLIPSgrouped=$ALLIPSgrouped"(100:"$voteshashisfn":"$ALLIPSofthisgroupfn":"\"$theIPSgrouphashsimilarfn\"")"
@@ -196,6 +199,7 @@ then
    IPS=`expr $IPS + $IPSnum`
    ALLIPSsorted=`echo $ALLIPS|sed -s s/" "/\\\\n/g|sort -n`
 #Note: ALLIPShashis DOES NOT contains " " in front and in the end
+   ALLIPSsorted=`echo $ALLIPSsorted` # bug fix due to change of bash version that trims spaces differently
    ALLIPShashis=`bc <<<ibase=16\;$(sha1sum <<<$ALLIPSsorted|tr a-z A-Z)0`
 
    echo $IPS",\""$ALLIPShashis"\","$ALLIPSsorted","$ALLIPSgrouped >> $filenameis
