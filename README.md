@@ -2,7 +2,7 @@
 
 This set of scripts is used in order to watch the way the Dash masternode owners vote. For more information read [here](https://www.dash.org/forum/threads/which-masternodes-voted-and-what-exactly-voted-on-various-proposals-v2.34403/).
 
-Look at the reports the above scripts produces, [here](https://apogee.dynu.net/).
+Have a look at the reports that the above set of scripts produces, [here](https://apogee.dynu.net/).
 
 ## CURRENT MNOWATCH VERSION: 0.10
 
