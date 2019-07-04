@@ -87,16 +87,19 @@ for fn in `cat pastedonefile`; do
 #TO DO: make every MNO link to dashninja.pl https://www.dashninja.pl/mndetails.html?mnoutput=
 #TO DO: show the dash address of every masternode, and link it to an OP_RETURN service so that people can send him messages.
 
+ voteshashexist=`grep $voteshash $PREVIUSREPORTFULL|wc -l`
  if [ $exists -eq 0 ]
  then
-  voteshash3=$voteshash
-  previusreportofvoteshash=`grep $voteshash3 $PREVIUSREPORTFULL|cut -f2 -d"\""`
-  voteshash3="<a href=\"./"$PREVIUSREPORT"#"$previusreportofvoteshash"\">"$voteshash3"</a>"
-  #echo $voteshash1
+  if [ $voteshashexist -eq 0 ]
+  then
+   voteshash3=$voteshash
+  else
+   previusreportofvoteshash=`grep $voteshash $PREVIUSREPORTFULL|cut -f2 -d"\""`
+   voteshash3="<a href=\"./"$PREVIUSREPORT"#"$previusreportofvoteshash"\">"$voteshash"</a>"
+  fi
   echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td><td class=\"container2\"><div>(History="$theHistory") <strong>"$theIPSgrouphash"</strong></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash3"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
  else
   voteshash2=$voteshash
-  voteshashexist=`grep $voteshash $PREVIUSREPORTFULL|wc -l`
   if [ $voteshashexist -eq 0 ]
   then
    voteshash2="<strong>"$voteshash"</strong> (copy the votehash, then search for it in the <a target=\"_blank\" href=\"./"$dateis".diff.html#"`echo $voteshash|cut -f2 -d"\""`"\">diff</a> file)"
