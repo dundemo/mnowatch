@@ -54,6 +54,7 @@ for fn in `cat pastedonefile`; do
  voteshash=" "`echo $fn |cut -f4 -d","`" "
  IPS=" "`grep $voteshash mysorted.csv|cut -f1 -d","|sort`" "
 #Note: theIPSgrouphash contains " " in front and in the end, as inherited by $IPS
+ IPS=`echo $IPS` # bug fix due to change of bash version that trims spaces differently
  theIPSgrouphash=`bc <<<ibase=16\;$(sha1sum <<<$IPS|tr a-z A-Z)0`
  theMNS=" "`grep $voteshash mysorted.csv|cut -f2 -d","`" "
  theMNSnum=" "`grep $voteshash mysorted.csv|cut -f2 -d","|wc -l`" "
@@ -86,12 +87,19 @@ for fn in `cat pastedonefile`; do
 #TO DO: make every MNO link to dashninja.pl https://www.dashninja.pl/mndetails.html?mnoutput=
 #TO DO: show the dash address of every masternode, and link it to an OP_RETURN service so that people can send him messages.
 
+ voteshashexist=`grep $voteshash $PREVIUSREPORTFULL|wc -l`
  if [ $exists -eq 0 ]
  then
-  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td><td class=\"container2\"><div>(History="$theHistory") <strong>"$theIPSgrouphash"</strong></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
+  if [ $voteshashexist -eq 0 ]
+  then
+   voteshash3=$voteshash
+  else
+   previusreportofvoteshash=`grep $voteshash $PREVIUSREPORTFULL|cut -f2 -d"\""`
+   voteshash3="<a href=\"./"$PREVIUSREPORT"#"$previusreportofvoteshash"\">"$voteshash"</a>"
+  fi
+  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td><td class=\"container2\"><div>(History="$theHistory") <strong>"$theIPSgrouphash"</strong></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash3"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
  else
   voteshash2=$voteshash
-  voteshashexist=`grep $voteshash $PREVIUSREPORTFULL|wc -l`
   if [ $voteshashexist -eq 0 ]
   then
    voteshash2="<strong>"$voteshash"</strong> (copy the votehash, then search for it in the <a target=\"_blank\" href=\"./"$dateis".diff.html#"`echo $voteshash|cut -f2 -d"\""`"\">diff</a> file)"
@@ -167,6 +175,7 @@ then
          ALLIPSofthisgroup=`grep $voteshashis $1|cut -f1 -d","|sort`
          ALLIPSofthisgroup2=" "`grep $voteshashis $1|cut -f1 -d","|sort`" "
          #Note: theIPSgrouphashsimilar contains " " in front and in the end due to compatibility to uniquehashes
+         ALLIPSofthisgroup2=`echo $ALLIPSofthisgroup2` # bug fix due to change of bash version that trims spaces differently
          theIPSgrouphashsimilar=`bc <<<ibase=16\;$(sha1sum <<<$ALLIPSofthisgroup2|tr a-z A-Z)0`
          ALLIPS=$ALLIPS" "$ALLIPSofthisgroup
          ALLIPSgrouped=$ALLIPSgrouped"("$cutit":"$voteshashis":"$ALLIPSofthisgroup":"\"$theIPSgrouphashsimilar\"")"
@@ -188,6 +197,7 @@ then
    ALLIPSofthisgroupfn=`grep $voteshashisfn $1|cut -f1 -d","|sort`
    ALLIPSofthisgroupfn2=" "`grep $voteshashisfn $1|cut -f1 -d","|sort`" "
 #Note: theIPSgrouphashsimilarfn contains " " in front and in the end due to compatibility to uniquehashes
+   ALLIPSofthisgroupfn2=`echo $ALLIPSofthisgroupfn2` # bug fix due to change of bash version that trims spaces differently
    theIPSgrouphashsimilarfn=`bc <<<ibase=16\;$(sha1sum <<<$ALLIPSofthisgroupfn2|tr a-z A-Z)0`
    ALLIPS=$ALLIPS" "$ALLIPSofthisgroupfn
    ALLIPSgrouped=$ALLIPSgrouped"(100:"$voteshashisfn":"$ALLIPSofthisgroupfn":"\"$theIPSgrouphashsimilarfn\"")"
@@ -196,6 +206,7 @@ then
    IPS=`expr $IPS + $IPSnum`
    ALLIPSsorted=`echo $ALLIPS|sed -s s/" "/\\\\n/g|sort -n`
 #Note: ALLIPShashis DOES NOT contains " " in front and in the end
+   ALLIPSsorted=`echo $ALLIPSsorted` # bug fix due to change of bash version that trims spaces differently
    ALLIPShashis=`bc <<<ibase=16\;$(sha1sum <<<$ALLIPSsorted|tr a-z A-Z)0`
 
    echo $IPS",\""$ALLIPShashis"\","$ALLIPSsorted","$ALLIPSgrouped >> $filenameis

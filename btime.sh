@@ -22,7 +22,7 @@ test -x "$run_prog"||{ echo "Cannot execute $run_prog";exit 3;}
 msg="$block,$remainder,$(date -u)"
 
 # We want to run mnowatch just after the voting has closed.
-if [ $remainder -le 10 ];then
+if [ $remainder -le 5 ];then
 	echo "$msg" > /tmp/The_voting_deadline
 	"$run_prog" -super
 	exit 0
