@@ -1144,7 +1144,8 @@ cp the_results_dashd_*.uniqueHashVotes.*.csv ../httpd
 cp the_results_dashd_*.uniqueHashVotes.*.html ../httpd
 ADDTHIS=" and <a href=\""`ls ./the_results*.uniqueHashVotes.*.csv`"\"> the uniqueVotesHashes.csv</a>"
 sed -i '5i'"$ADDTHIS" ../httpd/index.html
-ADDTHIS=" (<a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html</a>)"
+#ADDTHIS=" (<a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html</a>)"
+ADDTHIS="(<span style=\"background: #00ee00\"><a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html</a></span>)"
 sed -i '6i'"$ADDTHIS" ../httpd/index.html
 rm -rf *_* upload proposals
 
