@@ -95,6 +95,8 @@ done
 #exit
 #fi
 
+#TO DO: The mnowatch report of individuality does not take into account the crowdnode type of masternodes, and it wrongly assumes that a crowdnode is a unique individual.
+
 cd $TMP_DIR
 rm -rf *_* upload proposals
 
@@ -112,7 +114,8 @@ curl -s https://www.dashcentral.org/api/v1/budget > centralproposals_json
 awk -F"\"name" '{for(i=2;i<=NF;i++){{print $i}}}' centralproposals_json|cut -f2 -d":"|cut -f1 -d","|sed -e s/\"//g > current_props
 echo  > expired_props
 
-dash-cli masternodelist addr > masternodelist_addr
+#dash-cli masternodelist addr > masternodelist_addr
+dash-cli masternodelist addr|grep -v "[0:0:0:0:0:0:0:0]:0" > masternodelist_addr #https://github.com/dashpay/dash/issues/2942
 dash-cli masternodelist payee > masternodelist_payee
 #TO DO: Use this payee address to do more smart groupings
 #TO DO: After spork 15 the payee is not valid, we should check collateraladdress
@@ -1039,6 +1042,8 @@ csvfile=`echo $filenameis".csv"`
 for gn in `cat masternodelist_hash_addr_clear`; do
 MNhashis=`echo $gn|cut -f1 -d":"`
 ipis=`echo $gn|cut -f2 -d":"`
+# BUG: fix ipis in case this is not fixed: https://github.com/dashpay/dash/issues/2942
+#echo $MNhashis $ipis
 
 yesvotes=`grep -l ^$ipis$ *YES_IP_*|cut -f3- -d"_"`
 yesvotes=`echo $yesvotes`
@@ -1115,6 +1120,7 @@ echo "$dateis" > $distrfileis
 echo "The first operator includes all people who abstain. All the rest are identified by the way they vote." >> $distrfileis
 cut -f22 -d"<" the_results_dashd_*.html|cut -f2 -d">"|grep -v [a-z]|grep -v [A-Z]| grep ^[0-9]|grep -v "-"|sort|uniq -c|sed -e s/'^   '/000/g|sed -s s/'000   '/000000/g|sed -e s/'000  '/00000/g|sed -s s/'000 '/0000/g|sort -r|cut -f1 -d" "|uniq -c|sed -e s/" 0"/" operator(s) control(s) "/g|sed -e s/$/" masternode(s)"/g >> $distrfileis
 
+cp current_props ../httpd/current_props_"$dateis".txt
 cp upload_*.tar.gz ../httpd
 cp distr_*.txt ../httpd
 
@@ -1185,4 +1191,4 @@ sed -i '9i'"$ADDTHIS" ./index.html
 fi
 
 #echo "END! "
-
+#$MYHOME_DIR/warnings/warnings.sh $dateis
