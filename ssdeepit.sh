@@ -90,6 +90,7 @@ for fn in `cat pastedonefile`; do
  voteshashexist=`grep $voteshash $PREVIUSREPORTFULL|wc -l`
  if [ $exists -eq 0 ]
  then
+<<<<<<< HEAD
   if [ $voteshashexist -eq 0 ]
   then
    voteshash3=$voteshash
@@ -97,6 +98,12 @@ for fn in `cat pastedonefile`; do
    previusreportofvoteshash=`grep $voteshash $PREVIUSREPORTFULL|cut -f2 -d"\""`
    voteshash3="<a href=\"./"$PREVIUSREPORT"#"$previusreportofvoteshash"\">"$voteshash"</a>"
   fi
+=======
+  voteshash3=$voteshash
+  previusreportofvoteshash=`grep $voteshash3 $PREVIUSREPORTFULL|cut -f2 -d"\""`
+  voteshash3="<a href=\"./"$PREVIUSREPORT"#"$previusreportofvoteshash"\">"$voteshash3"</a>"
+  #echo $voteshash1
+>>>>>>> 0f4761e557f0e12d944d17dbb89aafae85a92939
   echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td><td class=\"container2\"><div>(History="$theHistory") <strong>"$theIPSgrouphash"</strong></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash3"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
  else
   voteshash2=$voteshash
