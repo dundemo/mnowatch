@@ -36,6 +36,9 @@ sort -t"," -k5 $1 > mysorted.csv
 sort -u -t"," -k5 $1|cut -f3- -d","|sed -e s/' '/':'/g > mysortedUnique.csv
 numuniques=`cat mysortedUnique.csv|wc -l`
 
+filenameunhtml=`echo $1|cut -f1 -d"."`.uniqueHashVotes.$numuniques.html
+thisuniqueHashreport=`basename $filenameunhtml`
+
 filenameun=`echo $1|cut -f1 -d"."`.uniqueHashVotes.$numuniques.csv
 filenameun=$WORKING_DIR/`basename $filenameun`
 cp mysortedUnique.csv $filenameun
@@ -178,7 +181,7 @@ then
          ALLIPSofthisgroup2=`echo $ALLIPSofthisgroup2` # bug fix due to change of bash version that trims spaces differently
          theIPSgrouphashsimilar=`bc <<<ibase=16\;$(sha1sum <<<$ALLIPSofthisgroup2|tr a-z A-Z)0`
          ALLIPS=$ALLIPS" "$ALLIPSofthisgroup
-         ALLIPSgrouped=$ALLIPSgrouped"("$cutit":"$voteshashis":"$ALLIPSofthisgroup":"\"$theIPSgrouphashsimilar\"")"
+         ALLIPSgrouped=$ALLIPSgrouped"("$cutit":"$voteshashis":"$ALLIPSofthisgroup":\"<a href=\"./"$thisuniqueHashreport"#"$theIPSgrouphashsimilar"\" title=\"How this group voted.\" >"$theIPSgrouphashsimilar"</a>\")"
          echo $voteshashis >> used.txt
          found=`expr $found + 1`
          IPSnum=`grep $voteshashis $1|cut -f1 -d","|wc -l`	
@@ -200,7 +203,7 @@ then
    ALLIPSofthisgroupfn2=`echo $ALLIPSofthisgroupfn2` # bug fix due to change of bash version that trims spaces differently
    theIPSgrouphashsimilarfn=`bc <<<ibase=16\;$(sha1sum <<<$ALLIPSofthisgroupfn2|tr a-z A-Z)0`
    ALLIPS=$ALLIPS" "$ALLIPSofthisgroupfn
-   ALLIPSgrouped=$ALLIPSgrouped"(100:"$voteshashisfn":"$ALLIPSofthisgroupfn":"\"$theIPSgrouphashsimilarfn\"")"
+   ALLIPSgrouped=$ALLIPSgrouped"(100:"$voteshashisfn":"$ALLIPSofthisgroupfn":\"<a href=\"./"$thisuniqueHashreport"#"$theIPSgrouphashsimilarfn"\" title=\"How this group voted.\" >"$theIPSgrouphashsimilarfn"</a>\")"
    IPSnum=`grep $voteshashisfn $1|cut -f1 -d","|wc -l`	
 
    IPS=`expr $IPS + $IPSnum`
