@@ -68,7 +68,7 @@ for fn in `cat pastedonefile`; do
 
  OLDESTREPORT=`cd $HTTPD_DIR;ls -tra *uniqueHashVotes*.html 2>/dev/null|xargs grep -l $theIPSgrouphash`
  OLDESTREPORT=`echo $OLDESTREPORT|cut -f1 -d" "`
- theHistory="<a href=\"./"$OLDESTREPORT"#"$theIPSgrouphash"\">"$theHistory"</a>"
+ theHistory="<a href=\"./"$OLDESTREPORT"#"$theIPSgrouphash"\" title=\"Go to the oldest report where this group of IPs initially appeared.\">"$theHistory"</a>"
 
  numips=`echo $IPS|awk -F'" "' 'NF{print NF-1}'`
  numips=`expr $numips + 1`
@@ -95,7 +95,7 @@ for fn in `cat pastedonefile`; do
    voteshash3=$voteshash
   else
    previusreportofvoteshash=`grep $voteshash $PREVIUSREPORTFULL|cut -f2 -d"\""`
-   voteshash3="<a href=\"./"$PREVIUSREPORT"#"$previusreportofvoteshash"\">"$voteshash"</a>"
+   voteshash3="<a href=\"./"$PREVIUSREPORT"#"$previusreportofvoteshash"\"  title=\"Go to the previous report and see the group that has identical VOTES_HASH.\" >"$voteshash"</a>"
   fi
   echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td><td class=\"container2\"><div>(History="$theHistory") <strong>"$theIPSgrouphash"</strong></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash3"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
  else
@@ -107,7 +107,7 @@ for fn in `cat pastedonefile`; do
   lastdiffdate=`cd $HTTPD_DIR;grep -l $theIPSgrouphash *.diff|grep -v "\-2019.diff"|tail -1|cut -f1 -d"."`
 #Note the grep -v "\-2019.diff" usage is for excluding the non stantard date diff files. Maybe do the same for the xargs above, for performance reasons
   lastdiffdatereport=`cd $HTTPD_DIR;ls *$lastdiffdate".uniqueHashVotes."*".html"`
-  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td> <td class=\"container2\"><div>(History="$theHistory") <a href=\"./"$lastdiffdatereport"#"$theIPSgrouphash"\">"$theIPSgrouphash"</a></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash2"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
+  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td> <td class=\"container2\"><div>(History="$theHistory") <a href=\"./"$lastdiffdatereport"#"$theIPSgrouphash" \" title=\"Go to the report where this group changed votes. Then check the diff that is linked from the VOTES_HASH column.\">"$theIPSgrouphash"</a></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash2"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
 #  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td> <td class=\"container2\"><div>(History="$theHistory") <a href=\"./"$PREVIUSREPORT"#"$theIPSgrouphash"\">"$theIPSgrouphash"</a></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash2"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
  fi
 done
@@ -219,13 +219,13 @@ then
 
    OLDESTREPORTSIMILAR=`cd $HTTPD_DIR;ls -tra *similar*.html 2>/dev/null|grep -v ".init.html"|xargs grep -l $ALLIPShashis`
    OLDESTREPORTSIMILAR=`echo $OLDESTREPORTSIMILAR|cut -f1 -d" "`
-   theHistoryfn="<a href=\"./"$OLDESTREPORTSIMILAR"#"$ALLIPShashis"\">"$theHistoryfn"</a>"
+   theHistoryfn="<a href=\"./"$OLDESTREPORTSIMILAR"#"$ALLIPShashis"\" title=\"Go to the report where this similarity initially occured.\" >"$theHistoryfn"</a>"
 
    if [ $existsfn -eq 0 ]
    then
     echo "<tr id=\""$ALLIPShashis"\"><td><div>"$IPS"</div></td><td><div>(History="$theHistoryfn") <strong>"$ALLIPShashis"</strong></div></td><td><div>"$ALLIPSsorted"</div></td><td><div>"$ALLIPSgrouped"</div></td></tr>" >> $filenameishtml
    else
-    echo "<tr id=\""$ALLIPShashis"\"><td><div>"$IPS"</div></td><td><div>(History="$theHistoryfn") <a href=\"./"$PREVIUSREPORTSIMILAR"#"$ALLIPShashis"\">"$ALLIPShashis"</a></div></td><td><div>"$ALLIPSsorted"</div></td><td><div>"$ALLIPSgrouped"</div></td></tr>" >> $filenameishtml
+    echo "<tr id=\""$ALLIPShashis"\"><td><div>"$IPS"</div></td><td><div>(History="$theHistoryfn") <a href=\"./"$PREVIUSREPORTSIMILAR"#"$ALLIPShashis"\" title=\"Go to the previus report and land in this similarity.\">"$ALLIPShashis"</a></div></td><td><div>"$ALLIPSsorted"</div></td><td><div>"$ALLIPSgrouped"</div></td></tr>" >> $filenameishtml
    fi
 
    echo $voteshashisfn >> used.txt
