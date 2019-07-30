@@ -95,7 +95,6 @@ done
 #exit
 #fi
 
-#TO DO: The mnowatch report of individuality does not take into account the crowdnode type of masternodes, and it wrongly assumes that a crowdnode is a unique individual.
 
 cd $TMP_DIR
 rm -rf *_* upload proposals
@@ -109,6 +108,12 @@ rm -rf *_* upload proposals
 #To put a flag and inform that this proposal will expire in the middle of the cycle, so that it is not taken as active one.
 #delete all supposed active proposals that end in the middle of the cycle.
 #it will be removed from the Active tab after the last superblock  overlaps with has occurred. So no, it will no longer be "active"
+
+#TO DO: The mnowatch report of individuality does not take into account the crowdnode type of masternodes, and it wrongly assumes that a crowdnode is a unique individual.
+crowdnodes=`wget -qO- crowdnode.io|grep ">MN"|awk -F"address/" '{for(i=2;i<=NF;i++){{print $i}}}'  |cut -f1 -d'"'|cut -f1 -d"."|uniq`
+#dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'
+#dash-cli masternodelist|jq 'keys'
+dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'|cut -f1 -d: > collateraladdress_IP
 
 curl -s https://www.dashcentral.org/api/v1/budget > centralproposals_json
 awk -F"\"name" '{for(i=2;i<=NF;i++){{print $i}}}' centralproposals_json|cut -f2 -d":"|cut -f1 -d","|sed -e s/\"//g > current_props
@@ -1042,6 +1047,10 @@ csvfile=`echo $filenameis".csv"`
 for gn in `cat masternodelist_hash_addr_clear`; do
 MNhashis=`echo $gn|cut -f1 -d":"`
 ipis=`echo $gn|cut -f2 -d":"`
+mycollat=`grep " $ipis$" ../collateraladdress_IP|cut -f1 -d" "`
+iscrowdnode2=`echo $crowdnodes|grep $mycollat|wc -l`
+
+
 # BUG: fix ipis in case this is not fixed: https://github.com/dashpay/dash/issues/2942
 #echo $MNhashis $ipis
 
@@ -1071,7 +1080,17 @@ fi
 allvotes=$yesvotes","$novotes","$absvotes
 #there was a bug when hashing $allvotes, in case a person has NO votes and not ABS votes, while another person has not NO votes but has ABS votes identical to the previous person's NO votes. I tried to fix it by comma separate instead of space.
 hashis=`bc <<<ibase=16\;$(sha1sum <<<$allvotes|tr a-z A-Z)0`
-echo "<tr><td class=\"container1\"><div><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis"</div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> $filenameis
+if [ $iscrowdnode2 -eq 1 ]
+then
+#echo "<tr><td class=\"container1\"><div><span style=\"background: #00ee00\"><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis" "$mycollat" Crowdnode</span></div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> $filenameis
+echo "<tr><td class=\"container1\"><div><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis" <a target=\"_blank\" href=https://bitinfocharts.com/dash/address/"$mycollat">"$mycollat"</a> Crowdnode</div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> $filenameis
+else
+echo "<tr><td class=\"container1\"><div><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis" <a target=\"_blank\" href=https://bitinfocharts.com/dash/address/"$mycollat">"$mycollat"</a> </div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> $filenameis
+fi
+#mycollat causes problem to ssdeepit.sh
+#echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\",$mycollat,$iscrowdnode2" >> $csvfile
+#iscrowdnode causes problem to ssdeepit.sh
+#echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\",$iscrowdnode2" >> $csvfile
 echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\"" >> $csvfile
 #echo -n "."
 done
@@ -1118,7 +1137,7 @@ distrfileis="distr_"$dateis".txt"
 
 echo "$dateis" > $distrfileis
 echo "The first operator includes all people who abstain. All the rest are identified by the way they vote." >> $distrfileis
-cut -f22 -d"<" the_results_dashd_*.html|cut -f2 -d">"|grep -v [a-z]|grep -v [A-Z]| grep ^[0-9]|grep -v "-"|sort|uniq -c|sed -e s/'^   '/000/g|sed -s s/'000   '/000000/g|sed -e s/'000  '/00000/g|sed -s s/'000 '/0000/g|sort -r|cut -f1 -d" "|uniq -c|sed -e s/" 0"/" operator(s) control(s) "/g|sed -e s/$/" masternode(s)"/g >> $distrfileis
+cut -f24 -d"<" the_results_dashd_*.html|cut -f2 -d">"|grep -v [a-z]|grep -v [A-Z]| grep ^[0-9]|grep -v "-"|sort|uniq -c|sed -e s/'^   '/000/g|sed -s s/'000   '/000000/g|sed -e s/'000  '/00000/g|sed -s s/'000 '/0000/g|sort -r|cut -f1 -d" "|uniq -c|sed -e s/" 0"/" operator(s) control(s) "/g|sed -e s/$/" masternode(s)"/g >> $distrfileis
 
 cp current_props ../httpd/current_props_"$dateis".txt
 cp upload_*.tar.gz ../httpd
