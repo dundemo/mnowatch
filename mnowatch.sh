@@ -110,7 +110,8 @@ rm -rf *_* upload proposals
 #it will be removed from the Active tab after the last superblock  overlaps with has occurred. So no, it will no longer be "active"
 
 #TO DO: The mnowatch report of individuality does not take into account the crowdnode type of masternodes, and it wrongly assumes that a crowdnode is a unique individual.
-crowdnodes=`wget -qO- crowdnode.io|grep ">MN"|awk -F"address/" '{for(i=2;i<=NF;i++){{print $i}}}'  |cut -f1 -d'"'|cut -f1 -d"."|uniq`
+#crowdnodes=`wget -qO- crowdnode.io|grep ">MN"|awk -F"address/" '{for(i=2;i<=NF;i++){{print $i}}}'  |cut -f1 -d'"'|cut -f1 -d"."|uniq`
+crowdnodes=`wget -qO- crowdnode.io|grep ">MN"|awk -F"address.dws" '{for(i=2;i<=NF;i++){{print $i}}}'  |cut -f1 -d'"'|cut -f1 -d"."|uniq|cut -f2 -d?`
 #dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'
 #dash-cli masternodelist|jq 'keys'
 dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'|cut -f1 -d: > collateraladdress_IP
@@ -1048,6 +1049,10 @@ for gn in `cat masternodelist_hash_addr_clear`; do
 MNhashis=`echo $gn|cut -f1 -d":"`
 ipis=`echo $gn|cut -f2 -d":"`
 mycollat=`grep " $ipis$" ../collateraladdress_IP|cut -f1 -d" "`
+
+#Below an example on how to get the creation date of a collat address by bitinfocharts
+#wget -qO- -U 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.6) Gecko/20070802 SeaMonkey/1.1.4' https://bitinfocharts.com/dash/address/Xy14MCXe7CL5nXJVtsHS7evs1X3jpkjgxM |awk -F"muted utc hidden-desktop" '{for(i=2;i<=NF;i++){{print $i}}}'|cut -f1 -d"<"|tail -1|cut -f2 -d">"
+
 iscrowdnode2=`echo $crowdnodes|grep $mycollat|wc -l`
 
 
@@ -1087,11 +1092,9 @@ echo "<tr><td class=\"container1\"><div><a target=\"_blank\" href=https://ipinfo
 else
 echo "<tr><td class=\"container1\"><div><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis" <a target=\"_blank\" href=https://bitinfocharts.com/dash/address/"$mycollat">"$mycollat"</a> </div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> $filenameis
 fi
-#mycollat causes problem to ssdeepit.sh
-#echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\",$mycollat,$iscrowdnode2" >> $csvfile
-#iscrowdnode causes problem to ssdeepit.sh
-#echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\",$iscrowdnode2" >> $csvfile
-echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\"" >> $csvfile
+#mycollat and iscrowdnode caused problem to ssdeepit.sh but I fixed it 
+echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\",$mycollat,$iscrowdnode2" >> $csvfile
+#echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\"" >> $csvfile
 #echo -n "."
 done
 

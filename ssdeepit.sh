@@ -30,10 +30,17 @@ BIN_DIR=$MYHOME_DIR"/bin"
 HTTPD_DIR=$MYHOME_DIR"/httpd"
 
 cd $WORKING_DIR
-sort -t"," -k5 $1 > mysorted.csv
+#sort -t"," -k5 $1 > mysorted.csv
+#fix in order to support mycollat and iscrowdnode
+cut -f1-6 -d"," $1|sort -t"," -k5 > mysorted.csv
+
 #a bug occurs to all proposals than contain a , in their proposal-name
 #ex. proposal-name = VENEZUELAN-ALLIED-DASH-COMMUNITIES,Cash_Evolution_Bloomberg_Radio
-sort -u -t"," -k5 $1|cut -f3- -d","|sed -e s/' '/':'/g > mysortedUnique.csv
+
+#sort -u -t"," -k5 $1|cut -f3- -d","|sed -e s/' '/':'/g > mysortedUnique.csv
+#fix in order to support mycollat and iscrowdnode
+cut -f1-6 -d"," $1|sort -u -t"," -k5|cut -f3- -d","|sed -e s/' '/':'/g > mysortedUnique.csv
+
 numuniques=`cat mysortedUnique.csv|wc -l`
 
 filenameunhtml=`echo $1|cut -f1 -d"."`.uniqueHashVotes.$numuniques.html
