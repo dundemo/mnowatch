@@ -5,8 +5,8 @@
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 # Tweaking / Debugging by xkcd@dashtalk 
 #
-# MNOWATCH VERSION: 0.10
-# COMPATIBLE TO DASHD VERSION 13 (works also for DASHD VERSION 12)
+# MNOWATCH VERSION: 0.11
+# COMPATIBLE TO DASHD VERSION 14 (works also for DASHD VERSION 12 and 13)
 
 #==========================INSTRUCTIONS ======================
 

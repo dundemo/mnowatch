@@ -3,7 +3,7 @@
 # Licence: GPLv2
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 #
-# MNOWATCH VERSION: 0.10
+# MNOWATCH VERSION: 0.11
 
 wcone=`echo $1|wc -c`
 wctwo=`echo $2|wc -c`
@@ -30,15 +30,11 @@ BIN_DIR=$MYHOME_DIR"/bin"
 HTTPD_DIR=$MYHOME_DIR"/httpd"
 
 cd $WORKING_DIR
-#sort -t"," -k5 $1 > mysorted.csv
-#fix in order to support mycollat and iscrowdnode
-cut -f1-6 -d"," $1|sort -t"," -k5 > mysorted.csv
-
+sort -t"," -k5 $1 > mysorted.csv
 #a bug occurs to all proposals than contain a , in their proposal-name
 #ex. proposal-name = VENEZUELAN-ALLIED-DASH-COMMUNITIES,Cash_Evolution_Bloomberg_Radio
-
 #sort -u -t"," -k5 $1|cut -f3- -d","|sed -e s/' '/':'/g > mysortedUnique.csv
-#fix in order to support mycollat and iscrowdnode
+#fix it in order to support mycollat and iscrowdnode
 cut -f1-6 -d"," $1|sort -u -t"," -k5|cut -f3- -d","|sed -e s/' '/':'/g > mysortedUnique.csv
 
 numuniques=`cat mysortedUnique.csv|wc -l`
@@ -69,8 +65,11 @@ for fn in `cat pastedonefile`; do
  theMNS=" "`grep $voteshash mysorted.csv|cut -f2 -d","`" "
  theMNSnum=" "`grep $voteshash mysorted.csv|cut -f2 -d","|wc -l`" "
  theMNSnum=`printf %04d $theMNSnum`
+ theCollats=" "`grep $voteshash mysorted.csv|cut -f7 -d","`" "
+ theCollats2=" "`grep $voteshash mysorted.csv|awk -F, '{ print "\""$7"\""}'`" "
+ theCrowds=" "`grep $voteshash mysorted.csv|cut -f8 -d","`" "
 
- echo $IPS","$yes","$no","$abs","$voteshash", \""$theIPSgrouphash"\" ,"$theMNSnum","$theMNS >> pastedtwofile
+ echo $IPS","$yes","$no","$abs","$voteshash", \""$theIPSgrouphash"\" ,"$theMNSnum","$theMNS","$theCollats","$theCrowds >> pastedtwofile
 
  exists=`grep $theIPSgrouphash $PREVIUSREPORTFULL 2>/dev/null|wc -l`
  theHistory=`grep -l $theIPSgrouphash $HTTPD_DIR/*uniqueHashVotes*.html 2>/dev/null|wc -l`
@@ -91,6 +90,19 @@ for fn in `cat pastedonefile`; do
   builtIPS=`echo $builtIPS|sed "s/@/${content}/"`
  done
 
+ numcoll=`echo $theCollats2|awk -F'" "' 'NF{print NF-1}'`
+ numcoll=`expr $numcoll + 1`
+ #<a target=\"_blank\" href=https://bitinfocharts.com/dash/address/"$theCollats">"$theCollats"</a>
+ #builtcoll=`echo " "$theCollats2|sed -e s/' @'/'<a target="_blank" href="https:\/\/ipinfo.io\/'/g|sed -e s/@/'">@<\/a> '/g`
+ builtcoll=`echo " "$theCollats2|sed -e s/'"'/'@'/g|sed -e s/' @'/'<a target="_blank" href="https:\/\/bitinfocharts.com\/dash\/address\/'/g|sed -e s/@/'">@<\/a> '/g`
+
+ for (( d=1; d<=$numcoll; d++ ))
+ do
+  cutf2=`expr $d \* 2`
+  content2="`echo $theCollats2|cut -f"$cutf2" -d'\"'`"
+  builtcoll=`echo $builtcoll|sed "s/@/${content2}/"`
+ done
+
 #TO DO: make every proposal link to dashwatch https://dashwatchbeta.org/api/p/proposal_name
 #TO DO: rate every voter according to the quality of the proposala (as calculated by dashwatch) he historicaly voted.
 
@@ -107,7 +119,8 @@ for fn in `cat pastedonefile`; do
    previusreportofvoteshash=`grep $voteshash $PREVIUSREPORTFULL|cut -f2 -d"\""`
    voteshash3="<a href=\"./"$PREVIUSREPORT"#"$previusreportofvoteshash"\"  title=\"Go to the previous report and see the group that has identical VOTES_HASH.\" >"$voteshash"</a>"
   fi
-  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td><td class=\"container2\"><div>(History="$theHistory") <strong>"$theIPSgrouphash"</strong></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash3"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
+ #<a target=\"_blank\" href=https://bitinfocharts.com/dash/address/"$theCollats">"$theCollats"</a> 
+  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td><td class=\"container2\"><div>(History="$theHistory") <strong>"$theIPSgrouphash"</strong></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash3"</div></td><td class=\"container8\"><div>"$theMNS"</div></td><td class=\"container9\"><div>"$builtcoll"</div></td><td class=\"container10\"><div>"$theCrowds"</div></td></tr>" >> pasted.html
  else
   voteshash2=$voteshash
   if [ $voteshashexist -eq 0 ]
@@ -117,12 +130,12 @@ for fn in `cat pastedonefile`; do
   lastdiffdate=`cd $HTTPD_DIR;grep -l $theIPSgrouphash *.diff|grep -v "\-2019.diff"|tail -1|cut -f1 -d"."`
 #Note the grep -v "\-2019.diff" usage is for excluding the non stantard date diff files. Maybe do the same for the xargs above, for performance reasons
   lastdiffdatereport=`cd $HTTPD_DIR;ls *$lastdiffdate".uniqueHashVotes."*".html"`
-  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td> <td class=\"container2\"><div>(History="$theHistory") <a href=\"./"$lastdiffdatereport"#"$theIPSgrouphash" \" title=\"Go to the report where this group changed votes. Then check the diff that is linked from the VOTES_HASH column.\">"$theIPSgrouphash"</a></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash2"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
+  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td> <td class=\"container2\"><div>(History="$theHistory") <a href=\"./"$lastdiffdatereport"#"$theIPSgrouphash" \" title=\"Go to the report where this group changed votes. Then check the diff that is linked from the VOTES_HASH column.\">"$theIPSgrouphash"</a></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash2"</div></td><td class=\"container8\"><div>"$theMNS"</div></td><td class=\"container9\"><div>"$builtcoll"</div></td><td class=\"container10\"><div>"$theCrowds"</div></td></tr>" >> pasted.html
 #  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td> <td class=\"container2\"><div>(History="$theHistory") <a href=\"./"$PREVIUSREPORT"#"$theIPSgrouphash"\">"$theIPSgrouphash"</a></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash2"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
  fi
 done
 
-echo "IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF_MASTERNODES,MASTERNODES" > $filenameun
+echo "IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF_MASTERNODES,MASTERNODES,COLLATERALS,CROWDTYPES" > $filenameun
 sort -t, -k7,7 -nr pastedtwofile >> $filenameun
 rm pastedonefile
 rm pastedtwofile

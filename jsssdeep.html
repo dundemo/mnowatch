@@ -1,4 +1,4 @@
-<!-- MNOWATCH VERSION: 0.10  -->
+<!-- MNOWATCH VERSION: 0.11  -->
 <html>
 <head>
 <title>MNOWATCH from dashd thedateis</title>
@@ -80,6 +80,22 @@ td.container8 > div {
     overflow:auto;
 }
 td.container8 {
+    height: 75px;
+}
+td.container9 > div {
+    width: 100%;
+    height: 100%;
+    overflow:auto;
+}
+td.container9 {
+    height: 75px;
+}
+td.container10 > div {
+    width: 100%;
+    height: 100%;
+    overflow:auto;
+}
+td.container10 {
     height: 75px;
 }
 </style>
@@ -6480,6 +6496,38 @@ $('th:nth-child(3)').show();
             
               });
 
+            $('#chkTest9').attr("checked", false);
+            $('#chkTest9').click(function() {
+		if($(this).attr('checked')){
+                   $('td:nth-child(9)').hide();
+			   $('th:nth-child(9)').hide();
+                   // if your table has header(th), use this
+                   //$('td:nth-child(7),th:nth-child(7)').hide();
+                } else {
+                   $('td:nth-child(9)').show();
+                   $('th:nth-child(9)').show();
+                   // if your table has header(th), use this
+                   //$('td:nth-child(7),th:nth-child(7)').hide();
+                }
+            
+              });
+
+            $('#chkTest10').attr("checked", false);
+            $('#chkTest10').click(function() {
+		if($(this).attr('checked')){
+                   $('td:nth-child(10)').hide();
+			   $('th:nth-child(10)').hide();
+                   // if your table has header(th), use this
+                   //$('td:nth-child(7),th:nth-child(7)').hide();
+                } else {
+                   $('td:nth-child(10)').show();
+                   $('th:nth-child(10)').show();
+                   // if your table has header(th), use this
+                   //$('td:nth-child(7),th:nth-child(7)').hide();
+                }
+            
+              });
+
           });
 </script>
 
@@ -7540,6 +7588,8 @@ NO filter:<input type="text" id="myInput4" onkeyup="myFunction4()" placeholder="
 ABS filter:<input type="text" id="myInput5" onkeyup="myFunction5()" placeholder="Search for names..">
 VotesHash filter:<input type="text" id="myInput6" onkeyup="myFunction6()" placeholder="Search for names..">
 Masternodes filter:<input type="text" id="myInput7" onkeyup="myFunction7()" placeholder="Search for names..">
+Collat filter:<input type="text" id="myInput8" onkeyup="myFunction8()" placeholder="Search for names..">
+Crowdtype filter:<input type="text" id="myInput9" onkeyup="myFunction9()" placeholder="Search for names..">
 <!-- When a filter works, it cancels all the rest  -->
 <!-- TO DO: Look at the below URL to make filters work all together in the table row, or in separate collumns with an OR or an AND relation  -->
 <!-- TO DO: Also implement and/or special syntax inside a single filter and not only between two or more filters   -->
@@ -7575,6 +7625,8 @@ document.getElementById("myInput4").value = "";
 document.getElementById("myInput5").value = "";
 document.getElementById("myInput6").value = "";
 document.getElementById("myInput7").value = "";
+document.getElementById("myInput8").value = "";
+document.getElementById("myInput9").value = "";
 }
 </script>
 <script>
@@ -7608,6 +7660,8 @@ document.getElementById("myInput4").value = "";
 document.getElementById("myInput5").value = "";
 document.getElementById("myInput6").value = "";
 document.getElementById("myInput7").value = "";
+document.getElementById("myInput8").value = "";
+document.getElementById("myInput9").value = "";
 }
 </script>
 <script>
@@ -7641,6 +7695,8 @@ document.getElementById("myInput4").value = "";
 document.getElementById("myInput5").value = "";
 document.getElementById("myInput6").value = "";
 document.getElementById("myInput7").value = "";
+document.getElementById("myInput8").value = "";
+document.getElementById("myInput9").value = "";
 }
 </script>
 <script>
@@ -7674,6 +7730,8 @@ document.getElementById("myInput4").value = "";
 document.getElementById("myInput5").value = "";
 document.getElementById("myInput6").value = "";
 document.getElementById("myInput7").value = "";
+document.getElementById("myInput8").value = "";
+document.getElementById("myInput9").value = "";
 }
 </script>
 <script>
@@ -7707,6 +7765,8 @@ document.getElementById("myInput3").value = "";
 document.getElementById("myInput5").value = "";
 document.getElementById("myInput6").value = "";
 document.getElementById("myInput7").value = "";
+document.getElementById("myInput8").value = "";
+document.getElementById("myInput9").value = "";
 }
 </script>
 <script>
@@ -7740,6 +7800,8 @@ document.getElementById("myInput3").value = "";
 document.getElementById("myInput4").value = "";
 document.getElementById("myInput6").value = "";
 document.getElementById("myInput7").value = "";
+document.getElementById("myInput8").value = "";
+document.getElementById("myInput9").value = "";
 }
 </script>
 <script>
@@ -7773,6 +7835,8 @@ document.getElementById("myInput3").value = "";
 document.getElementById("myInput4").value = "";
 document.getElementById("myInput5").value = "";
 document.getElementById("myInput7").value = "";
+document.getElementById("myInput8").value = "";
+document.getElementById("myInput9").value = "";
 }
 </script>
 <script>
@@ -7806,6 +7870,78 @@ document.getElementById("myInput3").value = "";
 document.getElementById("myInput4").value = "";
 document.getElementById("myInput5").value = "";
 document.getElementById("myInput6").value = "";
+document.getElementById("myInput8").value = "";
+document.getElementById("myInput9").value = "";
+}
+</script>
+<script>
+function myFunction8() {
+  var input, filter, table, tr, td, i, sumValf, trimit;
+sumValf = 0;
+  input = document.getElementById("myInput8");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[8];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+trimit=table.rows[i].cells[0].innerHTML;
+trimit=trimit.replace(/[^\w\s]/gi, '');
+trimit=trimit.replace(/div/g, '');
+sumValf=sumValf+Number(trimit);
+
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+document.getElementById("myValf").innerHTML="<br><h3 style=\"color:Tomato;\"><strong>Total Displayed Masternodes ="+sumValf+"</strong></h3>";
+document.getElementById("myInput0").value = "";
+document.getElementById("myInput1").value = "";
+document.getElementById("myInput2").value = "";
+document.getElementById("myInput3").value = "";
+document.getElementById("myInput4").value = "";
+document.getElementById("myInput5").value = "";
+document.getElementById("myInput6").value = "";
+document.getElementById("myInput7").value = "";
+document.getElementById("myInput9").value = "";
+}
+</script>
+<script>
+function myFunction9() {
+  var input, filter, table, tr, td, i, sumValf, trimit;
+sumValf = 0;
+  input = document.getElementById("myInput9");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[9];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+trimit=table.rows[i].cells[0].innerHTML;
+trimit=trimit.replace(/[^\w\s]/gi, '');
+trimit=trimit.replace(/div/g, '');
+sumValf=sumValf+Number(trimit);
+
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+document.getElementById("myValf").innerHTML="<br><h3 style=\"color:Tomato;\"><strong>Total Displayed Masternodes ="+sumValf+"</strong></h3>";
+document.getElementById("myInput0").value = "";
+document.getElementById("myInput1").value = "";
+document.getElementById("myInput2").value = "";
+document.getElementById("myInput3").value = "";
+document.getElementById("myInput4").value = "";
+document.getElementById("myInput5").value = "";
+document.getElementById("myInput6").value = "";
+document.getElementById("myInput7").value = "";
+document.getElementById("myInput8").value = "";
 }
 </script>
 <br><strong>Note 2:</strong> Click the check-boxes below if you want to hide some columns<br>
@@ -7817,6 +7953,8 @@ document.getElementById("myInput6").value = "";
 <input type="checkbox" id="chkTest6" />Hide ABSTVOTES 
 <input type="checkbox" id="chkTest7" />Hide VOTESHASH
 <input type="checkbox" id="chkTest8" />Hide MASTERNODES
+<input type="checkbox" id="chkTest9" />Hide COLLATERALS 
+<input type="checkbox" id="chkTest10" />Hide CROWDTYPES
 <br>
 <strong>Note 3:</strong> When clicking the History number you go to the report where the specific IP_group initially appeared. When clicking the IP_HASH you go to the report where a change in the votes of the IP_group occured. When clicking "(diff)" in the VOTES_HASH column you can see the votes changes in a better display. When clicking the VOTES_HASH itself (if clickable), you go to the previous report where the same VOTES_HASH appeared.<br>
 <strong>Note 4:</strong> Click the headers of the table if you want to sort it.<br>
@@ -7833,6 +7971,8 @@ document.getElementById("myInput6").value = "";
 <th>ABS_VOTES</th>
 <th>VOTES_HASH</th>
 <th>MASTERNODES</th>
+<th>COLLATERALS</th>
+<th>CROWDTYPES</th>
 </tr>
 </thead> 
 <tbody> 
