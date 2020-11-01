@@ -4,7 +4,7 @@ This set of scripts is used in order to watch the way the Dash masternode owners
 
 Have a look at the reports that the above set of scripts produces, [here](https://apogee.dynu.net/).
 
-## CURRENT MNOWATCH VERSION: 0.11
+## CURRENT MNOWATCH VERSION: 0.13
 
 ## QUICK INSTALLATION
 

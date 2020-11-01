@@ -5,8 +5,8 @@
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 # Tweaking / Debugging by xkcd@dashtalk 
 #
-# MNOWATCH VERSION: 0.11
-# COMPATIBLE TO DASHD VERSION 14 (works also for DASHD VERSION 12 and 13)
+# MNOWATCH VERSION: 0.13
+# COMPATIBLE TO DASHD VERSION 16 (works also for DASHD VERSION 12 and above)
 
 #==========================INSTRUCTIONS ======================
 
@@ -21,7 +21,7 @@ MYHOME_DIR=$HOME
 # 4) Set SIMILARNUM less than 99 and greater than 0 in case you want to spot similarities.
 #    WARNING: Setting $SIMILARNUM greater than 0 may cause HUGE delays in script's execution!
 #    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
-SIMILARNUM=0
+SIMILARNUM=90
 #==========================END OF INSTRUCTIONS ==================
 which dash-cli>/dev/null||{ echo "I dont know where the command dash-cli is. Please put dash-cli in your execution path.";exit;}
 which bc>/dev/null||{ echo "I dont know where the command bc is. Please put bc in your execution path.";exit;}
@@ -51,6 +51,18 @@ if [ ! -d $TMP_DIR ] ; then
  mkdir $TMP_DIR||{ echo "Unable to create directory $TMP_DIR. Please check your read-write priviledges.";exit 1;}
 fi
 HTTPD_DIR=$MYHOME_DIR"/httpd" ; if [ ! -d $HTTPD_DIR ] ; then mkdir $HTTPD_DIR ; echo "<html><body>" > $HTTPD_DIR/index.html ; echo "Hello world. The time of the reports is UTC. <br>" >> $HTTPD_DIR/index.html ; echo "</body></html>" >> $HTTPD_DIR/index.html ; fi;
+
+TYPES_DIR=$MYHOME_DIR"/httpd/Types" ; if [ ! -d $TYPES_DIR ] ; then mkdir $TYPES_DIR ; echo "<html><body>" > $TYPES_DIR/index.html ; echo "Here we explain the reason why the admins classified some masternodes into a specific type.<p> " >> $TYPES_DIR/index.html ; echo "</body></html>" >> $TYPES_DIR/index.html ; fi;
+
+PREVIUSREPORT=`cd $HTTPD_DIR;ls -tra the_results_dashd_*.html.csv 2>/dev/null|tail -1`
+PREVIUSREPORTCOUNT=`echo $PREVIUSREPORT|wc -c`
+if [ $PREVIUSREPORTCOUNT -gt 1 ]
+then
+PREVIUSREPORTFULL=$HTTPD_DIR"/"$PREVIUSREPORT
+else
+PREVIUSREPORTFULL=""
+fi
+
 superblock=0
 if [ $# -gt 0 ] ; then
   re='^[0-9]+$'
@@ -59,6 +71,7 @@ if [ $# -gt 0 ] ; then
       SIMILARNUM=$1
     fi
   elif [ $1 == '-super' ] ; then
+#BUG in case the super report is identical to the previous report, not "--end of vote" tag appears in index.html
     superblock=1
     if [ $# -gt 1 ] ; then
       if [[ $2 =~ $re ]] ; then
@@ -99,6 +112,20 @@ done
 cd $TMP_DIR
 rm -rf *_* upload proposals
 
+#crowdnodes=`wget -qO- crowdnode.io|grep ">MN"|awk -F"address/" '{for(i=2;i<=NF;i++){{print $i}}}'  |cut -f1 -d'"'|cut -f1 -d"."|uniq`
+#second (working) version
+#crowdnodes=`wget -qO- crowdnode.io|grep ">MN"|awk -F"address.dws" '{for(i=2;i<=NF;i++){{print $i}}}'  |cut -f1 -d'"'|cut -f1 -d"."|uniq|cut -f2 -d?`
+#xkcd version
+
+#crowdnodes=`wget -qO- crowdnode.io|grep ">MN"|awk -F"address.dws" '{for(i=2;i<=NF;i++){{print $i}}}'|sed 's/.\(.\{34\}\).*/\1/g'|uniq`
+
+#BUG: https://app.crowdnode.io/ is more accurate! Use it, instead of crowdnode.io. Unfortunately it provides info about IPs rather than addresses, but we could fix that somehow.
+wget -qO- crowdnode.io|grep ">MN"|awk -F"address.dws" '{for(i=2;i<=NF;i++){{print $i}}}'|sed 's/.\(.\{34\}\).*/\1/g'|uniq > $HTTPD_DIR/Types/CrowdNode.txt
+
+#dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'
+#dash-cli masternodelist|jq 'keys'
+dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'|cut -f1 -d: > collateraladdress_IP
+
 #TO DO: Make the script intedendant of dashcentral.org api. Read directly the active proposals by using dash-cli
 #look at https://insight.dashevo.org/insight-api-dash/gobject/list
 #Look at the end_epoch
@@ -109,24 +136,57 @@ rm -rf *_* upload proposals
 #delete all supposed active proposals that end in the middle of the cycle.
 #it will be removed from the Active tab after the last superblock  overlaps with has occurred. So no, it will no longer be "active"
 
-#TO DO: The mnowatch report of individuality does not take into account the crowdnode type of masternodes, and it wrongly assumes that a crowdnode is a unique individual.
-#crowdnodes=`wget -qO- crowdnode.io|grep ">MN"|awk -F"address/" '{for(i=2;i<=NF;i++){{print $i}}}'  |cut -f1 -d'"'|cut -f1 -d"."|uniq`
-crowdnodes=`wget -qO- crowdnode.io|grep ">MN"|awk -F"address.dws" '{for(i=2;i<=NF;i++){{print $i}}}'  |cut -f1 -d'"'|cut -f1 -d"."|uniq|cut -f2 -d?`
-#dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'
-#dash-cli masternodelist|jq 'keys'
-dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'|cut -f1 -d: > collateraladdress_IP
+#TO_DO: In order to et rid of the cashcentral dependancy : dash-cli gobject list proposals (and search for endepoch to be more than the 14 of the current month)
+#dash-cli gobject list valid proposals|grep end_epoch|wc -l
 
-curl -s https://www.dashcentral.org/api/v1/budget > centralproposals_json
-awk -F"\"name" '{for(i=2;i<=NF;i++){{print $i}}}' centralproposals_json|cut -f2 -d":"|cut -f1 -d","|sed -e s/\"//g > current_props
+#old working version
+#curl -s https://www.dashcentral.org/api/v1/budget > centralproposals_json
+#awk -F"\"name" '{for(i=2;i<=NF;i++){{print $i}}}' centralproposals_json|cut -f2 -d":"|cut -f1 -d","|sed -e s/\"//g > current_props
+
+#xkcd version
+
+#curl -s https://www.dashcentral.org/api/v1/budget|jq '.proposals[].name'|sed 's/"//g' > current_props
+
+#mytry without dashcentral
+#dash-cli gobject list valid proposals|grep end_epoch|sort -nr -t: -k7|cut -f3-4 -d:|cut -f1-2 -d,|sed -e s/'\\"name\\":\\"'/''/g|sed -e s/'\\"'/''/g > newpros
+#nextsuperblockseconds=$(echo "($(dash-cli getgovernanceinfo|jq -r '.nextsuperblock') - $(dash-cli getblockcount))*2.625*60"|bc)
+#nextsuperblockseconds=$(printf "%.0f" $nextsuperblockseconds)
+#nextsuperblocktime=$((nextsuperblockseconds + EPOCHSECONDS))
+#for fn in `cat newpros`; do
+#        comp=`echo $fn|cut -f1 -d,`
+#        if [ $comp -gt $nextsuperblocktime ]
+#        then
+#                echo $fn|cut -f2 -d,
+#        fi
+#done
+#end mytry
+
+cat /dev/null > current_props
+#xkcd version without dashcentral
+nextsuperblockseconds=$(echo "($(dash-cli getgovernanceinfo|jq -r '.nextsuperblock') - $(dash-cli getblockcount))*2.625*60"|bc)
+nextsuperblockseconds=$(printf "%.0f" $nextsuperblockseconds)
+nextsuperblocktime=$((nextsuperblockseconds + EPOCHSECONDS))
+dash-cli gobject list valid proposals|grep end_epoch|sort -nr -t: -k7|cut -f3-4 -d:|cut -f1-2 -d,|sed -e s/'\\"name\\":\\"'/''/g|sed -e s/'\\"'/''/g|while IFS=, read time name;do if ((time>nextsuperblocktime));then echo "$name">>current_props;fi;done
+#end xkcd
+
 echo  > expired_props
 
 #dash-cli masternodelist addr > masternodelist_addr
+#BUGGY VERSION: dash-cli masternodelist full ENABLED|cut -f1-3,19 -d" "|sed -e "s/: /: \"/g"|grep -v "[0:0:0:0:0:0:0:0]:0" > masternodelist_addr
+#dash-cli masternodelist full ENABLED|awk '{print $1" \""$7}'|grep -v "[0:0:0:0:0:0:0:0]:0" > masternodelist_addr
 dash-cli masternodelist addr|grep -v "[0:0:0:0:0:0:0:0]:0" > masternodelist_addr #https://github.com/dashpay/dash/issues/2942
-dash-cli masternodelist payee > masternodelist_payee
+
+#dash-cli masternodelist payee > masternodelist_payee
+
 #TO DO: Use this payee address to do more smart groupings
 #TO DO: After spork 15 the payee is not valid, we should check collateraladdress
 dash-cli gobject list > gobject_list
-grep "{" gobject_list|grep -v "DataString"|cut -f2 -d"\""|grep -v "{" > proposals
+
+#old working code
+#grep "{" gobject_list|grep -v "DataString"|cut -f2 -d"\""|grep -v "{" > proposals
+#xkcd version
+jq -r '.[].Hash' gobject_list > proposals
+
 for fn in `cat proposals`; do
 dash-cli gobject getcurrentvotes $fn > "gobject_getcurrentvotes_"$fn
 numi=$(grep -n "\"Hash\": \""$fn gobject_list|tail -1|cut -f1 -d":")
@@ -144,21 +204,35 @@ propc=`echo $prop|wc -c`
 if [ $propc -gt 1 -a $propc -lt 200 ]
 then
 
-grep -i ABSTAIN:FUNDING "gobject_getcurrentvotes_"$fn|cut -f3 -d"("|cut -f1 -d")"|sed -e s/", "/-/g |cut -f2 -d":" > "ABSTAIN_"$prop
+#old working code		
+#grep -i ABSTAIN:FUNDING "gobject_getcurrentvotes_"$fn|cut -f3 -d"("|cut -f1 -d")"|sed -e s/", "/-/g |cut -f2 -d":" > "ABSTAIN_"$prop
+#xkcd version
+grep -i ABSTAIN:FUNDING "gobject_getcurrentvotes_"$fn|awk -F \: '{print $2}' > "ABSTAIN_"$prop
+
 >"ABSTAIN_IP_"$prop
 for gn in `cat "ABSTAIN_"$prop`; do
 grep $gn\" masternodelist_addr|cut -f2 -d":"|cut -f2 -d"\"" >> "ABSTAIN_IP_"$prop
 done
 sort "ABSTAIN_IP_"$prop -o "ABSTAIN_IP_"$prop
 #echo "ABS:"`wc -l "ABSTAIN_IP_"$prop|cut -f1 -d" "`
-grep -i NO:FUNDING "gobject_getcurrentvotes_"$fn|cut -f3 -d"("|cut -f1 -d")"|sed -e s/", "/-/g |cut -f2 -d":" > "NO_"$prop
+
+#old working code		
+#grep -i NO:FUNDING "gobject_getcurrentvotes_"$fn|cut -f3 -d"("|cut -f1 -d")"|sed -e s/", "/-/g |cut -f2 -d":" > "NO_"$prop
+#xkcd version
+grep -i NO:FUNDING "gobject_getcurrentvotes_"$fn|awk -F \: '{print $2}' > "NO_"$prop
+
 >"NO_IP_"$prop
 for gn in `cat "NO_"$prop`; do
 grep $gn\" masternodelist_addr|cut -f2 -d":"|cut -f2 -d"\"" >> "NO_IP_"$prop
 done
 sort "NO_IP_"$prop -o "NO_IP_"$prop
 #echo "NO:"`wc -l "NO_IP_"$prop|cut -f1 -d" "`
-grep -i YES:FUNDING "gobject_getcurrentvotes_"$fn|cut -f3 -d"("|cut -f1 -d")"|sed -e s/", "/-/g |cut -f2 -d":" > "YES_"$prop
+
+#old working code		
+#grep -i YES:FUNDING "gobject_getcurrentvotes_"$fn|cut -f3 -d"("|cut -f1 -d")"|sed -e s/", "/-/g |cut -f2 -d":" > "YES_"$prop
+#xkcd version
+grep -i YES:FUNDING "gobject_getcurrentvotes_"$fn|awk -F \: '{print $2}' > "YES_"$prop
+
 >"YES_IP_"$prop
 for gn in `cat "YES_"$prop`; do
 grep $gn\" masternodelist_addr|cut -f2 -d":"|cut -f2 -d"\"" >> "YES_IP_"$prop
@@ -197,6 +271,8 @@ cd upload
 
 # Decompress the javascript helper functions and add HTML file.
 dateis=`date -u +"%Y-%m-%d-%H-%M-%S"`
+dateisAndTypes=`echo $dateis" <p>Note: We argue why we classified each type into mnowatch.org\\/Types<p>"`
+
 filenameis="../the_results_dashd_"$dateis".html"
 echo "QlpoOTFBWSZTWT7rLIAAj8X/0H90xER///////////////9AAAgAYQGe8AAAAAFAAAAF9y8+rfTQ
 jt9971V73MfLrvp9ra3fcz7tX1efddZ98NAA+202d7d9yG++ybcvrbodA4fO++vvgH0JUUCVR93N
@@ -1037,7 +1113,7 @@ oB04TiSkKFOIUMJDJQOsA5AJSiNJ+bgrAH9b979yrtOQc5v3pMAbwDfA/fP5HE+BzDkE/nQOeUYh
 0SSlQ6OlhRqWpNMLPWgVxqulgVkabXq0jv6HpLkhoBoBudeJJN7DQh1hv19fh39R/j9fIr19V9IU
 Qc6R1Wdm/+Ly4bzN+MoUCRRCcDBI6iFMY7Ncnc7D/vJvd8ch5jEFoCjmzMVyBKKFKVA4t9fX18/T
 2U6vddxsw4P01pIWdmvPOBiNpSUKULGqYCg7dcA6+GcSC5VKSMMyYDBzM5DVCaXieqZ3kf3WaI8i
-DyH4j//F3JFOFCQPussgAA=="|base64 -d|bzcat|sed -e s/"thedateis"/"$dateis"/g > $filenameis
+DyH4j//F3JFOFCQPussgAA=="|base64 -d|bzcat|sed -e s/"MNOWATCH from dashd thedateis<\/title>"/"MNOwatch - FirstResults $dateis <\/title><link rel=\"icon\" type=\"image\/png\" href=\"favicon.ico\">"/g|sed -e s/"thedateis"/"$dateisAndTypes"/g > $filenameis
 
 sed -i '1i'"$codeurl2" $filenameis
 
@@ -1050,10 +1126,75 @@ MNhashis=`echo $gn|cut -f1 -d":"`
 ipis=`echo $gn|cut -f2 -d":"`
 mycollat=`grep " $ipis$" ../collateraladdress_IP|cut -f1 -d" "`
 
-#Below an example on how to get the creation date of a collat address by bitinfocharts
+
+#ANOTHER TRY that IS SUCCESFULL
+#transact=`dash-cli getaddresstxids '{"addresses": ["'$mycollat'"]}'|head -2|tail -1|cut -f2 -d"\""`
+#blockis=`dash-cli getrawtransaction $transact 1|grep '"locktime":'|cut -f2 -d:|cut -f1 -d,`
+#if [ -z $blockis ]
+#then
+#blockis=`dash-cli getrawtransaction $transact 1|grep '"height":'|head -1|cut -f2 -d:|cut -f1 -d,`
+#fi
+#if [ $blockis -eq 0 ]
+#then
+#blockis=`dash-cli getrawtransaction $transact 1|grep '"height":'|head -1|cut -f2 -d:|cut -f1 -d,`
+#fi
+#if [ -z $blockis ]
+#then
+#blockis=`dash-cli getrawtransaction $transact 1|grep '"spentHeight":'|head -1|cut -f2 -d:`
+#fi
+#blockhash=`dash-cli getblockhash $blockis`
+#mediantime=`dash-cli getblock $blockhash|grep '"mediantime":'|cut -f2 -d:|cut -f1 -d,`
+#mediantime="@"`echo $mediantime`
+#earlytxdate=`date -u +"%Y-%m-%d-%H-%M-%S" -d $mediantime`
+
+#Below an alternative example on how to get the creation date of a collat address by bitinfocharts
 #wget -qO- -U 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.6) Gecko/20070802 SeaMonkey/1.1.4' https://bitinfocharts.com/dash/address/Xy14MCXe7CL5nXJVtsHS7evs1X3jpkjgxM |awk -F"muted utc hidden-desktop" '{for(i=2;i<=NF;i++){{print $i}}}'|cut -f1 -d"<"|tail -1|cut -f2 -d">"
 
-iscrowdnode2=`echo $crowdnodes|grep $mycollat|wc -l`
+if [ $PREVIUSREPORTCOUNT -gt 1 ]
+then
+ SEARCHINPREVIUS=`grep ","$mycollat"," $PREVIUSREPORTFULL|wc -l`		
+ if [ $SEARCHINPREVIUS -eq 1 ]
+ then
+  earlytxdate=`grep ","$mycollat"," $PREVIUSREPORTFULL|cut -f9 -d,`
+  #echo $mycollat $earlytxdate
+ else
+  #begin xkcd's contribution
+  transact=$(dash-cli getaddresstxids '{"addresses": ["'$mycollat'"]}'|jq -r '.[0]')
+  #echo "-----------------------------------------------"
+  #echo "mycollat" $mycollat
+  #echo "transact" $transact
+  #echo "Exiting...please fix the bug in case the dash-cli does not work"
+  #exit
+  tx=$(dash-cli getrawtransaction $transact 1)
+  blockis=$(jq -r '.locktime' <<< $tx)
+  test -z "$blockis" && blockis=$(jq -r '.height' <<< "$tx")
+  test "$blockis" -eq 0 && blockis=$(jq -r '.height' <<< "$tx")
+  test -z "$blockis" && blockis=$(jq -r '.vout[0].spentHeight' <<< "$tx")
+  blockhash=$(dash-cli getblockhash $blockis)
+  mediantime="@"$(dash-cli getblock $blockhash|jq -r '.mediantime')
+  earlytxdate=$(date -u +"%Y-%m-%d-%H-%M-%S" -d $mediantime)
+ fi
+else
+ #begin xkcd's contribution
+ transact=$(dash-cli getaddresstxids '{"addresses": ["'$mycollat'"]}'|jq -r '.[0]')
+ #echo "-----------------------------------------------"
+ #echo "mycollat" $mycollat
+ #echo "transact" $transact
+ #echo "Exiting...please fix the bug in case the dash-cli does not work"
+ #exit
+ tx=$(dash-cli getrawtransaction $transact 1)
+ blockis=$(jq -r '.locktime' <<< $tx)
+ test -z "$blockis" && blockis=$(jq -r '.height' <<< "$tx")
+ test "$blockis" -eq 0 && blockis=$(jq -r '.height' <<< "$tx")
+ test -z "$blockis" && blockis=$(jq -r '.vout[0].spentHeight' <<< "$tx")
+ blockhash=$(dash-cli getblockhash $blockis)
+ mediantime="@"$(dash-cli getblock $blockhash|jq -r '.mediantime')
+ earlytxdate=$(date -u +"%Y-%m-%d-%H-%M-%S" -d $mediantime)
+ #end xkcd's contribution
+fi
+
+#echo $mycollat $earlytxdate
+
 
 
 # BUG: fix ipis in case this is not fixed: https://github.com/dashpay/dash/issues/2942
@@ -1085,15 +1226,77 @@ fi
 allvotes=$yesvotes","$novotes","$absvotes
 #there was a bug when hashing $allvotes, in case a person has NO votes and not ABS votes, while another person has not NO votes but has ABS votes identical to the previous person's NO votes. I tried to fix it by comma separate instead of space.
 hashis=`bc <<<ibase=16\;$(sha1sum <<<$allvotes|tr a-z A-Z)0`
+
+
+iscrowdnode2=`grep $mycollat $TYPES_DIR/CrowdNode.txt|wc -l`
 if [ $iscrowdnode2 -eq 1 ]
 then
-#echo "<tr><td class=\"container1\"><div><span style=\"background: #00ee00\"><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis" "$mycollat" Crowdnode</span></div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> $filenameis
-echo "<tr><td class=\"container1\"><div><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis" <a target=\"_blank\" href=https://bitinfocharts.com/dash/address/"$mycollat">"$mycollat"</a> Crowdnode</div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> $filenameis
+ mytypeis="CrowdNode"
 else
-echo "<tr><td class=\"container1\"><div><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis" <a target=\"_blank\" href=https://bitinfocharts.com/dash/address/"$mycollat">"$mycollat"</a> </div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> $filenameis
+ num_matches=`grep -l $MNhashis $TYPES_DIR/*.txt|wc -l`
+ if [ $num_matches -gt 1 ]
+ then
+  mytypeis="TypeMismatched"
+ else
+  if [ $num_matches -eq 1 ]
+  then
+   num_matches2=`grep -l $MNhashis $TYPES_DIR/*.txt`
+   mytypeis=`basename $num_matches2|cut -f1 -d.`
+  else
+   mytypeis="NoType"
+  fi
+ fi
 fi
+
+#iscrowdnode2=`echo $crowdnodes|grep $mycollat|wc -l`
+#isbinance=`grep $MNhashis $HTTPD_DIR/Types/Binance.txt|wc -l`
+#iscoinbase=`grep $MNhashis $HTTPD_DIR/Types/Coinbase.txt|wc -l`
+#mismached=1
+#mytypeis=""
+#istype=0
+#if [[ $iscrowdnode2 -eq 0 && $isbinance -eq 0 && $iscoinbase -eq 0 ]]
+#then
+# mytypeis="NoType"
+# mismached=0
+#else
+# if [[ $iscrowdnode2 -gt 0 && $isbinance -eq 0 && $iscoinbase -eq 0 ]]
+# then
+#  mytypeis="CrowdNode"
+#  istype=1
+#  mismached=0
+# fi
+# if [[ $iscrowdnode2 -eq 0 && $isbinance -gt 0 && $iscoinbase -eq 0 ]]
+# then
+#  mytypeis="Binance"
+#  istype=2
+#  mismached=0
+# fi
+# if [[ $iscrowdnode2 -eq 0 && $isbinance -eq 0 && $iscoinbase -gt 0 ]]
+# then
+#  mytypeis="Coinbase"
+#  istype=3
+#  mismached=0
+# fi
+# if [ $mismached -gt 0 ]
+# then
+#  mytypeis="TypeMismatched"
+#  istype=9999
+# fi
+#fi
+
+
+
+echo "<tr><td class=\"container1\"><div><a target=\"_blank\" href=https://ipinfo.io/"$ipis">"$ipis"</a> "$MNhashis" <a target=\"_blank\" href=https://bitinfocharts.com/dash/address/"$mycollat">"$mycollat"</a> "$earlytxdate" "$mytypeis"</div></td><td class=\"container2\"><div>"$yesvotes"</div></td><td class=\"container3\"><div>"$novotes"</div></td><td class=\"container4\"><div>"$absvotes"</div></td><td class=\"container5\"><div>"$hashis"</div></td></tr>" >> $filenameis
+
+
 #mycollat and iscrowdnode caused problem to ssdeepit.sh but I fixed it 
-echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\",$mycollat,$iscrowdnode2" >> $csvfile
+#Crowdnode type is 1, Binance type is 2. Coinbase is 3.
+
+#Question: Instead of numbers, can I use plain names(stings) for types into the csv files? 
+#Will ssdeepit.sh and uniquehashvote report behave propery? I should investigate it.
+
+#echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\",$mycollat,$istype,$earlytxdate" >> $csvfile
+echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\",$mycollat,$mytypeis,$earlytxdate" >> $csvfile
 #echo "\"$ipis\",$MNhashis,$yesvotes,$novotes,$absvotes,\"$hashis\"" >> $csvfile
 #echo -n "."
 done
@@ -1111,22 +1314,46 @@ cp the_results_dashd_*.html.csv ../httpd
 # Check it: diff plays in tty and not in cron!
 # Warning! sometimes THERE iS diff in the_results.csv and there is no diff in the uniqueHashVotes.csv.
 # This is because an mno who DID NOT voted appeared/left.
-compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html.csv$|grep -v uniqueHashVotes|tail -2|wc -l`
+
+#TMP_DIR
+#I am on TMP_DIR/
+#pwd
+#In order not to use ls -trad that crashes the kernel, I have to change dirs
+#BUGFIX:the code breaks ls! ---> compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html.csv$|grep -v uniqueHashVotes|tail -2|wc -l`
+compareresultfiles=`ls -tra $HTTPD_DIR/|grep the_results_dashd.*.html.csv$|grep -v uniqueHashVotes|tail -2|wc -l`
 
 if [ $compareresultfiles -eq 2 ]
 then
- compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html.csv$|grep -v uniqueHashVotes|tail -2`
+#BUGFIX: compareresultfiles=`ls -trad $HTTPD_DIR/*|grep the_results_dashd.*.html.csv$|grep -v uniqueHashVotes|tail -2`
+compareresultfiles=`ls -tra $HTTPD_DIR/|grep the_results_dashd.*.html.csv$|grep -v uniqueHashVotes|tail -2`
+#I am on TMP_DIR/
+#pwd
+#In order not to use ls -trad that crashes the kernel, I have to change dirs
+cd $HTTPD_DIR
  istherediff=`diff $compareresultfiles |wc -l`
+cd $TMP_DIR
  if [[ ( $superblock -eq 0 && $istherediff -eq 0 ) || ( $superblock -eq 1 && $istherediff -eq 0 ) ]]
  then
   echo $dateis" --> No diffs found between "$compareresultfiles" . "`date -u` > /tmp/Mnowatch_diffs
+#I am on TMP_DIR/
+#pwd
+#In order not to use ls -trad that crashes the kernel, I have to change dirs
+cd $HTTPD_DIR
   diff $compareresultfiles >> /tmp/Mnowatch_diffs 
+cd $TMP_DIR
   deletelatest=`ls -tra $HTTPD_DIR/the_results_dashd_*.html.csv|grep -v uniqueHashVotes|tail -1`
+#WARNING. THE BELOW COMMAND IS EXTREMELY DANGERUS. MAKE SURE YOU ARE IN TMP_DIR
+cd $TMP_DIR
   rm -rf $deletelatest *_* upload proposals
   exit
  else
   echo $dateis" DIFFS FOUND! "$istherediff > /tmp/Mnowatch_diffs
+#I am on TMP_DIR/
+#pwd
+#In order not to use ls -trad that crashes the kernel, I have to change dirs
+cd $HTTPD_DIR
   diff $compareresultfiles >> /tmp/Mnowatch_diffs 
+cd $TMP_DIR
  fi
 else
  echo "I cant find two files to compare" > /tmp/Mnowatch_diffs
@@ -1139,7 +1366,7 @@ gzip -9 $filetimeis
 distrfileis="distr_"$dateis".txt"
 
 echo "$dateis" > $distrfileis
-echo "The first operator includes all people who abstain. All the rest are identified by the way they vote." >> $distrfileis
+echo "The first operator includes all people who dont vote at all. All the rest are identified by the way they vote." >> $distrfileis
 cut -f24 -d"<" the_results_dashd_*.html|cut -f2 -d">"|grep -v [a-z]|grep -v [A-Z]| grep ^[0-9]|grep -v "-"|sort|uniq -c|sed -e s/'^   '/000/g|sed -s s/'000   '/000000/g|sed -e s/'000  '/00000/g|sed -s s/'000 '/0000/g|sort -r|cut -f1 -d" "|uniq -c|sed -e s/" 0"/" operator(s) control(s) "/g|sed -e s/$/" masternode(s)"/g >> $distrfileis
 
 cp current_props ../httpd/current_props_"$dateis".txt
@@ -1202,6 +1429,8 @@ tblend=`grep -n "</pre>" $targetfile |tail -1|cut -f1 -d:`
 ADDTHIS="</tr></td></tbody></table>"
 tblend=$tblend"i$ADDTHIS"
 sed -i $tblend $targetfile
+ADDTHIS="<title>MNOwatch - Diff $dateis</title><link rel=\"icon\" type=\"image/png\" href=\"favicon.ico\">"
+sed -i '3i'"$ADDTHIS" $targetfile
 rm $initfile
 
 ADDTHIS=" (<a href=\"./"$diffis.html"\">html</a>)"
@@ -1214,4 +1443,4 @@ sed -i '9i'"$ADDTHIS" ./index.html
 fi
 
 #echo "END! "
-#$MYHOME_DIR/warnings/warnings.sh $dateis
+$MYHOME_DIR/warnings/warnings.sh $dateis

@@ -3,7 +3,7 @@
 # Licence: GPLv2
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 #
-# MNOWATCH VERSION: 0.11
+# MNOWATCH VERSION: 0.13
 
 wcone=`echo $1|wc -c`
 wctwo=`echo $2|wc -c`
@@ -49,7 +49,7 @@ cp mysortedUnique.csv $filenameun
 cat $filenameun|grep -v "^,,," > pastedonefile 
 cat /dev/null > pastedtwofile
 dateis=`echo $1|cut -f4 -d"_"|cut -f1 -d"."`
-cat $BIN_DIR/jsssdeep.html|sed -e s/"thedateis"/"$dateis"/g >  mysortedUnique.html
+cat $BIN_DIR/jsssdeep.html|sed -e s/"MNOWATCH from dashd thedateis<\/title>"/"MNOwatch - VoteHashGroups $dateis <\/title><link rel=\"icon\" type=\"image\/png\" href=\"favicon.ico\">"/g|sed -e s/"thedateis"/"$dateis"/g >  mysortedUnique.html
 PREVIUSREPORT=`cd $HTTPD_DIR;ls -tra *uniqueHashVotes*.html 2>/dev/null|tail -1`
 PREVIUSREPORTFULL=$HTTPD_DIR"/"$PREVIUSREPORT
 
@@ -62,14 +62,17 @@ for fn in `cat pastedonefile`; do
 #Note: theIPSgrouphash contains " " in front and in the end, as inherited by $IPS
  IPS=`echo $IPS` # bug fix due to change of bash version that trims spaces differently
  theIPSgrouphash=`bc <<<ibase=16\;$(sha1sum <<<$IPS|tr a-z A-Z)0`
+ #WARNING the IPS are sorted so they do not match the order of MNS or Collats
+ #TO DO: Make MNS and collats match the order of IPs
  theMNS=" "`grep $voteshash mysorted.csv|cut -f2 -d","`" "
  theMNSnum=" "`grep $voteshash mysorted.csv|cut -f2 -d","|wc -l`" "
  theMNSnum=`printf %04d $theMNSnum`
  theCollats=" "`grep $voteshash mysorted.csv|cut -f7 -d","`" "
  theCollats2=" "`grep $voteshash mysorted.csv|awk -F, '{ print "\""$7"\""}'`" "
+ the1stTx=" "`grep $voteshash mysorted.csv|cut -f9 -d","|sort|head -1|sed -e s/"-"/"."/g`" "
  theCrowds=" "`grep $voteshash mysorted.csv|cut -f8 -d","`" "
 
- echo $IPS","$yes","$no","$abs","$voteshash", \""$theIPSgrouphash"\" ,"$theMNSnum","$theMNS","$theCollats","$theCrowds >> pastedtwofile
+ echo $IPS","$yes","$no","$abs","$voteshash", \""$theIPSgrouphash"\" ,"$theMNSnum","$theMNS","$theCollats","$the1stTx","$theCrowds >> pastedtwofile
 
  exists=`grep $theIPSgrouphash $PREVIUSREPORTFULL 2>/dev/null|wc -l`
  theHistory=`grep -l $theIPSgrouphash $HTTPD_DIR/*uniqueHashVotes*.html 2>/dev/null|wc -l`
@@ -120,22 +123,23 @@ for fn in `cat pastedonefile`; do
    voteshash3="<a href=\"./"$PREVIUSREPORT"#"$previusreportofvoteshash"\"  title=\"Go to the previous report and see the group that has identical VOTES_HASH.\" >"$voteshash"</a>"
   fi
  #<a target=\"_blank\" href=https://bitinfocharts.com/dash/address/"$theCollats">"$theCollats"</a> 
-  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td><td class=\"container2\"><div>(History="$theHistory") <strong>"$theIPSgrouphash"</strong></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash3"</div></td><td class=\"container8\"><div>"$theMNS"</div></td><td class=\"container9\"><div>"$builtcoll"</div></td><td class=\"container10\"><div>"$theCrowds"</div></td></tr>" >> pasted.html
+  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td><td class=\"container2\"><div>(History="$theHistory") <strong>"$theIPSgrouphash"</strong></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash3"</div></td><td class=\"container8\"><div>"$theMNS"</div></td><td class=\"container9\"><div>"$builtcoll"</div></td><td class=\"container10\"><div>"$the1stTx"</div></td><td class=\"container11\"><div>"$theCrowds"</div></td></tr>" >> pasted.html
  else
   voteshash2=$voteshash
   if [ $voteshashexist -eq 0 ]
   then
    voteshash2="<strong>"$voteshash"</strong> (copy the votehash, then search for it in the <a target=\"_blank\" href=\"./"$dateis".diff.html#"`echo $voteshash|cut -f2 -d"\""`"\">diff</a> file)"
   fi
+  #BUG is there a bug in lastdiffdate? No . The reports changed to the diff in the collateral collumn. So I need to check the votes specifically in order for this not to happen again
   lastdiffdate=`cd $HTTPD_DIR;grep -l $theIPSgrouphash *.diff|grep -v "\-2019.diff"|tail -1|cut -f1 -d"."`
 #Note the grep -v "\-2019.diff" usage is for excluding the non stantard date diff files. Maybe do the same for the xargs above, for performance reasons
   lastdiffdatereport=`cd $HTTPD_DIR;ls *$lastdiffdate".uniqueHashVotes."*".html"`
-  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td> <td class=\"container2\"><div>(History="$theHistory") <a href=\"./"$lastdiffdatereport"#"$theIPSgrouphash" \" title=\"Go to the report where this group changed votes. Then check the diff that is linked from the VOTES_HASH column.\">"$theIPSgrouphash"</a></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash2"</div></td><td class=\"container8\"><div>"$theMNS"</div></td><td class=\"container9\"><div>"$builtcoll"</div></td><td class=\"container10\"><div>"$theCrowds"</div></td></tr>" >> pasted.html
+  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td> <td class=\"container2\"><div>(History="$theHistory") <a href=\"./"$lastdiffdatereport"#"$theIPSgrouphash" \" title=\"Go to the report where this group changed votes. Then check the diff that is linked from the VOTES_HASH column.\">"$theIPSgrouphash"</a></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash2"</div></td><td class=\"container8\"><div>"$theMNS"</div></td><td class=\"container9\"><div>"$builtcoll"</div></td><td class=\"container10\"><div>"$the1stTx"</div></td><td class=\"container11\"><div>"$theCrowds"</div></td></tr>" >> pasted.html
 #  echo "<tr id=\""$theIPSgrouphash"\" ><td class=\"container1\"><div>"$theMNSnum"</div></td> <td class=\"container2\"><div>(History="$theHistory") <a href=\"./"$PREVIUSREPORT"#"$theIPSgrouphash"\">"$theIPSgrouphash"</a></div></td><td class=\"container3\"><div>"$builtIPS"</div></td><td class=\"container4\"><div>"$yes"</div></td><td class=\"container5\"><div>"$no"</div></td><td class=\"container6\"><div>"$abs"</div></td><td class=\"container7\"><div>"$voteshash2"</div></td><td class=\"container8\"><div>"$theMNS"</div></td></tr>" >> pasted.html
  fi
 done
 
-echo "IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF_MASTERNODES,MASTERNODES,COLLATERALS,CROWDTYPES" > $filenameun
+echo "IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF_MASTERNODES,MASTERNODES,COLLATERALS,FIRSTTRANS,CROWDTYPES" > $filenameun
 sort -t, -k7,7 -nr pastedtwofile >> $filenameun
 rm pastedonefile
 rm pastedtwofile
@@ -268,7 +272,7 @@ then
  cp -f $tmpsortin $filenameis
 
  sort -t">" -k4,4 -nr $filenameishtml > $tmpsortin
- echo "<html><body><style> table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; } td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } tr:nth-child(even) { background-color: #dddddd; } </style><table><thead><tr><th>NUMBER_OF_IPS</th><th>HASH_OF_IPS</th><th>ALL_IPS</th><th>HOW_IPS_ARE_GROUPED</th></tr></thead><tbody>" > $filenameishtml
+ echo "<html><head><title>MNOwatch - Similarities $dateis</title><link rel=\"icon\" type=\"image/png\" href=\"favicon.ico\"></head><body><style> table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; } td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } tr:nth-child(even) { background-color: #dddddd; } </style><table><thead><tr><th>NUMBER_OF_IPS</th><th>HASH_OF_IPS</th><th>ALL_IPS</th><th>HOW_IPS_ARE_GROUPED</th></tr></thead><tbody>" > $filenameishtml
  cat $tmpsortin >> $filenameishtml
  echo "</tbody></table></body></html>" >> $filenameishtml
 
