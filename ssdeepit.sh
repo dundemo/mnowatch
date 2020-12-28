@@ -3,7 +3,7 @@
 # Licence: GPLv2
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
 #
-# MNOWATCH VERSION: 0.13
+# MNOWATCH VERSION: 0.14
 
 wcone=`echo $1|wc -c`
 wctwo=`echo $2|wc -c`
@@ -148,6 +148,13 @@ sort -t">" -k4,4 -nr pasted.html >> mysortedUnique.html
 echo "
 </tbody>
 </table>
+<!-- XKCD -->
+<script>
+const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+const comparer = (idx, asc) => (a, b) => ((v1, v2) => v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2))(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {const table = th.closest('table');Array.from(table.querySelectorAll('tr:nth-child(n+2)')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc)).forEach(tr => table.appendChild(tr));})));
+</script>
+<!-- END XKCD -->
 </body>
 </html>
 " >> mysortedUnique.html
@@ -274,7 +281,22 @@ then
  sort -t">" -k4,4 -nr $filenameishtml > $tmpsortin
  echo "<html><head><title>MNOwatch - Similarities $dateis</title><link rel=\"icon\" type=\"image/png\" href=\"favicon.ico\"></head><body><style> table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; } td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } tr:nth-child(even) { background-color: #dddddd; } </style><table><thead><tr><th>NUMBER_OF_IPS</th><th>HASH_OF_IPS</th><th>ALL_IPS</th><th>HOW_IPS_ARE_GROUPED</th></tr></thead><tbody>" > $filenameishtml
  cat $tmpsortin >> $filenameishtml
- echo "</tbody></table></body></html>" >> $filenameishtml
+
+# echo "</tbody></table></body></html>" >> $filenameishtml
+# Do I need to add the script of xkcd here?
+ echo "
+</tbody>
+</table>
+<!-- XKCD -->
+<script>
+const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+const comparer = (idx, asc) => (a, b) => ((v1, v2) => v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2))(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {const table = th.closest('table');Array.from(table.querySelectorAll('tr:nth-child(n+2)')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc)).forEach(tr => table.appendChild(tr));})));
+</script>
+<!-- END XKCD -->
+</body>
+</html>
+" >> $filenameishtml
 
  rm tmpsort
  rm mysortedUnique_gntwo.csv 
