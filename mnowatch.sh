@@ -699,15 +699,20 @@ distrfileis="distr_"$dateis".txt"
 
 echo "$dateis" > $distrfileis
 echo "The first operator includes all people who dont vote at all. All the rest are identified by the way they vote." >> $distrfileis
-cut -f24 -d"<" the_results_dashd_*.html|cut -f2 -d">"|grep -v [a-z]|grep -v [A-Z]| grep ^[0-9]|grep -v "-"|sort|uniq -c|sed -e s/'^   '/000/g|sed -s s/'000   '/000000/g|sed -e s/'000  '/00000/g|sed -s s/'000 '/0000/g|sort -r|cut -f1 -d" "|uniq -c|sed -e s/" 0"/" operator(s) control(s) "/g|sed -e s/$/" masternode(s)"/g >> $distrfileis
+
+#cut -f24 -d"<" the_results_dashd_*.html|cut -f2 -d">"|grep -v [a-z]|grep -v [A-Z]| grep ^[0-9]|grep -v "-"|sort|uniq -c|sed -e s/'^   '/000/g|sed -s s/'000   '/000000/g|sed -e s/'000  '/00000/g|sed -s s/'000 '/0000/g|sort -r|cut -f1 -d" "|uniq -c|sed -e s/" 0"/" operator(s) control(s) "/g|sed -e s/$/" masternode(s)"/g >> $distrfileis
+#xkcd replacement of the above command
+grep -o '[0-9]\{40,\}' the_results_dashd_*.html|sort|uniq -c|awk '{ while (/^[[:blank:]]/) {if (sub(/^ /,"")) printf "0";}print;}'|sort -r|cut -f1 -d" "|uniq -c|sed 's/\( *[0-9]* \)000\(.*\)/\1operator(s) control(s) \2 masternode(s)/g' >> $distrfileis
+#end of xkcd code
 
 cp current_props ../httpd/current_props_"$dateis".txt
 cp upload_*.tar.gz ../httpd
 cp distr_*.txt ../httpd
-
 cp the_results_dashd_*.html ../httpd
+
+wheredoIedit=`grep -n "Everything below this line is updated by MNOWatch.sh, do not modify!" ../httpd/index.html |cut -f1 -d:`
 ADDTHIS="<br><a href=\""`ls ./distr_*.txt`"\"> the distribution $dateis </a> and <a href=\""`ls ./the_results*.html`"\"> the results $dateis </a> (<a href=\""`ls ./the_results*.html.csv`"\">csv</a>)" 
-sed -i '3i'"$ADDTHIS" ../httpd/index.html
+sed -i `expr $wheredoIedit + 1`'i'"$ADDTHIS" ../httpd/index.html
 
 if [ $SIMILARNUM -gt 0 ]
 then
@@ -719,15 +724,15 @@ else
 $BIN_DIR/ssdeepit.sh `ls -tra $HTTPD_DIR/*html.csv|tail -1`
 ADDTHIS=" and didnt calculate similarites" 
 fi
-sed -i '4i'"$ADDTHIS" ../httpd/index.html
+sed -i `expr $wheredoIedit + 2`'i'"$ADDTHIS" ../httpd/index.html
 
 cp the_results_dashd_*.uniqueHashVotes.*.csv ../httpd
 cp the_results_dashd_*.uniqueHashVotes.*.html ../httpd
 ADDTHIS=" and <a href=\""`ls ./the_results*.uniqueHashVotes.*.csv`"\"> the uniqueVotesHashes.csv</a>"
-sed -i '5i'"$ADDTHIS" ../httpd/index.html
+sed -i `expr $wheredoIedit + 3`'i'"$ADDTHIS" ../httpd/index.html
 #ADDTHIS=" (<a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html</a>)"
 ADDTHIS="(<span style=\"background: #00ee00\"><a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html</a></span>)"
-sed -i '6i'"$ADDTHIS" ../httpd/index.html
+sed -i `expr $wheredoIedit + 4`'i'"$ADDTHIS" ../httpd/index.html
 rm -rf *_* upload proposals
 
 #here I change the working  directory to httpd 
@@ -744,7 +749,7 @@ else
 echo "" > $diffis
 fi
 ADDTHIS=" and <a href=\"./"$diffis"\">the git diff</a>"
-sed -i '7i'"$ADDTHIS" ./index.html
+sed -i `expr $wheredoIedit + 5`'i'"$ADDTHIS" ./index.html
 #TO DO: debug ansi2html when looks like a table.
 cat $diffis |$BIN_DIR/ansi2html.sh > $diffis.init.html
 
@@ -766,12 +771,12 @@ sed -i '3i'"$ADDTHIS" $targetfile
 rm $initfile
 
 ADDTHIS=" (<a href=\"./"$diffis.html"\">html</a>)"
-sed -i '8i'"$ADDTHIS" ./index.html
+sed -i `expr $wheredoIedit + 6`'i'"$ADDTHIS" ./index.html
 
 if [ $superblock -gt 0 ]
 then
 ADDTHIS="-<strong>EndOfVote</strong>"
-sed -i '9i'"$ADDTHIS" ./index.html
+sed -i `expr $wheredoIedit + 7`'i'"$ADDTHIS" ./index.html
 fi
 
 #echo "END! "
