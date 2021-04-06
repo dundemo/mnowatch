@@ -21,7 +21,7 @@ MYHOME_DIR=$HOME
 # 4) Set SIMILARNUM less than 99 and greater than 0 in case you want to spot similarities.
 #    WARNING: Setting $SIMILARNUM greater than 0 may cause HUGE delays in script's execution!
 #    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
-SIMILARNUM=90
+SIMILARNUM=0
 #==========================END OF INSTRUCTIONS ==================
 which dash-cli>/dev/null||{ echo "I dont know where the command dash-cli is. Please put dash-cli in your execution path.";exit;}
 which bc>/dev/null||{ echo "I dont know where the command bc is. Please put bc in your execution path.";exit;}
@@ -51,7 +51,7 @@ if [ ! -d $TMP_DIR ] ; then
  mkdir $TMP_DIR||{ echo "Unable to create directory $TMP_DIR. Please check your read-write priviledges.";exit 1;}
 fi
 #NOTE: EACHTIME A REPORT IS CREATED, WE INsERT IT IN THE 3rd row of index.html. The First 2 rows of index.html are reserved as shown below. You may change the 1st and second row, but keep space for the 3rd row to be inserted smoothly.
-HTTPD_DIR=$MYHOME_DIR"/httpd" ; if [ ! -d $HTTPD_DIR ] ; then mkdir $HTTPD_DIR ; echo "<!DOCTYPE html><html lang=\"en\"><head><meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"><title>MNOwatch</title></head>" > $HTTPD_DIR/index.html ; echo "<body> Hello world. The time of the reports is UTC. <br>" >> $HTTPD_DIR/index.html ; echo "</body></html>" >> $HTTPD_DIR/index.html ; fi;
+HTTPD_DIR=$MYHOME_DIR"/httpd" ; if [ ! -d $HTTPD_DIR ] ; then mkdir $HTTPD_DIR ; echo "<!DOCTYPE html><html lang=\"en\"><head><meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"><title>MNOwatch</title></head>" > $HTTPD_DIR/index.html ; echo "<body> Hello world. The time of the reports is UTC. <br>" >> $HTTPD_DIR/index.html ; echo '<!--  Everything below this line is updated by MNOWatch.sh, do not modify! -->' >> $HTTPD_DIR/index.html  ; echo "</body></html>" >> $HTTPD_DIR/index.html ; fi;
 
 TYPES_DIR=$MYHOME_DIR"/httpd/Types" ; if [ ! -d $TYPES_DIR ] ; then mkdir $TYPES_DIR ; echo "<html><body>" > $TYPES_DIR/index.html ; echo "Here we explain the reason why the admins classified some masternodes into a specific type.<p> " >> $TYPES_DIR/index.html ; echo "</body></html>" >> $TYPES_DIR/index.html ; fi;
 
@@ -780,6 +780,6 @@ sed -i `expr $wheredoIedit + 7`'i'"$ADDTHIS" ./index.html
 fi
 
 #echo "END! "
-$MYHOME_DIR/warnings/warnings.sh $dateis
+#$MYHOME_DIR/warnings/warnings.sh $dateis
 
 
