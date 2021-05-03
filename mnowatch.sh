@@ -21,7 +21,7 @@ MYHOME_DIR=$HOME
 # 4) Set SIMILARNUM less than 99 and greater than 0 in case you want to spot similarities.
 #    WARNING: Setting $SIMILARNUM greater than 0 may cause HUGE delays in script's execution!
 #    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
-SIMILARNUM=0
+SIMILARNUM=90
 #==========================END OF INSTRUCTIONS ==================
 which dash-cli>/dev/null||{ echo "I dont know where the command dash-cli is. Please put dash-cli in your execution path.";exit;}
 which bc>/dev/null||{ echo "I dont know where the command bc is. Please put bc in your execution path.";exit;}
@@ -64,21 +64,28 @@ else
 PREVIUSREPORTFULL=""
 fi
 
+MYCOMMENT="" 
 superblock=0
 if [ $# -gt 0 ] ; then
+  MYCOMMENT=$@ #comment is initialy all arguments. But then.....
   re='^[0-9]+$'
   if [[ $1 =~ $re ]] ; then
     if [[ $1 -ge 0 && $1 -lt 100 ]] ; then
       SIMILARNUM=$1
     fi
+	MYCOMMENT=`echo $@|cut -f2- -d" "` #comment starts after the similarity number
   elif [ $1 == '-super' ] ; then
+#BUG
 #BUG in case the super report is identical to the previous report, not "--end of vote" tag appears in index.html
+#BUG
     superblock=1
+	MYCOMMENT=`echo $@|cut -f2- -d" "` # comment starts after the -super flag
     if [ $# -gt 1 ] ; then
       if [[ $2 =~ $re ]] ; then
         if [[ $2 -ge 0 && $2 -lt 100 ]] ; then
           SIMILARNUM=$2
         fi
+	    MYCOMMENT=`echo $@|cut -f3- -d" "` #comment starts after the -super flag and the similarity number
       fi
     fi
   fi
@@ -722,7 +729,7 @@ cp the_results_dashd_*.similar.*.html ../httpd
 ADDTHIS=" and <a href=\""`ls ./the_results*.similar.*.csv`"\">the similarities.csv</a> (<a href=\""`ls ./the_results*.similar.*.html`"\">html</a>)" 
 else
 $BIN_DIR/ssdeepit.sh `ls -tra $HTTPD_DIR/*html.csv|tail -1`
-ADDTHIS=" and didnt calculate similarites" 
+ADDTHIS=" and didn't calculate similarites" 
 fi
 sed -i `expr $wheredoIedit + 2`'i'"$ADDTHIS" ../httpd/index.html
 
@@ -779,7 +786,14 @@ ADDTHIS="-<strong>EndOfVote</strong>"
 sed -i `expr $wheredoIedit + 7`'i'"$ADDTHIS" ./index.html
 fi
 
+reg2='^leaderboard '
+if [[ $MYCOMMENT =~ $reg2 ]] 
+then
+ADDTHIS="-<strong><a href=\"./leaderboard/analysis/?"`echo $MYCOMMENT|cut -f2 -d" "`"\">Leaderboard</a></strong>"
+sed -i `expr $wheredoIedit + 7`'i'"$ADDTHIS" ./index.html
+fi
+
 #echo "END! "
-#$MYHOME_DIR/warnings/warnings.sh $dateis
+$MYHOME_DIR/warnings/warnings.sh $dateis
 
 

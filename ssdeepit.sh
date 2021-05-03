@@ -72,11 +72,13 @@ for fn in `cat pastedonefile`; do
  the1stTx=" "`grep $voteshash mysorted.csv|cut -f9 -d","|sort|head -1|sed -e s/"-"/"."/g`" "
  theCrowds=" "`grep $voteshash mysorted.csv|cut -f8 -d","`" "
 
- echo $IPS","$yes","$no","$abs","$voteshash", \""$theIPSgrouphash"\" ,"$theMNSnum","$theMNS","$theCollats","$the1stTx","$theCrowds >> pastedtwofile
 
  exists=`grep $theIPSgrouphash $PREVIUSREPORTFULL 2>/dev/null|wc -l`
  theHistory=`grep -l $theIPSgrouphash $HTTPD_DIR/*uniqueHashVotes*.html 2>/dev/null|wc -l`
  theHistory=`printf %04d $theHistory`
+ theHistoryCsv=$theHistory
+
+ echo $IPS","$yes","$no","$abs","$voteshash", \""$theIPSgrouphash"\" ,"$theMNSnum","$theMNS","$theCollats","$the1stTx","$theCrowds","$theHistoryCsv >> pastedtwofile
 
  OLDESTREPORT=`cd $HTTPD_DIR;ls -tra *uniqueHashVotes*.html 2>/dev/null|xargs grep -l $theIPSgrouphash`
  OLDESTREPORT=`echo $OLDESTREPORT|cut -f1 -d" "`
@@ -139,7 +141,7 @@ for fn in `cat pastedonefile`; do
  fi
 done
 
-echo "IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF_MASTERNODES,MASTERNODES,COLLATERALS,FIRSTTRANS,CROWDTYPES" > $filenameun
+echo "IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF_MASTERNODES,MASTERNODES,COLLATERALS,FIRSTTRANS,CROWDTYPES,VOTERS_HISTORY" > $filenameun
 sort -t, -k7,7 -nr pastedtwofile >> $filenameun
 rm pastedonefile
 rm pastedtwofile
