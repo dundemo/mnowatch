@@ -751,7 +751,20 @@ if [ $filestodiff -eq 2 ]
 then
 #git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "`|sed -e s/"IPS,YES_VOTES,NO_VOTES,ABSTAIN_VOTES,VOTES_HASH,HASH_OF_THE_SORTED_IPS,NUMBER_OF"/"------------------------------"/g > $diffis
 #TO DO: debug git diff --color-words. It seems to put some IPs in the same line while we expect to be in separete lines.
-git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "` > $diffis
+file1todiff=`ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "|head -1`
+file2todiff=`ls -lrta |grep unique|grep -v html |tail -1|cut -f2 -d":"|cut -f2 -d" "`
+cat $file1todiff |cut -f1-11 -d, > $TMP_DIR/$file1todiff
+cat $file2todiff |cut -f1-11 -d, > $TMP_DIR/$file2todiff
+
+cd $TMP_DIR
+#git diff --color-words --word-diff=plain --unified=0 `ls -lrta |grep unique|grep -v html |tail -2|cut -f2 -d":"|cut -f2 -d" "` > $diffis
+#diff <(cat file1todiff|cut -f1-2 -d,) <(cat file2todiff|cut -f1-2 -d,)
+#WARNING. Diff should not take into account the last collumn of history
+git diff --color-words --word-diff=plain --unified=0 $file1todiff $file2todiff > $HTTPD_DIR/$diffis
+cd $HTTPD_DIR
+rm -f $TMP_DIR/$file1todiff
+rm -f $TMP_DIR/$file2todiff
+
 else
 echo "" > $diffis
 fi
