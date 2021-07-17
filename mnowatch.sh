@@ -21,7 +21,7 @@ MYHOME_DIR=$HOME
 # 4) Set SIMILARNUM less than 99 and greater than 0 in case you want to spot similarities.
 #    WARNING: Setting $SIMILARNUM greater than 0 may cause HUGE delays in script's execution!
 #    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
-SIMILARNUM=90
+SIMILARNUM=0
 #==========================END OF INSTRUCTIONS ==================
 which dash-cli>/dev/null||{ echo "I dont know where the command dash-cli is. Please put dash-cli in your execution path.";exit;}
 which bc>/dev/null||{ echo "I dont know where the command bc is. Please put bc in your execution path.";exit;}
