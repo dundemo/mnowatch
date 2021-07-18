@@ -22,8 +22,30 @@ MYHOME_DIR=$HOME
 #    WARNING: Setting $SIMILARNUM greater than 0 may cause HUGE delays in script's execution!
 #    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
 SIMILARNUM=0
+# 5) If you want to connect to a remote dash-cli, set LOCAL_DASHCLI to 0 and edit the config file.
 #==========================END OF INSTRUCTIONS ==================
+
+LOCAL_DASHCLI=0
+MYCONFIG_DIR=$MYHOME_DIR"/bin"
 which dash-cli>/dev/null||{ echo "I dont know where the command dash-cli is. Please put dash-cli in your execution path.";exit;}
+if [ $LOCAL_DASHCLI -eq 0 ]
+then
+ rpcuser=$(cut -f1 -d, $MYCONFIG_DIR/config.txt)
+ rpcpassword=`cut -f2 -d, $MYCONFIG_DIR/config.txt`
+ rpcconnect=`cut -f3 -d, $MYCONFIG_DIR/config.txt`
+fi
+dcli () {
+ if [ $LOCAL_DASHCLI -eq 0 ]
+ then
+#         echo remote dash-cli
+  dash-cli -datadir=/tmp -rpcuser=$rpcuser -rpcpassword=$rpcpassword -rpcconnect=$rpcconnect "$@" 2>&1  || { echo "The command dash-cli does not work remotely.";exit;}
+ else
+#         echo local dash-cli
+  dash-cli "$@" 2>&1  || { echo "I dont know where the command dcli is. Please put dcli in your execution path.";exit;}
+ fi
+}
+
+
 which bc>/dev/null||{ echo "I dont know where the command bc is. Please put bc in your execution path.";exit;}
 which zip>/dev/null||{ echo "I dont know where the command zip is. Please put zip in your execution path.";exit;}
 which ssdeep>/dev/null||{ echo "I dont know where ssdeep command is. Please put ssdeep in your execution path.";exit;}
@@ -106,6 +128,7 @@ fi
 for pid in $(pidof -x mnowatch.sh); do
     if [ $pid != $$ ]; then
         echo "[$(date)] : mnowatch.sh : Process is already running with PID $pid"
+		#In case $superblock -gt 0 then put endOFvote tag in the previus report.
         exit 1
     fi
 done
@@ -118,7 +141,7 @@ done
 
 
 cd $TMP_DIR
-rm -rf *_* upload proposals
+cd $TMP_DIR; rm -rf *_* upload proposals
 
 #crowdnodes=`wget -qO- crowdnode.io|grep ">MN"|awk -F"address/" '{for(i=2;i<=NF;i++){{print $i}}}'  |cut -f1 -d'"'|cut -f1 -d"."|uniq`
 #second (working) version
@@ -130,11 +153,11 @@ rm -rf *_* upload proposals
 #BUG: https://app.crowdnode.io/ is more accurate! Use it, instead of crowdnode.io. Unfortunately it provides info about IPs rather than addresses, but we could fix that somehow.
 wget -qO- crowdnode.io|grep ">MN"|awk -F"address.dws" '{for(i=2;i<=NF;i++){{print $i}}}'|sed 's/.\(.\{34\}\).*/\1/g'|uniq > $HTTPD_DIR/Types/CrowdNode.txt
 
-#dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'
-#dash-cli masternodelist|jq 'keys'
-dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'|cut -f1 -d: > collateraladdress_IP
+#dcli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'
+#dcli masternodelist|jq 'keys'
+dcli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'|cut -f1 -d: > collateraladdress_IP
 
-#TO DO: Make the script intedendant of dashcentral.org api. Read directly the active proposals by using dash-cli
+#TO DO: Make the script intedendant of dashcentral.org api. Read directly the active proposals by using dcli
 #look at https://insight.dashevo.org/insight-api-dash/gobject/list
 #Look at the end_epoch
 #End epoch occurs in the middle of the month, so if a proposal ends in the middle of the month is considered as non active
@@ -144,8 +167,8 @@ dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'|cut -f1
 #delete all supposed active proposals that end in the middle of the cycle.
 #it will be removed from the Active tab after the last superblock  overlaps with has occurred. So no, it will no longer be "active"
 
-#TO_DO: In order to et rid of the cashcentral dependancy : dash-cli gobject list proposals (and search for endepoch to be more than the 14 of the current month)
-#dash-cli gobject list valid proposals|grep end_epoch|wc -l
+#TO_DO: In order to et rid of the cashcentral dependancy : dcli gobject list proposals (and search for endepoch to be more than the 14 of the current month)
+#dcli gobject list valid proposals|grep end_epoch|wc -l
 
 #old working version
 #curl -s https://www.dashcentral.org/api/v1/budget > centralproposals_json
@@ -156,8 +179,8 @@ dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'|cut -f1
 #curl -s https://www.dashcentral.org/api/v1/budget|jq '.proposals[].name'|sed 's/"//g' > current_props
 
 #mytry without dashcentral
-#dash-cli gobject list valid proposals|grep end_epoch|sort -nr -t: -k7|cut -f3-4 -d:|cut -f1-2 -d,|sed -e s/'\\"name\\":\\"'/''/g|sed -e s/'\\"'/''/g > newpros
-#nextsuperblockseconds=$(echo "($(dash-cli getgovernanceinfo|jq -r '.nextsuperblock') - $(dash-cli getblockcount))*2.625*60"|bc)
+#dcli gobject list valid proposals|grep end_epoch|sort -nr -t: -k7|cut -f3-4 -d:|cut -f1-2 -d,|sed -e s/'\\"name\\":\\"'/''/g|sed -e s/'\\"'/''/g > newpros
+#nextsuperblockseconds=$(echo "($(dcli getgovernanceinfo|jq -r '.nextsuperblock') - $(dcli getblockcount))*2.625*60"|bc)
 #nextsuperblockseconds=$(printf "%.0f" $nextsuperblockseconds)
 #nextsuperblocktime=$((nextsuperblockseconds + EPOCHSECONDS))
 #for fn in `cat newpros`; do
@@ -171,24 +194,24 @@ dash-cli masternodelist|jq -r '.[]| "\(.collateraladdress) \(.address)"'|cut -f1
 
 cat /dev/null > current_props
 #xkcd version without dashcentral
-nextsuperblockseconds=$(echo "($(dash-cli getgovernanceinfo|jq -r '.nextsuperblock') - $(dash-cli getblockcount))*2.625*60"|bc)
+nextsuperblockseconds=$(echo "($(dcli getgovernanceinfo|jq -r '.nextsuperblock') - $(dcli getblockcount))*2.625*60"|bc)
 nextsuperblockseconds=$(printf "%.0f" $nextsuperblockseconds)
 nextsuperblocktime=$((nextsuperblockseconds + EPOCHSECONDS))
-dash-cli gobject list valid proposals|grep end_epoch|sort -nr -t: -k7|cut -f3-4 -d:|cut -f1-2 -d,|sed -e s/'\\"name\\":\\"'/''/g|sed -e s/'\\"'/''/g|while IFS=, read time name;do if ((time>nextsuperblocktime));then echo "$name">>current_props;fi;done
+dcli gobject list valid proposals|grep end_epoch|sort -nr -t: -k7|cut -f3-4 -d:|cut -f1-2 -d,|sed -e s/'\\"name\\":\\"'/''/g|sed -e s/'\\"'/''/g|while IFS=, read time name;do if ((time>nextsuperblocktime));then echo "$name">>current_props;fi;done
 #end xkcd
 
 echo  > expired_props
 
-#dash-cli masternodelist addr > masternodelist_addr
-#BUGGY VERSION: dash-cli masternodelist full ENABLED|cut -f1-3,19 -d" "|sed -e "s/: /: \"/g"|grep -v "[0:0:0:0:0:0:0:0]:0" > masternodelist_addr
-#dash-cli masternodelist full ENABLED|awk '{print $1" \""$7}'|grep -v "[0:0:0:0:0:0:0:0]:0" > masternodelist_addr
-dash-cli masternodelist addr|grep -v "[0:0:0:0:0:0:0:0]:0" > masternodelist_addr #https://github.com/dashpay/dash/issues/2942
+#dcli masternodelist addr > masternodelist_addr
+#BUGGY VERSION: dcli masternodelist full ENABLED|cut -f1-3,19 -d" "|sed -e "s/: /: \"/g"|grep -v "[0:0:0:0:0:0:0:0]:0" > masternodelist_addr
+#dcli masternodelist full ENABLED|awk '{print $1" \""$7}'|grep -v "[0:0:0:0:0:0:0:0]:0" > masternodelist_addr
+dcli masternodelist addr|grep -v "[0:0:0:0:0:0:0:0]:0" > masternodelist_addr #https://github.com/dashpay/dash/issues/2942
 
-#dash-cli masternodelist payee > masternodelist_payee
+#dcli masternodelist payee > masternodelist_payee
 
 #TO DO: Use this payee address to do more smart groupings
 #TO DO: After spork 15 the payee is not valid, we should check collateraladdress
-dash-cli gobject list > gobject_list
+dcli gobject list > gobject_list
 
 #old working code
 #grep "{" gobject_list|grep -v "DataString"|cut -f2 -d"\""|grep -v "{" > proposals
@@ -196,7 +219,7 @@ dash-cli gobject list > gobject_list
 jq -r '.[].Hash' gobject_list > proposals
 
 for fn in `cat proposals`; do
-dash-cli gobject getcurrentvotes $fn > "gobject_getcurrentvotes_"$fn
+dcli gobject getcurrentvotes $fn > "gobject_getcurrentvotes_"$fn
 numi=$(grep -n "\"Hash\": \""$fn gobject_list|tail -1|cut -f1 -d":")
 ((numi--))
 numip=$numi"p"
@@ -462,22 +485,22 @@ mycollat=`grep " $ipis$" ../collateraladdress_IP|cut -f1 -d" "`
 
 
 #ANOTHER TRY that IS SUCCESFULL
-#transact=`dash-cli getaddresstxids '{"addresses": ["'$mycollat'"]}'|head -2|tail -1|cut -f2 -d"\""`
-#blockis=`dash-cli getrawtransaction $transact 1|grep '"locktime":'|cut -f2 -d:|cut -f1 -d,`
+#transact=`dcli getaddresstxids '{"addresses": ["'$mycollat'"]}'|head -2|tail -1|cut -f2 -d"\""`
+#blockis=`dcli getrawtransaction $transact 1|grep '"locktime":'|cut -f2 -d:|cut -f1 -d,`
 #if [ -z $blockis ]
 #then
-#blockis=`dash-cli getrawtransaction $transact 1|grep '"height":'|head -1|cut -f2 -d:|cut -f1 -d,`
+#blockis=`dcli getrawtransaction $transact 1|grep '"height":'|head -1|cut -f2 -d:|cut -f1 -d,`
 #fi
 #if [ $blockis -eq 0 ]
 #then
-#blockis=`dash-cli getrawtransaction $transact 1|grep '"height":'|head -1|cut -f2 -d:|cut -f1 -d,`
+#blockis=`dcli getrawtransaction $transact 1|grep '"height":'|head -1|cut -f2 -d:|cut -f1 -d,`
 #fi
 #if [ -z $blockis ]
 #then
-#blockis=`dash-cli getrawtransaction $transact 1|grep '"spentHeight":'|head -1|cut -f2 -d:`
+#blockis=`dcli getrawtransaction $transact 1|grep '"spentHeight":'|head -1|cut -f2 -d:`
 #fi
-#blockhash=`dash-cli getblockhash $blockis`
-#mediantime=`dash-cli getblock $blockhash|grep '"mediantime":'|cut -f2 -d:|cut -f1 -d,`
+#blockhash=`dcli getblockhash $blockis`
+#mediantime=`dcli getblock $blockhash|grep '"mediantime":'|cut -f2 -d:|cut -f1 -d,`
 #mediantime="@"`echo $mediantime`
 #earlytxdate=`date -u +"%Y-%m-%d-%H-%M-%S" -d $mediantime`
 
@@ -490,39 +513,39 @@ then
  if [ $SEARCHINPREVIUS -eq 1 ]
  then
   earlytxdate=`grep ","$mycollat"," $PREVIUSREPORTFULL|cut -f9 -d,`
-  #echo $mycollat $earlytxdate
+  #echo "mycollat"  $mycollat $earlytxdate
  else
   #begin xkcd's contribution
-  transact=$(dash-cli getaddresstxids '{"addresses": ["'$mycollat'"]}'|jq -r '.[0]')
+  transact=$(dcli getaddresstxids '{"addresses": ["'$mycollat'"]}'|jq -r '.[0]')
   #echo "-----------------------------------------------"
   #echo "mycollat" $mycollat
   #echo "transact" $transact
-  #echo "Exiting...please fix the bug in case the dash-cli does not work"
+  #echo "Exiting...please fix the bug in case the dcli does not work"
   #exit
-  tx=$(dash-cli getrawtransaction $transact 1)
+  tx=$(dcli getrawtransaction $transact 1)
   blockis=$(jq -r '.locktime' <<< $tx)
   test -z "$blockis" && blockis=$(jq -r '.height' <<< "$tx")
   test "$blockis" -eq 0 && blockis=$(jq -r '.height' <<< "$tx")
   test -z "$blockis" && blockis=$(jq -r '.vout[0].spentHeight' <<< "$tx")
-  blockhash=$(dash-cli getblockhash $blockis)
-  mediantime="@"$(dash-cli getblock $blockhash|jq -r '.mediantime')
+  blockhash=$(dcli getblockhash $blockis)
+  mediantime="@"$(dcli getblock $blockhash|jq -r '.mediantime')
   earlytxdate=$(date -u +"%Y-%m-%d-%H-%M-%S" -d $mediantime)
  fi
 else
  #begin xkcd's contribution
- transact=$(dash-cli getaddresstxids '{"addresses": ["'$mycollat'"]}'|jq -r '.[0]')
+ transact=$(dcli getaddresstxids '{"addresses": ["'$mycollat'"]}'|jq -r '.[0]')
  #echo "-----------------------------------------------"
  #echo "mycollat" $mycollat
  #echo "transact" $transact
- #echo "Exiting...please fix the bug in case the dash-cli does not work"
+ #echo "Exiting...please fix the bug in case the dcli does not work"
  #exit
- tx=$(dash-cli getrawtransaction $transact 1)
+ tx=$(dcli getrawtransaction $transact 1)
  blockis=$(jq -r '.locktime' <<< $tx)
  test -z "$blockis" && blockis=$(jq -r '.height' <<< "$tx")
  test "$blockis" -eq 0 && blockis=$(jq -r '.height' <<< "$tx")
  test -z "$blockis" && blockis=$(jq -r '.vout[0].spentHeight' <<< "$tx")
- blockhash=$(dash-cli getblockhash $blockis)
- mediantime="@"$(dash-cli getblock $blockhash|jq -r '.mediantime')
+ blockhash=$(dcli getblockhash $blockis)
+ mediantime="@"$(dcli getblock $blockhash|jq -r '.mediantime')
  earlytxdate=$(date -u +"%Y-%m-%d-%H-%M-%S" -d $mediantime)
  #end xkcd's contribution
 fi
@@ -674,16 +697,17 @@ cd $TMP_DIR
  if [[ ( $superblock -eq 0 && $istherediff -eq 0 ) || ( $superblock -eq 1 && $istherediff -eq 0 ) ]]
  then
   echo $dateis" --> No diffs found between "$compareresultfiles" . "`date -u` > /tmp/Mnowatch_diffs
-#I am on TMP_DIR/
-#pwd
-#In order not to use ls -trad that crashes the kernel, I have to change dirs
-cd $HTTPD_DIR
+  #I am on TMP_DIR/
+  #pwd
+  #In order not to use ls -trad that crashes the kernel, I have to change dirs
+  cd $HTTPD_DIR
   diff $compareresultfiles >> /tmp/Mnowatch_diffs 
-cd $TMP_DIR
+  cd $TMP_DIR
   deletelatest=`ls -tra $HTTPD_DIR/the_results_dashd_*.html.csv|grep -v uniqueHashVotes|tail -1`
-#WARNING. THE BELOW COMMAND IS EXTREMELY DANGERUS. MAKE SURE YOU ARE IN TMP_DIR
-cd $TMP_DIR
-  rm -rf $deletelatest *_* upload proposals
+  #WARNING. THE BELOW COMMAND IS EXTREMELY DANGERUS. MAKE SURE YOU ARE IN TMP_DIR
+  cd $TMP_DIR
+  cd $TMP_DIR; rm -rf $deletelatest *_* upload proposals
+  #In case $superblock -gt 0 then put endOFvote tag in the previus report.
   exit
  else
   echo $dateis" DIFFS FOUND! "$istherediff > /tmp/Mnowatch_diffs
@@ -713,7 +737,8 @@ grep -o '[0-9]\{40,\}' the_results_dashd_*.html|sort|uniq -c|awk '{ while (/^[[:
 #end of xkcd code
 
 cp current_props ../httpd/current_props_"$dateis".txt
-cp upload_*.tar.gz ../httpd
+#cp upload_*.tar.gz ../httpd
+#In case you want to keep the upload files, uncomment the above
 cp distr_*.txt ../httpd
 cp the_results_dashd_*.html ../httpd
 
@@ -740,7 +765,7 @@ sed -i `expr $wheredoIedit + 3`'i'"$ADDTHIS" ../httpd/index.html
 #ADDTHIS=" (<a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html</a>)"
 ADDTHIS="(<span style=\"background: #00ee00\"><a href=\""`ls ./the_results*.uniqueHashVotes.*.html`"\">html</a></span>)"
 sed -i `expr $wheredoIedit + 4`'i'"$ADDTHIS" ../httpd/index.html
-rm -rf *_* upload proposals
+cd $TMP_DIR; rm -rf *_* upload proposals
 
 #here I change the working  directory to httpd 
 cd $HTTPD_DIR
@@ -807,6 +832,6 @@ sed -i `expr $wheredoIedit + 7`'i'"$ADDTHIS" ./index.html
 fi
 
 #echo "END! "
-$MYHOME_DIR/warnings/warnings.sh $dateis
+#$MYHOME_DIR/warnings/warnings.sh $dateis
 
 
