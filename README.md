@@ -17,7 +17,7 @@ cd; git clone https://github.com/dundemo/mnowatch; mkdir ~/bin; cp ~/mnowatch/* 
 
 ## ANALYTIC INSTALLATION
 
-1) First [download dashd](https://www.dash.org/get-dash/) and install it into a Linux system. Then put dash-cli (along with any other script's dependencies, probably you will also need to install bc,zip,ssdeep and gawk packages) into your execution path. (Read [here](https://www.dash.org/forum/threads/which-masternodes-voted-and-what-exactly-voted-on-various-proposals-v2.34403/#post-195834) for more instructions). In case you want to connect to a remote dash-cli, edit config.txt and put the appropriate values there.
+1) First [download dashd](https://www.dash.org/get-dash/) and install it into a Linux system. Then put dash-cli (along with any other script's dependencies, probably you will also need to install bc,zip,ssdeep and gawk packages) into your execution path. (Read [here](https://www.dash.org/forum/threads/which-masternodes-voted-and-what-exactly-voted-on-various-proposals-v2.34403/#post-195834) for more instructions). In case you want to connect to a remote dash-cli then set LOCAL_DASHCLI to 0 n mnowatch.sh and btime.sh . You have to edit also the config.txt and put the appropriate values there.
 2) Download the git files of mnowatch package and put them into a directory named SOME_PATH_OF_YOUR_CHOICE/bin.
 3) Edit the script mnowatch.sh and change whatever is needed there (instructions inside the script)
 4) Run the script. The script runs silently and lasts from 5-20 minutes (in an Intel Xeon 2.7 Ghz) depending on the reports it's been asked to create. 
