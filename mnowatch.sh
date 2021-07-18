@@ -47,7 +47,7 @@ dcli () {
 
 
 which bc>/dev/null||{ echo "I dont know where the command bc is. Please put bc in your execution path.";exit;}
-which zip>/dev/null||{ echo "I dont know where the command zip is. Please put zip in your execution path.";exit;}
+#which zip>/dev/null||{ echo "I dont know where the command zip is. Please put zip in your execution path.";exit;}
 which ssdeep>/dev/null||{ echo "I dont know where ssdeep command is. Please put ssdeep in your execution path.";exit;}
 
 #checkbin=`cd \`dirname $0\` &&pwd|grep /bin$|wc -l`
