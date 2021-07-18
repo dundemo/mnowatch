@@ -12,10 +12,32 @@ MYHOME_DIR=$HOME
 # 2) ALL MNOWATCH GITHUB FILES MUST RESIDE INTO $MYHOME_DIR/bin
 # 3) In order for this to work you have to put THIS_IS_CRON=1 into crontab.
 #    Look at the provided crontab.example file.
-#=============== END OF ISTRUCTIONS ===================================
+# 4) If you want to connect to a remote dash-cli, set LOCAL_DASHCLI to 0 and edit the config file.
+LOCAL_DASHCLI=0
+#==========================END OF INSTRUCTIONS ==================
+MYCONFIG_DIR=$MYHOME_DIR"/bin"
+which dash-cli>/dev/null||{ echo "I dont know where the command dash-cli is. Please put dash-cli in your execution path.";exit;}
+if [ $LOCAL_DASHCLI -eq 0 ]
+then
+ rpcuser=$(cut -f1 -d, $MYCONFIG_DIR/config.txt)
+ rpcpassword=`cut -f2 -d, $MYCONFIG_DIR/config.txt`
+ rpcconnect=`cut -f3 -d, $MYCONFIG_DIR/config.txt`
+fi
+dcli () {
+ if [ $LOCAL_DASHCLI -eq 0 ]
+ then
+#         echo remote dash-cli
+  dash-cli -datadir=/tmp -rpcuser=$rpcuser -rpcpassword=$rpcpassword -rpcconnect=$rpcconnect "$@" 2>&1  || { echo "The command dash-cli does not work remotely.";exit;}
+ else
+#         echo local dash-cli
+  dash-cli "$@" 2>&1  || { echo "I dont know where the command dcli is. Please put dcli in your execution path.";exit;}
+ fi
+}
+
+
 
 test -n "$THIS_IS_CRON"||{ echo "This bash should be executed only by cron daemon.";exit 1;}
-block=$(dash-cli getblockcount)||{ echo "dashd error getting block height.";exit 2;}
+block=$(dcli getblockcount)||{ echo "dashd error getting block height.";exit 2;}
 remainder=$((($block-880648+1662) % 16616))
 run_prog="$MYHOME_DIR/bin/mnowatch.sh"
 test -x "$run_prog"||{ echo "Cannot execute $run_prog";exit 3;}

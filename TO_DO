@@ -1,7 +1,6 @@
 jsssdeep.html:<!-- TO DO: Look at the below URL to make filters work all together in the table row, or in separate collumns with an OR or an AND relation  -->
 jsssdeep.html:<!-- TO DO: Also implement and/or special syntax inside a single filter and not only between two or more filters   -->
 mnowatch.sh:#TO DO: The mnowatch report of individuality does not take into account the crowdnode type of masternodes, and it wrongly assumes that a crowdnode is a unique individual.
-mnowatch.sh:#TO DO: Make the script intedendant of dashcentral.org api. Read directly the active proposals by using dash-cli
 mnowatch.sh:#TO DO: Use this payee address to do more smart groupings
 mnowatch.sh:#TO DO: After spork 15 the payee is not valid, we should check collateraladdress
 mnowatch.sh:#TO DO: debug git diff --color-words. It seems to put some IPs in the same line while we expect to be in separete lines.
