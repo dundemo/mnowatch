@@ -23,7 +23,7 @@ MYHOME_DIR=$HOME
 #    If you want to overwrite the default SIMILARNUM you can run: mnowatch.sh <number>
 SIMILARNUM=0
 # 5) If you want to connect to a remote dash-cli, set LOCAL_DASHCLI to 0 and edit the config file.
-LOCAL_DASHCLI=0
+LOCAL_DASHCLI=1
 #==========================END OF INSTRUCTIONS ==================
 
 MYCONFIG_DIR=$MYHOME_DIR"/bin"
