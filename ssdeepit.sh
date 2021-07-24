@@ -29,6 +29,15 @@ WORKING_DIR=$MYHOME_DIR"/tmp"
 BIN_DIR=$MYHOME_DIR"/bin"
 HTTPD_DIR=$MYHOME_DIR"/httpd"
 
+for pid in $(pidof -x ssdeepit.sh); do
+    if [ $pid != $$ ]; then
+        echo "[$(date)] : ssdeepit.sh : Process is already running with PID $pid"
+        #In case $superblock -gt 0 then put endOFvote tag in the previus report.
+        exit 1
+    fi
+done
+
+
 cd $WORKING_DIR
 sort -t"," -k5 $1 > mysorted.csv
 #a bug occurs to all proposals than contain a , in their proposal-name
@@ -49,9 +58,9 @@ cp mysortedUnique.csv $filenameun
 cat $filenameun|grep -v "^,,," > pastedonefile 
 cat /dev/null > pastedtwofile
 dateis=`echo $1|cut -f4 -d"_"|cut -f1 -d"."`
-cat $BIN_DIR/jsssdeep.html|sed -e s/"MNOWATCH from dashd thedateis<\/title>"/"MNOwatch - VoteHashGroups $dateis <\/title><link rel=\"icon\" type=\"image\/png\" href=\"favicon.ico\">"/g|sed -e s/"thedateis"/"$dateis"/g >  mysortedUnique.html
 PREVIUSREPORT=`cd $HTTPD_DIR;ls -tra *uniqueHashVotes*.html 2>/dev/null|tail -1`
 PREVIUSREPORTFULL=$HTTPD_DIR"/"$PREVIUSREPORT
+cat $BIN_DIR/jsssdeep.html|sed -e s/"MNOWATCH from dashd thedateis<\/title>"/"MNOwatch - VoteHashGroups $dateis <\/title><link rel=\"icon\" type=\"image\/png\" href=\"favicon.ico\">"/g|sed -e s/"thedateis"/"Current_report_date: $dateis --------------- Previous_Report: <a href=\".\/$PREVIUSREPORT\">$PREVIUSREPORT<\/a>"/g >  mysortedUnique.html
 
 for fn in `cat pastedonefile`; do 
  yes=" "`echo $fn |cut -f1 -d","|sed -e s/":"/" "/g`" "

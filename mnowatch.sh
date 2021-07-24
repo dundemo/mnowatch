@@ -1,5 +1,7 @@
 #!/bin/bash
 #set -x
+trap "exit 1" TERM
+export TOP_PID=$$
 
 # Licence: GPLv2
 # The author of the software is the owner of the Dash Address: XnpT2YQaYpyh7F9twM6EtDMn1TCDCEEgNX
@@ -38,10 +40,11 @@ dcli () {
  if [ $LOCAL_DASHCLI -eq 0 ]
  then
 #         echo remote dash-cli
-  dash-cli -datadir=/tmp -rpcuser=$rpcuser -rpcpassword=$rpcpassword -rpcconnect=$rpcconnect "$@" 2>&1  || { echo "The command dash-cli does not work remotely.";exit;}
+  dash-cli -datadir=/tmp -rpcuser=$rpcuser -rpcpassword=$rpcpassword -rpcconnect=$rpcconnect "$@" 2>&1||{ echo "The command dash-cli does not work remotely.";kill -s TERM $TOP_PID;}
+#  dash-cli -datadir=/tmp -rpcuser=$rpcuser -rpcpassword=$rpcpassword "$@" 2>&1||{ echo "The command dash-cli does not work remotely.";kill -s TERM $TOP_PID;}
  else
 #         echo local dash-cli
-  dash-cli "$@" 2>&1  || { echo "I dont know where the command dcli is. Please put dcli in your execution path.";exit;}
+  dash-cli "$@" 2>&1||{ echo "I dont know where the command dcli is. Please put dcli in your execution path.";exit;}
  fi
 }
 
